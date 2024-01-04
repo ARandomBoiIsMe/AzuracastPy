@@ -5,6 +5,7 @@ from .remote import Remote
 from .requestable_song import RequestableSong
 from .station_status import StationStatus
 from .song_history import SongHistory
+from .listener import Listener
 
 from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
@@ -118,3 +119,13 @@ class Station:
         response = self._request_handler.get(url)
 
         return [SongHistory(**sh) for sh in response]
+    
+    def listeners(self) -> List[Listener]:
+        url = API_ENDPOINTS["station_listeners"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return [Listener(**l) for l in response]
