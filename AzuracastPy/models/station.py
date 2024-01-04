@@ -1,0 +1,43 @@
+from typing import List, Optional, Dict, Any
+
+from .mount import Mount
+from .remote import Remote
+
+from request_handler import RequestHandler
+
+class Station:
+    def __init__(
+            self, id: str, name: str, shortcode: str, description: str, frontend: str, backend: str,
+            listen_url: str, url: str, public_player_url: str, playlist_pls_url: str, playlist_m3u_url: str,
+            is_public: bool, hls_enabled: bool, hls_url: Optional[str], hls_listeners: int,
+            mounts: List[Mount], remotes: List[Remote], hls_is_default: bool = None,
+            _request_handler: RequestHandler = None
+        ):
+        self.id = id
+        self.name = name
+        self.shortcode = shortcode
+        self.description = description
+        self.frontend = frontend
+        self.backend = backend
+        self.listen_url = listen_url
+        self.url = url
+        self.public_player_url = public_player_url
+        self.playlist_pls_url = playlist_pls_url
+        self.playlist_m3u_url = playlist_m3u_url
+        self.is_public = is_public
+        self.mounts = mounts
+        self.remotes = remotes
+        self.hls_enabled = hls_enabled
+        self.hls_is_default = hls_is_default
+        self.hls_url = hls_url
+        self.hls_listeners = hls_listeners
+        self._request_handler = _request_handler
+
+    def __repr__(self):
+        return (
+            f"Station(id={self.id!r}, name={self.name!r}, shortcode={self.shortcode!r}, "
+            f"description={self.description!r}, frontend={self.frontend!r}, backend={self.backend!r}, "
+            f"listen_url={self.listen_url!r}, url={self.url!r}, public_player_url={self.public_player_url!r}, "
+            f"is_public={self.is_public}, hls_enabled={self.hls_enabled}, hls_listeners={self.hls_listeners}, "
+            f"mounts={self.mounts!r}, remotes={self.remotes!r})"
+        )
