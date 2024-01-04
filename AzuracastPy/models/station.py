@@ -63,3 +63,13 @@ class Station:
         )
 
         self._request_handler.post(url)
+
+    def status(self) -> StationStatus:
+        url = API_ENDPOINTS["station_status"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return StationStatus(**response)
