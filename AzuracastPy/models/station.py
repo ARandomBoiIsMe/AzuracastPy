@@ -83,3 +83,27 @@ class Station:
         response = self._request_handler.post(url)
 
         return response['message']
+    
+    def perform_frontend_action(self, action: str = 'restart'):
+        response = self._perform_service_action(action=action, service_type="frontend")
+
+        return response['message']
+    
+    def perform_backend_action(self, action: str = 'restart'):
+        response = self._perform_service_action(action=action, service_type="backend")
+
+        return response['message']
+    
+    def _perform_service_action(self, action: str, service_type: str):
+        if action not in ['start', 'stop', 'restart']:
+            raise ValueError("action must be one of 'start', 'stop' or 'restart'")
+        
+        url = API_ENDPOINTS[f"{service_type}_action"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            action=action
+        )
+
+        response = self._request_handler.post(url)
+
+        return response
