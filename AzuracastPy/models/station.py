@@ -4,6 +4,7 @@ from .mount import Mount
 from .remote import Remote
 from .requestable_song import RequestableSong
 from .station_status import StationStatus
+from .song_history import SongHistory
 
 from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
@@ -107,3 +108,13 @@ class Station:
         response = self._request_handler.post(url)
 
         return response
+    
+    def history(self) -> List[SongHistory]:
+        url = API_ENDPOINTS["station_history"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return [SongHistory(**sh) for sh in response]
