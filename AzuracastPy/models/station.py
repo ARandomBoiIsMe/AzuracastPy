@@ -2,7 +2,9 @@ from typing import List, Optional, Dict, Any
 
 from .mount import Mount
 from .remote import Remote
+from .requestable_song import RequestableSong
 
+from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
 
 class Station:
@@ -41,3 +43,13 @@ class Station:
             f"is_public={self.is_public}, hls_enabled={self.hls_enabled}, hls_listeners={self.hls_listeners}, "
             f"mounts={self.mounts!r}, remotes={self.remotes!r})"
         )
+    
+    def requestable_songs(self) -> List[RequestableSong]:
+        url = API_ENDPOINTS["requestable_songs"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return [RequestableSong(**rs) for rs in response]
