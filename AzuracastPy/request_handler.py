@@ -5,7 +5,7 @@ from exceptions import ClientException, AccessDeniedException, AzuracastExceptio
 
 from lxml import html # A HTML parser is needed to extract some errors
 
-from typing import Optional, Tuple, Dict
+from typing import Optional, Tuple, Dict, Any
 
 class RequestHandler:
     def __init__(self, radio_url: str, x_api_key: Optional[str] = None):
@@ -13,19 +13,19 @@ class RequestHandler:
         self._x_api_key = x_api_key
         self._headers = self._set_headers()
 
-    def post(self, url: str, body: Dict):
+    def post(self, url: str, body: Dict[str, Any]):
         return self._send_request(method='POST', url=url, body=body)
     
     def get(self, url: str):
         return self._send_request(method='GET', url=url)
     
-    def put(self, url: str, body: Dict):
+    def put(self, url: str, body: Dict[str, Any]):
         return self._send_request(method='PUT', url=url, body=body)
     
     def delete(self, url: str):
         return self._send_request(method='DELETE', url=url)
     
-    def _send_request(self, method: str, url: str, body: Optional[str] = None):
+    def _send_request(self, method: str, url: str, body: Optional[str] = None) -> Dict[str, Any]:
         # When testing the API, I ran into multiple instances of NotLoggedIn errors returning a code of 200, as well as
         # some errors returning a code of 500. In addition to this, some errors returned HTML instead of JSON.
         # This behaviour seems to be random. As a result, on top of the normal error logic, I added logic to check for these occurences,
