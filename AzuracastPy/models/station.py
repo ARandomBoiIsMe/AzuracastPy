@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any
 from .mount import Mount
 from .remote import Remote
 from .requestable_song import RequestableSong
+from .station_status import StationStatus
 
 from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
@@ -53,3 +54,12 @@ class Station:
         response = self._request_handler.get(url)
 
         return [RequestableSong(**rs) for rs in response]
+    
+    def request_song(self, request_id: str):
+        url = API_ENDPOINTS["song_request"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            request_id=request_id
+        )
+
+        self._request_handler.post(url)
