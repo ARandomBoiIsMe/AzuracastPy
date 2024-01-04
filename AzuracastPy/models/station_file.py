@@ -1,12 +1,6 @@
 from typing import List
 
-class Links:
-    def __init__(self_, self: str, **kwargs):
-        self_.self = self
-        self_.__dict__.update(kwargs) # Incase there are other attributes in the link object from the API
-    
-    def __repr__(self):
-        return f"Links(self={self.self!r}, {', '.join(f'{k}={v!r}' for k, v in self.__dict__.items())})"
+from .links import Links
 
 class Playlist:
     def __init__(self, id: int, name: str, weight: int):

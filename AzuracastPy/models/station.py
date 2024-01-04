@@ -8,6 +8,7 @@ from .song_history import SongHistory
 from .listener import Listener
 from .schedule_time import ScheduleTime
 from .station_file import StationFile
+from .mount_point import MountPoint
 
 from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
@@ -140,7 +141,7 @@ class Station:
 
         response = self._request_handler.get(url)
 
-        return [ScheduleTime(**si) for si in response]
+        return [ScheduleTime(**st) for st in response]
     
     def files(self) -> List[StationFile]:
         url = API_ENDPOINTS["station_files"].format(
@@ -168,3 +169,30 @@ class Station:
         response = self._request_handler.get(url)
 
         return StationFile(**response)
+    
+    def mount_points(self) -> List[MountPoint]:
+        url = API_ENDPOINTS["station_mount_points"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return [MountPoint(**mp) for mp in response]
+    
+    def mount_point(self, mount_point_id) -> MountPoint:
+        if type(mount_point_id) is not int:
+            raise TypeError("file_id param should be of type int.")
+        
+        if mount_point_id < 0:
+            raise ValueError("file_id must be a non-negative number.")
+        
+        url = API_ENDPOINTS["station_mount_point"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=mount_point_id
+        )
+
+        response = self._request_handler.get(url)
+
+        return MountPoint(**response)
