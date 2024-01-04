@@ -82,7 +82,7 @@ class RequestHandler:
         raise AzuracastException(f"Encountered request error: {error_type} - {error_message}")
     
     def _raise_access_denied_exception(self):
-        raise AccessDeniedException("You silly goose. You need a valid x-api-key to access this endpoint. Update yours and try again.")
+        raise AccessDeniedException("You silly goose. You need a valid x-api-key to perform this action. Update yours and try again.")
     
     def _raise_unexpected_error_exception(self, url, text):
         raise AzuracastException(f"Unexpected error occured while trying to access this url: {url}.\nError details: {text}")
