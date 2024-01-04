@@ -13,7 +13,7 @@ class RequestHandler:
         self._x_api_key = x_api_key
         self._headers = self._set_headers()
 
-    def post(self, url: str, body: Dict[str, Any]):
+    def post(self, url: str, body: Optional[Dict[str, Any]] = None):
         return self._send_request(method='POST', url=url, body=body)
     
     def get(self, url: str):
