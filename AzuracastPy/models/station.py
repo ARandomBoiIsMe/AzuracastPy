@@ -6,6 +6,7 @@ from .requestable_song import RequestableSong
 from .station_status import StationStatus
 from .song_history import SongHistory
 from .listener import Listener
+from .schedule_time import ScheduleTime
 
 from endpoints import API_ENDPOINTS
 from request_handler import RequestHandler
@@ -129,3 +130,13 @@ class Station:
         response = self._request_handler.get(url)
 
         return [Listener(**l) for l in response]
+    
+    def schedule(self) -> List[ScheduleTime]:
+        url = API_ENDPOINTS["station_schedule"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        response = self._request_handler.get(url)
+
+        return [ScheduleTime(**si) for si in response]
