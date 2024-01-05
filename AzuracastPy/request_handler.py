@@ -1,6 +1,5 @@
 import requests
-from requests import exceptions
-from json import decoder
+from json.decoder import JSONDecodeError
 
 from .exceptions import (
     AccessDeniedException, AzuracastAPIException, UnexpectedErrorException, ClientException
@@ -51,7 +50,7 @@ class RequestHandler:
             if response.status_code == 200:
                 try:
                     return response.json()
-                except (ValueError, KeyError, exceptions.JSONDecodeError, decoder.JSONDecodeError):
+                except (ValueError, KeyError, JSONDecodeError):
                     if self._confirm_login_error(response.text) is True:
                         self._raise_access_denied_exception()
                     
@@ -64,19 +63,21 @@ class RequestHandler:
         return {'accept': 'application/json', 'X-API-Key': self._x_api_key}
     
     def _handle_500_error(self, url: str, response: requests.Response):
+        # Attempts to parse error json response for details.
         try:
-            # Attempts to parse error json response for details.
             error = response.json()
             self._raise_request_exception(error['type'], error['message'])
-        except (ValueError, KeyError, exceptions.JSONDecodeError, decoder.JSONDecodeError):
-            # Error is not valid JSON.
-            # Assumes response is error HTML response and tries to parse it to get details.
-            try:
-                error = self._get_specific_error(response.text)
-                self._raise_request_exception(error[0], error[1])
-            except:
-                # Error is neither JSON nor expected HTML. Unexpected error found.
-                self._raise_unexpected_error_exception(url, response.text)
+        except (ValueError, KeyError, JSONDecodeError):
+            pass
+            
+        # Error is not valid JSON.
+        # Assumes response is error HTML response and tries to parse it to get details.
+        try:
+            error = self._get_specific_error(response.text)
+            self._raise_request_exception(error[0], error[1])
+        except:
+            # Error is neither JSON nor expected HTML. Unexpected error found.
+            self._raise_unexpected_error_exception(url, response.text)
 
     def _get_specific_error(self, text: str) -> Tuple:
         doc = html.fromstring(text)

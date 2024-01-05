@@ -1,9 +1,9 @@
 from typing import Optional, List, Union
 
-from models.station import Station
+from .models import Station
 
-from request_handler import RequestHandler
-from endpoints import API_ENDPOINTS
+from .request_handler import RequestHandler
+from .endpoints import API_ENDPOINTS
 
 class AzuracastClient:
     # Docstring here
@@ -15,7 +15,7 @@ class AzuracastClient:
         :param radio_url: Your radio's URL, which was set upon its creation.
         :param x_api_key: An optional authorization key, which can be created from your Azuracast account's profile. Include this key to gain access to specific endpoints.
         """
-        # Handle lack of url and x_api_key here. Soon.
+        # TODO: Handle lack of url and x_api_key here. Soon.
         self._request_handler = RequestHandler(radio_url=radio_url, x_api_key=x_api_key)
 
     def stations(self) -> List[Station]:
@@ -31,22 +31,22 @@ class AzuracastClient:
 
         return [Station(**station, _request_handler=self._request_handler) for station in response]
 
-    def station(self, station_id: int) -> Station:
+    def station(self, id: int) -> Station:
         """
         Retrieves a specified station on the radio.
         Constructs and returns a single instance of :class:`Station`.
 
-        :param station_id: The ID of the station to be retrieved.
+        :param id: The numerical ID of the station to be retrieved.
         """
-        if type(station_id) is not int:
-            raise TypeError("station_id param should be of type int.")
+        if type(id) is not int:
+            raise TypeError("id param should be of type int.")
         
-        if station_id < 0:
-            raise ValueError("station_id must be a non-negative number.")
+        if id < 0:
+            raise ValueError("id must be a non-negative number.")
 
         url = API_ENDPOINTS["station"].format(
             radio_url=self._request_handler.radio_url,
-            station_id=station_id
+            station_id=id
         )
 
         response = self._request_handler.get(url)

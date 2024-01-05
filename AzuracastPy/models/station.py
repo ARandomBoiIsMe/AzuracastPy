@@ -9,17 +9,18 @@ from .listener import Listener
 from .schedule_time import ScheduleTime
 from .station_file import StationFile
 from .mount_point import MountPoint
+from .playlist import Playlist
 
-from endpoints import API_ENDPOINTS
-from request_handler import RequestHandler
+from AzuracastPy.endpoints import API_ENDPOINTS
+from AzuracastPy.request_handler import RequestHandler
 
 class Station:
     def __init__(
             self, id: str, name: str, shortcode: str, description: str, frontend: str, backend: str,
-            listen_url: str, url: str, public_player_url: str, playlist_pls_url: str, playlist_m3u_url: str,
-            is_public: bool, hls_enabled: bool, hls_url: Optional[str], hls_listeners: int,
-            mounts: List[Mount], remotes: List[Remote], hls_is_default: bool = None,
-            _request_handler: RequestHandler = None
+            listen_url: str, url: str, public_player_url: str, is_public: bool, hls_enabled: bool,
+            hls_listeners: int, mounts: List[Mount], remotes: List[Remote], hls_is_default: bool = None,
+            playlist_pls_url: Optional[str] = None, playlist_m3u_url: Optional[str] = None,
+            hls_url: Optional[str] = None, _request_handler: RequestHandler = None
         ):
         self.id = id
         self.name = name
@@ -50,13 +51,45 @@ class Station:
             f"mounts={self.mounts!r}, remotes={self.remotes!r})"
         )
     
-    def requestable_songs(self) -> List[RequestableSong]:
-        url = API_ENDPOINTS["requestable_songs"].format(
+    def _perform_service_action(self, action: str, service_type: str):
+        if action not in ['start', 'stop', 'restart']:
+            raise ValueError("action must be one of 'start', 'stop' or 'restart'")
+        
+        url = API_ENDPOINTS[f"{service_type}_action"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            action=action
+        )
+
+        response = self._request_handler.post(url)
+
+        return response
+    
+    def _request_multiple_instances_of(self, resource_name: str):
+        url = API_ENDPOINTS[resource_name].format(
             radio_url=self._request_handler.radio_url,
             station_id=self.id
         )
 
-        response = self._request_handler.get(url)
+        return self._request_handler.get(url)
+    
+    def _request_single_instance_of(self, resource_name: str, resource_id: int):
+        if type(resource_id) is not int:
+            raise TypeError("id param should be of type int.")
+        
+        if resource_id < 0:
+            raise ValueError("id must be a non-negative number.")
+        
+        url = API_ENDPOINTS[resource_name].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=resource_id
+        )
+
+        return self._request_handler.get(url)
+
+    def requestable_songs(self) -> List[RequestableSong]:
+        response = self._request_multiple_instances_of("requestable_songs")
 
         return [RequestableSong(**rs) for rs in response]
     
@@ -70,12 +103,8 @@ class Station:
         self._request_handler.post(url)
 
     def status(self) -> StationStatus:
-        url = API_ENDPOINTS["station_status"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        # Had to make an exception here cuz it doesn't need an ID despite being a single instance
+        response = self._request_multiple_instances_of("station_status")
 
         return StationStatus(**response)
     
@@ -99,100 +128,47 @@ class Station:
 
         return response['message']
     
-    def _perform_service_action(self, action: str, service_type: str):
-        if action not in ['start', 'stop', 'restart']:
-            raise ValueError("action must be one of 'start', 'stop' or 'restart'")
-        
-        url = API_ENDPOINTS[f"{service_type}_action"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            action=action
-        )
-
-        response = self._request_handler.post(url)
-
-        return response
-    
     def history(self) -> List[SongHistory]:
-        url = API_ENDPOINTS["station_history"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        response = self._request_multiple_instances_of("station_history")
 
         return [SongHistory(**sh) for sh in response]
     
     def listeners(self) -> List[Listener]:
-        url = API_ENDPOINTS["station_listeners"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        response = self._request_multiple_instances_of("station_listeners")
 
         return [Listener(**l) for l in response]
     
     def schedule(self) -> List[ScheduleTime]:
-        url = API_ENDPOINTS["station_schedule"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        response = self._request_multiple_instances_of("station_schedule")
 
         return [ScheduleTime(**st) for st in response]
     
     def files(self) -> List[StationFile]:
-        url = API_ENDPOINTS["station_files"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        response = self._request_multiple_instances_of("station_files")
 
         return [StationFile(**sf) for sf in response]
     
-    def file(self, file_id: int) -> StationFile:
-        if type(file_id) is not int:
-            raise TypeError("file_id param should be of type int.")
-        
-        if file_id < 0:
-            raise ValueError("file_id must be a non-negative number.")
-        
-        url = API_ENDPOINTS["station_file"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=file_id
-        )
-
-        response = self._request_handler.get(url)
+    def file(self, id: int) -> StationFile:
+        response = self._request_single_instance_of("station_file", id)
 
         return StationFile(**response)
     
     def mount_points(self) -> List[MountPoint]:
-        url = API_ENDPOINTS["station_mount_points"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        response = self._request_handler.get(url)
+        response = self._request_multiple_instances_of("station_mount_points")
 
         return [MountPoint(**mp) for mp in response]
     
-    def mount_point(self, mount_point_id) -> MountPoint:
-        if type(mount_point_id) is not int:
-            raise TypeError("file_id param should be of type int.")
-        
-        if mount_point_id < 0:
-            raise ValueError("file_id must be a non-negative number.")
-        
-        url = API_ENDPOINTS["station_mount_point"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=mount_point_id
-        )
-
-        response = self._request_handler.get(url)
+    def mount_point(self, id) -> MountPoint:
+        response = self._request_single_instance_of("station_mount_point", id)
 
         return MountPoint(**response)
+    
+    def playlists(self) -> List[Playlist]:
+        response = self._request_multiple_instances_of("station_playlists")
+
+        return [Playlist(**p) for p in response]
+    
+    def playlist(self, id) -> Playlist:
+        response = self._request_single_instance_of("station_playlist", id)
+
+        return Playlist(**response)
