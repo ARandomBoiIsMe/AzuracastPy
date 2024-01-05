@@ -8,6 +8,7 @@ from AzuracastPy.models.schedule_time import ScheduleTime
 from AzuracastPy.models.listener import Listener
 from AzuracastPy.models.station_status import StationStatus
 from AzuracastPy.models.podcast import Podcast
+from AzuracastPy.models.podcast_episode import PodcastEpisode
 
 def return_fake_station_json(id: int):
     return {
@@ -300,3 +301,33 @@ def return_fake_podcast_json():
 
 def return_fake_podcast_instance():
     return Podcast(**return_fake_podcast_json())
+
+def return_fake_podcast_episode_json():
+    return {
+        "id": "XXXX",
+        "title": "XXXX",
+        "description": "XXXX",
+        "explicit": False,
+        "publish_at": 1704491460,
+        "has_media": True,
+        "media": {
+            "id": "XXXX",
+            "original_name": "XXXX",
+            "length": 0,
+            "length_text": "XXXX",
+            "path": "XXXX"
+        },
+        "has_custom_art": True,
+        "art": "XXXX",
+        "art_updated_at": 1704491337,
+        "links": {
+            "self": "XXXX",
+            "public": "XXXX",
+            "download": "XXXX",
+            "art": "XXXX",
+            "media": "XXXX"
+        }
+    }
+
+def return_fake_podcast_episode_instance():
+    return PodcastEpisode(**return_fake_podcast_episode_json())

@@ -177,7 +177,7 @@ class Station:
     def podcasts(self) -> List[Podcast]:
         response = self._request_multiple_instances_of("station_podcasts")
 
-        return [Podcast(**p, _request_handler=self._request_handler) for p in response]
+        return [Podcast(**p, station_id=self.id, _request_handler=self._request_handler) for p in response]
 
     # Can't use the _request_single_instance_of method here, cuz the ID is a string.
     # The function only works with integers.
@@ -194,4 +194,4 @@ class Station:
 
         response = self._request_handler.get(url)
 
-        return Podcast(**response, _request_handler=self._request_handler)
+        return Podcast(**response, station_id=self.id, _request_handler=self._request_handler)
