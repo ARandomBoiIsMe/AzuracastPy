@@ -10,6 +10,7 @@ from .schedule_time import ScheduleTime
 from .station_file import StationFile
 from .mount_point import MountPoint
 from .playlist import Playlist
+from .podcast import Podcast
 
 from AzuracastPy.endpoints import API_ENDPOINTS
 from AzuracastPy.request_handler import RequestHandler
@@ -172,3 +173,25 @@ class Station:
         response = self._request_single_instance_of("station_playlist", id)
 
         return Playlist(**response)
+    
+    def podcasts(self) -> List[Podcast]:
+        response = self._request_multiple_instances_of("station_podcasts")
+
+        return [Podcast(**p, _request_handler=self._request_handler) for p in response]
+
+    # Can't use the _request_single_instance_of method here, cuz the ID is a string.
+    # The function only works with integers.
+    # Bummer.
+    def podcast(self, id: str) -> Podcast:
+        if type(id) is not str:
+            raise TypeError("id param should be of type string.")
+        
+        url = API_ENDPOINTS["station_podcast"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=id
+        )
+
+        response = self._request_handler.get(url)
+
+        return Podcast(**response, _request_handler=self._request_handler)

@@ -6,6 +6,7 @@ from AzuracastPy.models.song_history import SongHistory
 from AzuracastPy.models.schedule_time import ScheduleTime
 from AzuracastPy.models.listener import Listener
 from AzuracastPy.models.station_status import StationStatus
+from AzuracastPy.models.podcast import Podcast
 
 import unittest
 from unittest import TestCase, mock
@@ -155,6 +156,34 @@ class TestStation(TestCase):
         result = self.station.status()
 
         self.assertIsInstance(result, StationStatus)
+
+    def test_podcast_invalid_type_raises_type_error(self):
+        incorrect_ids = [True, 2.0, 1]
+
+        for id in incorrect_ids:
+            with self.assertRaises(TypeError):
+                self.station.podcast(id)
+
+    def test_podcast_returns_podcast(self):
+        id = 'string-id'
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_podcast_json()
+        
+        result = self.station.podcast(id)
+
+        self.assertIsInstance(result, Podcast)
+
+    def test_podcasts_returns_list_of_podcast(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_podcast_json(),
+            fake_data_generator.return_fake_podcast_json(),
+            fake_data_generator.return_fake_podcast_json()
+        ]
+        
+        result = self.station.podcasts()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, Podcast)
 
     def test__perform_service_action_invalid_action_raises_value_error_exception(self):
         invalid_actions = ['RESTART', 'StOp', 'stArt']
