@@ -2,4 +2,4 @@ venv
 __pycache__
 meh.py
 *.egg-info
-randomassautolol.py
+setup.py
