@@ -2,7 +2,7 @@ class AzuracastException(Exception):
     """The base Azuracast Exception class that all other exceptions will extend"""
 
 class AzuracastAPIException(AzuracastException):
-    """The base Azuracast Exception class that all other exceptions will extend"""
+    """Indicates API errors"""
 
 class AccessDeniedException(AzuracastException):
     """Indicates unauthorized access to certain endpoints."""
