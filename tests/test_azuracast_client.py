@@ -4,9 +4,8 @@ import unittest
 from unittest import TestCase, mock
 
 from AzuracastPy import AzuracastClient
-from AzuracastPy.exceptions import (
-    AccessDeniedException, AzuracastAPIException, UnexpectedErrorException, ClientException
-)
+
+from .util import fake_data_generator
 
 class TestAzuracastClient(TestCase):
     def setUp(self) -> None:
@@ -25,46 +24,23 @@ class TestAzuracastClient(TestCase):
             self.client.station(-2)
 
     def test_station_returns_station(self):
-        self.client._request_handler.get.return_value = {
-            "id":1,"name":"my radio","shortcode":"my_radio","description":"","frontend":"icecast",
-            "backend":"liquidsoap","listen_url":"http://localhost:8000/radio.mp3","url":"",
-            "public_player_url":"http://localhost/public/my_radio","playlist_pls_url":"http://localhost/public/my_radio/playlist.pls",
-            "playlist_m3u_url":"http://localhost/public/my_radio/playlist.m3u","is_public":True,
-            "mounts":[{"id":1,"name":"/radio.mp3 (128kbps MP3)","url":"http://localhost:8000/radio.mp3",
-                       "bitrate":128,"format":"mp3","listeners":{"total":0,"unique":0,"current":0},
-                       "path":"/radio.mp3","is_default":True}],"remotes":[],"hls_enabled":False,
-            "hls_is_default":False,"hls_url":None,"hls_listeners":0}
+        id = 1
+        self.client._request_handler.get.return_value = fake_data_generator.return_fake_station_json(id)
         
-        result = self.client.station(1)
+        result = self.client.station(id)
+
         self.assertIsInstance(result, Station)
 
     def test_stations_returns_list_of_station(self):
         self.client._request_handler.get.return_value = [
-            {
-                "id":1,"name":"my radio","shortcode":"my_radio","description":"","frontend":"icecast",
-                "backend":"liquidsoap","listen_url":"http://localhost:8000/radio.mp3","url":"",
-                "public_player_url":"http://localhost/public/my_radio","playlist_pls_url":"http://localhost/public/my_radio/playlist.pls",
-                "playlist_m3u_url":"http://localhost/public/my_radio/playlist.m3u","is_public":True,
-                "mounts":[{"id":1,"name":"/radio.mp3 (128kbps MP3)","url":"http://localhost:8000/radio.mp3",
-                        "bitrate":128,"format":"mp3","listeners":{"total":0,"unique":0,"current":0},
-                        "path":"/radio.mp3","is_default":True}],"remotes":[],"hls_enabled":False,
-                "hls_is_default":False,"hls_url":None,"hls_listeners":0
-            },
-            {
-                "id":1,"name":"my radio","shortcode":"my_radio","description":"","frontend":"icecast",
-                "backend":"liquidsoap","listen_url":"http://localhost:8000/radio.mp3","url":"",
-                "public_player_url":"http://localhost/public/my_radio","playlist_pls_url":"http://localhost/public/my_radio/playlist.pls",
-                "playlist_m3u_url":"http://localhost/public/my_radio/playlist.m3u","is_public":True,
-                "mounts":[{"id":1,"name":"/radio.mp3 (128kbps MP3)","url":"http://localhost:8000/radio.mp3",
-                        "bitrate":128,"format":"mp3","listeners":{"total":0,"unique":0,"current":0},
-                        "path":"/radio.mp3","is_default":True}],"remotes":[],"hls_enabled":False,
-                "hls_is_default":False,"hls_url":None,"hls_listeners":0
-            }
+            fake_data_generator.return_fake_station_json(1),
+            fake_data_generator.return_fake_station_json(2),
+            fake_data_generator.return_fake_station_json(19)
         ]
         
         result = self.client.stations()
-        self.assertIsInstance(result, list)
 
+        self.assertIsInstance(result, list)
         for item in result:
             self.assertIsInstance(item, Station)
 
