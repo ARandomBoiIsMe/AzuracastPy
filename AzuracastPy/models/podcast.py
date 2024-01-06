@@ -2,7 +2,7 @@ from typing import List, Dict, Any
 
 from AzuracastPy.request_handler import RequestHandler
 
-from AzuracastPy.endpoints import API_ENDPOINTS
+from AzuracastPy.constants import API_ENDPOINTS
 
 from .podcast_episode import PodcastEpisode
 
@@ -69,7 +69,12 @@ class Podcast:
 
         response = self._request_handler.get(url)
 
-        return [PodcastEpisode(**pe) for pe in response]
+        params = {
+            "station_id": self.station_id,
+            "podcast_id": self.id
+        }
+
+        return [PodcastEpisode(**pe, params=params, _request_handler=self._request_handler) for pe in response]
     
     def podcast_episode(self, id: str) -> PodcastEpisode:
         if type(id) is not str:
@@ -84,4 +89,9 @@ class Podcast:
 
         response = self._request_handler.get(url)
 
-        return PodcastEpisode(**response)
+        params = {
+            "station_id": self.station_id,
+            "podcast_id": self.id
+        }
+
+        return PodcastEpisode(**response, params=params, _request_handler=self._request_handler)

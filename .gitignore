@@ -3,3 +3,4 @@ __pycache__
 meh.py
 *.egg-info
 setup.py
+random_auto.py

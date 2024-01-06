@@ -9,6 +9,11 @@ from AzuracastPy.models.listener import Listener
 from AzuracastPy.models.station_status import StationStatus
 from AzuracastPy.models.podcast import Podcast
 from AzuracastPy.models.podcast_episode import PodcastEpisode
+from AzuracastPy.models.queue_item import QueueItem
+from AzuracastPy.models.remote_relay import RemoteRelay
+from AzuracastPy.models.sftp_user import SFTPUser
+from AzuracastPy.models.streamer import Streamer
+from AzuracastPy.models.webhook import Webhook
 
 def return_fake_station_json(id: int):
     return {
@@ -331,3 +336,104 @@ def return_fake_podcast_episode_json():
 
 def return_fake_podcast_episode_instance():
     return PodcastEpisode(**return_fake_podcast_episode_json())
+
+def return_fake_queue_item_json():
+    return {
+        "cued_at": 1609480800,
+        "played_at": 1609480800,
+        "duration": 180,
+        "playlist": "XXXX",
+        "is_request": True,
+        "song": {
+            "id": "XXXX",
+            "text": "XXXX",
+            "artist": "XXXX",
+            "title": "XXXX",
+            "album": "XXXX",
+            "genre": "XXXX",
+            "isrc": "XXXX",
+            "lyrics": "",
+            "art": "XXXX",
+            "custom_fields": []
+        },
+        "links": [
+            "XXXX"
+        ],
+        "sent_to_autodj": True,
+        "is_played": True,
+        "autodj_custom_uri": "",
+        "log": [
+            "XXXX"
+        ]
+    }
+
+def return_fake_queue_item_instance():
+    return QueueItem(**return_fake_queue_item_json())
+
+def return_fake_remote_relay_json():
+    return {
+        "links": [],
+        "id": 0,
+        "display_name": "XXXX",
+        "is_visible_on_public_pages": True,
+        "type": "XXXX",
+        "is_editable": True,
+        "enable_autodj": False,
+        "autodj_format": "XXXX",
+        "autodj_bitrate": 128,
+        "custom_listen_url": "XXXX",
+        "url": "XXXX",
+        "mount": "XXXX",
+        "admin_password": "XXXX",
+        "source_port": 8000,
+        "source_mount": "XXXX",
+        "source_username": "XXXX",
+        "source_password": "XXXX",
+        "is_public": False,
+        "listeners_unique": 0,
+        "listeners_total": 0
+    }
+
+def return_fake_remote_relay_instance():
+    return RemoteRelay(**return_fake_remote_relay_json())
+
+def return_fake_sftp_user_json():
+    return {
+        "id": 0,
+        "username": "XXXX",
+        "password": "XXXX",
+        "publicKeys": "XXXX"
+    }
+
+def return_fake_sftp_user_instance():
+    return SFTPUser(**return_fake_sftp_user_json())
+
+def return_fake_streamer_json():
+    return {
+        "id": 0,
+        "streamer_username": "XXXX",
+        "streamer_password": "XXXX",
+        "display_name": "XXXX",
+        "comments": "XXXX",
+        "is_active": True,
+        "enforce_schedule": False,
+        "reactivate_at": 1609480800,
+        "schedule_items": []
+    }
+
+def return_fake_streamer_instance():
+    return Streamer(**return_fake_streamer_json())
+
+def return_fake_webhook_json():
+    return {
+        "id": 0,
+        "name": "XXXX",
+        "type": "XXXX",
+        "is_enabled": True,
+        "triggers": [],
+        "config": [],
+        "metadata": []
+    }
+
+def return_fake_webhook_instance():
+    return Webhook(**return_fake_webhook_json())

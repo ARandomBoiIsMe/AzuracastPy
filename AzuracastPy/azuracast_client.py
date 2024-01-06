@@ -3,7 +3,7 @@ from typing import Optional, List, Union
 from .models import Station
 
 from .request_handler import RequestHandler
-from .endpoints import API_ENDPOINTS
+from .constants import API_ENDPOINTS
 
 class AzuracastClient:
     # Docstring here

@@ -7,6 +7,11 @@ from AzuracastPy.models.schedule_time import ScheduleTime
 from AzuracastPy.models.listener import Listener
 from AzuracastPy.models.station_status import StationStatus
 from AzuracastPy.models.podcast import Podcast
+from AzuracastPy.models.queue_item import QueueItem
+from AzuracastPy.models.remote_relay import RemoteRelay
+from AzuracastPy.models.sftp_user import SFTPUser
+from AzuracastPy.models.streamer import Streamer
+from AzuracastPy.models.webhook import Webhook
 
 import unittest
 from unittest import TestCase, mock
@@ -184,6 +189,111 @@ class TestStation(TestCase):
         self.assertIsInstance(result, list)
         for item in result:
             self.assertIsInstance(item, Podcast)
+
+    def test_queue_item_returns_queue_item(self):
+        id = 1
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_queue_item_json()
+
+        result = self.station.queue_item(id)
+
+        self.assertIsInstance(result, QueueItem)
+
+    def test_queue_returns_list_of_queue_item(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_queue_item_json(),
+            fake_data_generator.return_fake_queue_item_json(),
+            fake_data_generator.return_fake_queue_item_json()
+        ]
+
+        result = self.station.queue()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, QueueItem)
+
+    def test_remote_relay_returns_remote_relay(self):
+        id = 1
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_remote_relay_json()
+
+        result = self.station.remote_relay(id)
+
+        self.assertIsInstance(result, RemoteRelay)
+
+    def test_remote_relays_returns_list_of_remote_relay(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_remote_relay_json(),
+            fake_data_generator.return_fake_remote_relay_json(),
+            fake_data_generator.return_fake_remote_relay_json()
+        ]
+
+        result = self.station.remote_relays()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, RemoteRelay)
+
+    def test_sftp_user_returns_sftp_user(self):
+        id = 1
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_sftp_user_json()
+
+        result = self.station.sftp_user(id)
+
+        self.assertIsInstance(result, SFTPUser)
+
+    def test_sftp_users_returns_list_of_sftp_user(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_sftp_user_json(),
+            fake_data_generator.return_fake_sftp_user_json(),
+            fake_data_generator.return_fake_sftp_user_json()
+        ]
+
+        result = self.station.sftp_users()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, SFTPUser)
+
+    def test_streamer_returns_streamer(self):
+        id = 1
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json()
+
+        result = self.station.streamer(id)
+
+        self.assertIsInstance(result, Streamer)
+
+    def test_streamers_returns_list_of_streamer(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_streamer_json(),
+            fake_data_generator.return_fake_streamer_json(),
+            fake_data_generator.return_fake_streamer_json()
+        ]
+
+        result = self.station.streamers()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, Streamer)
+
+    def test_webhook_returns_webhook(self):
+        id = 1
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json()
+
+        result = self.station.webhook(id)
+
+        self.assertIsInstance(result, Webhook)
+
+    def test_webhooks_returns_list_of_webhook(self):
+        self.station._request_handler.get.return_value = [
+            fake_data_generator.return_fake_webhook_json(),
+            fake_data_generator.return_fake_webhook_json(),
+            fake_data_generator.return_fake_webhook_json()
+        ]
+
+        result = self.station.webhooks()
+
+        self.assertIsInstance(result, list)
+        for item in result:
+            self.assertIsInstance(item, Webhook)
 
     def test__perform_service_action_invalid_action_raises_value_error_exception(self):
         invalid_actions = ['RESTART', 'StOp', 'stArt']
