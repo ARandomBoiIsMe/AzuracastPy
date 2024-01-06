@@ -208,6 +208,17 @@ class Station:
 
         return response['message']
     
+    def delete_file(self, id: int):
+        url = API_ENDPOINTS["station_file"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=id
+        )
+
+        response = self._request_handler.delete(url)
+
+        return response['message']
+    
     def mount_points(self) -> List[MountPoint]:
         response = self._request_multiple_instances_of("station_mount_points")
 
