@@ -171,6 +171,42 @@ class Station:
         response = self._request_single_instance_of("station_file", id)
 
         return StationFile(**response)
+
+    def edit_file(
+            self, id: int, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
+            genre: Optional[str] = None, album: Optional[str] = None, lyrics: Optional[str] = None,
+            isrc: Optional[str] = None, playlists: Optional[List[str]] = None, amplify: Optional[int] = None,
+            fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
+            cue_in: Optional[int] = None, cue_out: Optional[int] = None
+        ):
+        old_file = self.file(id)
+
+        url = API_ENDPOINTS["station_file"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=id
+        )
+
+        body = {
+            "artist": artist if artist else old_file.artist,
+            "title": title if title else old_file.title,
+            "album": album if album else old_file.album,
+            "genre": genre if genre else old_file.genre,
+            "lyrics": lyrics if lyrics else old_file.lyrics,
+            "path": path if path else old_file.path,
+            "isrc": isrc if isrc else old_file.isrc,
+            "amplify": amplify if amplify else old_file.amplify,
+            "fade_overlap": fade_overlap if fade_overlap else old_file.fade_overlap,
+            "fade_in": fade_in if fade_in else old_file.fade_in,
+            "fade_out": fade_out if fade_out else old_file.fade_out,
+            "cue_in": cue_in if cue_in else old_file.cue_in,
+            "cue_out": cue_out if cue_out else old_file.cue_out,
+            "playlists": playlists if playlists else old_file.playlists
+        }
+
+        response = self._request_handler.put(url, body)
+
+        return response['message']
     
     def mount_points(self) -> List[MountPoint]:
         response = self._request_multiple_instances_of("station_mount_points")
