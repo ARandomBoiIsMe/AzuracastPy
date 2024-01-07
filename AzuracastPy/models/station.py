@@ -175,17 +175,17 @@ class Station:
 
         response = self._request_handler.post(url, upload_body)
 
-        return StationFile(**response)
+        return StationFile(**response, station=self)
     
     def files(self) -> List[StationFile]:
         response = self._request_multiple_instances_of("station_files")
 
-        return [StationFile(**sf) for sf in response]
+        return [StationFile(**sf, station=self) for sf in response]
     
     def file(self, id: int) -> StationFile:
         response = self._request_single_instance_of("station_file", id)
 
-        return StationFile(**response)
+        return StationFile(**response, station=self)
 
     def edit_file(
             self, id: int, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
@@ -226,7 +226,7 @@ class Station:
     def delete_file(self, id: int):
         response = self._delete_single_instance_of("station_file", id)
 
-        return response['message']
+        return response
     
     def mount_points(self) -> List[MountPoint]:
         response = self._request_multiple_instances_of("station_mount_points")
