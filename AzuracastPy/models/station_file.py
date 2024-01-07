@@ -15,11 +15,11 @@ class Playlist:
 
 class StationFile:
     def __init__(
-            self, unique_id: str, album: str, genre: str, lyrics: str, isrc: str, length: float,
-            length_text: str, path: str, mtime: int, amplify, fade_overlap, fade_in, fade_out, cue_in,
-            cue_out, art_updated_at: int, playlists: List[Playlist], id: int, song_id: str, text: str,
-            artist: str, title: str, custom_fields: List[str], links: Links, station
-        ):
+        self, unique_id: str, album: str, genre: str, lyrics: str, isrc: str, length: float,
+        length_text: str, path: str, mtime: int, amplify, fade_overlap, fade_in, fade_out, cue_in,
+        cue_out, art_updated_at: int, playlists: List[Playlist], id: int, song_id: str, text: str,
+        artist: str, title: str, custom_fields: List[str], links: Links, _station
+    ):
         self.unique_id = unique_id
         self.album = album
         self.genre = genre
@@ -44,7 +44,7 @@ class StationFile:
         self.title = title
         self.custom_fields = custom_fields
         self.links = links
-        self.station = station
+        self._station = _station
 
     def __repr__(self):
         return (
@@ -56,13 +56,13 @@ class StationFile:
         )
     
     def edit(
-            self, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
-            genre: Optional[str] = None, album: Optional[str] = None, lyrics: Optional[str] = None,
-            isrc: Optional[str] = None, playlists: Optional[List[str]] = None, amplify: Optional[int] = None,
-            fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
-            cue_in: Optional[int] = None, cue_out: Optional[int] = None
-        ):
-        old_file = self.station.file(self.id)
+        self, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
+        genre: Optional[str] = None, album: Optional[str] = None, lyrics: Optional[str] = None,
+        isrc: Optional[str] = None, playlists: Optional[List[str]] = None, amplify: Optional[int] = None,
+        fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
+        cue_in: Optional[int] = None, cue_out: Optional[int] = None
+    ):
+        old_file = self._station.file(self.id)
 
         url = API_ENDPOINTS["station_file"].format(
             radio_url=self.station._request_handler.radio_url,
@@ -75,7 +75,7 @@ class StationFile:
             playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
         )
 
-        response = self.station._request_handler.put(url, body)
+        response = self._station._request_handler.put(url, body)
 
         if response['success'] is True:
             self._update_properties(
@@ -87,12 +87,12 @@ class StationFile:
     
     def delete(self):
         url = API_ENDPOINTS["station_file"].format(
-            radio_url=self.station._request_handler.radio_url,
+            radio_url=self._station._request_handler.radio_url,
             station_id=self.station.id,
             id=self.id
         )
 
-        response = self.station._request_handler.delete(url)
+        response = self._station._request_handler.delete(url)
 
         if response['success'] is True:
             self._clear_properties()
@@ -100,8 +100,8 @@ class StationFile:
         return response
 
     def _build_update_body(
-            self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
-            playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
+        self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
+        playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
     ):
         return {
             "artist": artist if artist else old_file.artist,

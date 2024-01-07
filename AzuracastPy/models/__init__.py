@@ -12,3 +12,5 @@ from .song_history import SongHistory
 from .station import Station
 from .station_file import StationFile
 from .station_status import StationStatus
+from .podcast import Podcast
+from .podcast_episode import PodcastEpisode

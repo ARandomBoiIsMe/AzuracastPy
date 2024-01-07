@@ -175,58 +175,17 @@ class Station:
 
         response = self._request_handler.post(url, upload_body)
 
-        return StationFile(**response, station=self)
+        return StationFile(**response, _station=self)
     
     def files(self) -> List[StationFile]:
         response = self._request_multiple_instances_of("station_files")
 
-        return [StationFile(**sf, station=self) for sf in response]
+        return [StationFile(**sf, _station=self) for sf in response]
     
     def file(self, id: int) -> StationFile:
         response = self._request_single_instance_of("station_file", id)
 
-        return StationFile(**response, station=self)
-
-    def edit_file(
-            self, id: int, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
-            genre: Optional[str] = None, album: Optional[str] = None, lyrics: Optional[str] = None,
-            isrc: Optional[str] = None, playlists: Optional[List[str]] = None, amplify: Optional[int] = None,
-            fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
-            cue_in: Optional[int] = None, cue_out: Optional[int] = None
-        ):
-        old_file = self.file(id)
-
-        url = API_ENDPOINTS["station_file"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=id
-        )
-
-        body = {
-            "artist": artist if artist else old_file.artist,
-            "title": title if title else old_file.title,
-            "album": album if album else old_file.album,
-            "genre": genre if genre else old_file.genre,
-            "lyrics": lyrics if lyrics else old_file.lyrics,
-            "path": path if path else old_file.path,
-            "isrc": isrc if isrc else old_file.isrc,
-            "amplify": amplify if amplify else old_file.amplify,
-            "fade_overlap": fade_overlap if fade_overlap else old_file.fade_overlap,
-            "fade_in": fade_in if fade_in else old_file.fade_in,
-            "fade_out": fade_out if fade_out else old_file.fade_out,
-            "cue_in": cue_in if cue_in else old_file.cue_in,
-            "cue_out": cue_out if cue_out else old_file.cue_out,
-            "playlists": playlists if playlists else old_file.playlists
-        }
-
-        response = self._request_handler.put(url, body)
-
-        return response['message']
-    
-    def delete_file(self, id: int):
-        response = self._delete_single_instance_of("station_file", id)
-
-        return response
+        return StationFile(**response, _station=self)
     
     def mount_points(self) -> List[MountPoint]:
         response = self._request_multiple_instances_of("station_mount_points")
@@ -269,64 +228,22 @@ class Station:
 
         response = self._request_handler.post(url, body)
 
-        return Playlist(**response)
+        return Playlist(**response, _station=self)
     
     def playlists(self) -> List[Playlist]:
         response = self._request_multiple_instances_of("station_playlists")
 
-        return [Playlist(**p) for p in response]
+        return [Playlist(**p, _station=self) for p in response]
     
     def playlist(self, id: int) -> Playlist:
         response = self._request_single_instance_of("station_playlist", id)
 
-        return Playlist(**response)
-    
-    def edit_playlist(
-            self, id: int, name: Optional[str] = None, type: Optional[str] = None, source: Optional[str] = None,
-            order: Optional[str] = None, remote_url: Optional[str] = None, remote_type: Optional[str] = None,
-            remote_buffer: Optional[int] = None, play_per_value: Optional[int] = None, weight: Optional[int] = None,
-            include_in_requests: Optional[bool] = None, include_in_on_demand: Optional[bool] = None,
-            avoid_duplicates: Optional[bool] = None, is_jingle: Optional[bool] = None
-        ):
-        old_playlist = self.playlist(id)
-
-        url = API_ENDPOINTS["station_playlist"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=id
-        )
-
-        body = {
-            "name": name if name else old_playlist.name,
-            "type": type if type else old_playlist.type,
-            "source": source if source else old_playlist.source,
-            "order": order if order else old_playlist.order,
-            "remote_url": remote_url if remote_url else old_playlist.remote_url,
-            "remote_type": remote_type if remote_type else old_playlist.remote_type,
-            "remote_buffer": remote_buffer if remote_buffer else old_playlist.remote_buffer,
-            "is_jingle": is_jingle if is_jingle is not None else old_playlist.is_jingle,
-            "play_per_songs": play_per_value if type == "once_per_x_songs" else old_playlist.play_per_songs,
-            "play_per_minutes": play_per_value if type == "once_per_x_minutes" else old_playlist.play_per_minutes,
-            "play_per_hour_minute": play_per_value if type == "once_per_hour" else old_playlist.play_per_hour_minute,
-            "weight": weight if weight is not None else old_playlist.weight,
-            "include_in_requests": include_in_requests if include_in_requests is not None else old_playlist.include_in_requests,
-            "include_in_on_demand": include_in_on_demand if include_in_on_demand is not None else old_playlist.include_in_on_demand,
-            "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else old_playlist.avoid_duplicates
-        }
-
-        response = self._request_handler.put(url, body)
-
-        return response['message']
-    
-    def delete_playlist(self, id: int):
-        response = self._delete_single_instance_of("station_playlist", id)
-
-        return response['message']
+        return Playlist(**response, _station=self)
     
     def add_podcast(
-            self, title: str, description: str, language: str, categories: Optional[List[str]] = None,
-            author: Optional[str] = None, email: Optional[str] = None, website: Optional[str] = None
-        ) -> Podcast:
+        self, title: str, description: str, language: str, categories: Optional[List[str]] = None,
+        author: Optional[str] = None, email: Optional[str] = None, website: Optional[str] = None
+    ) -> Podcast:
         url = API_ENDPOINTS["station_podcasts"].format(
             radio_url=self._request_handler.radio_url,
             station_id=self.id
@@ -348,12 +265,12 @@ class Station:
 
         response = self._request_handler.post(url, body)
 
-        return Podcast(**response)
+        return Podcast(**response, _station=self)
     
     def podcasts(self) -> List[Podcast]:
         response = self._request_multiple_instances_of("station_podcasts")
 
-        return [Podcast(**p, station_id=self.id, _request_handler=self._request_handler) for p in response]
+        return [Podcast(**p, _station=self) for p in response]
 
     # Can't use the _request_single_instance_of method here, cuz the ID is a string.
     # The function only works with integers.
@@ -370,7 +287,7 @@ class Station:
 
         response = self._request_handler.get(url)
 
-        return Podcast(**response, station_id=self.id, _request_handler=self._request_handler)
+        return Podcast(**response, _station=self)
     
     def edit_podcast(
         self, id: str, title: Optional[str] = None, description: Optional[str] = None, language: Optional[str] = None,
@@ -482,8 +399,3 @@ class Station:
         response = self._request_single_instance_of("station_webhook", id)
 
         return Webhook(**response)
-    
-    def delete_webhook(self, id: int):
-        response = self._delete_single_instance_of("station_webhook", id)
-
-        return response['message']

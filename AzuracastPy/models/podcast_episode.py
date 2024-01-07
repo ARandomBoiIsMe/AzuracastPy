@@ -1,6 +1,5 @@
 from typing import List, Dict, Any
 
-from AzuracastPy.request_handler import RequestHandler
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util import file_upload_util
 
@@ -34,10 +33,10 @@ class Media:
 
 class PodcastEpisode:
     def __init__(
-            self, id: str, title: str, description: str, explicit: bool, publish_at: int, has_media: bool,
-            media: Media, has_custom_art: bool, art: str, art_updated_at: int, links: Links,
-            params: Dict[str, Any] = None, _request_handler: RequestHandler = None
-        ):
+        self, id: str, title: str, description: str, explicit: bool, publish_at: int, has_media: bool,
+        media: Media, has_custom_art: bool, art: str, art_updated_at: int, links: Links,
+        _podcast
+    ):
         self.id = id
         self.title = title
         self.description = description
@@ -49,8 +48,7 @@ class PodcastEpisode:
         self.art = art
         self.art_updated_at = art_updated_at
         self.links = links
-        self.params = params
-        self._request_handler = _request_handler
+        self._podcast = _podcast
 
     def __repr__(self):
         return (
@@ -59,17 +57,3 @@ class PodcastEpisode:
             f"media={self.media!r}, has_custom_art={self.has_custom_art!r}, art={self.art!r}, "
             f"art_updated_at={self.art_updated_at!r}, links={self.links!r})"
         )
-    
-    def set_episode_art(self, path: str, file: str):
-        url = API_ENDPOINTS["podcast_episode_art"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.params['station_id'],
-            podcast_id=self.params['podcast_id'],
-            episode_id=self.id
-        )
-
-        body = file_upload_util.generate_file_upload_structure(path, file)
-
-        response = self._request_handler.post(url, body)
-
-        return response

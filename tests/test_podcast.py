@@ -1,4 +1,4 @@
-from AzuracastPy.models.podcast_episode import PodcastEpisode
+from AzuracastPy.models import PodcastEpisode
 
 import unittest
 from unittest import TestCase, mock
