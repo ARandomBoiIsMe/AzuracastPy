@@ -94,6 +94,21 @@ class Station:
         )
 
         return self._request_handler.get(url)
+    
+    def _delete_single_instance_of(self, resource_name: str, resource_id: int):
+        if type(resource_id) is not int:
+            raise TypeError("id param should be of type int.")
+        
+        if resource_id < 0:
+            raise ValueError("id must be a non-negative number.")
+        
+        url = API_ENDPOINTS[resource_name].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id,
+            id=resource_id
+        )
+
+        return self._request_handler.delete(url)
 
     def requestable_songs(self) -> List[RequestableSong]:
         response = self._request_multiple_instances_of("requestable_songs")
@@ -209,13 +224,7 @@ class Station:
         return response['message']
     
     def delete_file(self, id: int):
-        url = API_ENDPOINTS["station_file"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=id
-        )
-
-        response = self._request_handler.delete(url)
+        response = self._delete_single_instance_of("station_file", id)
 
         return response['message']
     
@@ -306,6 +315,11 @@ class Station:
         }
 
         response = self._request_handler.put(url, body)
+
+        return response['message']
+    
+    def delete_playlist(self, id: int):
+        response = self._delete_single_instance_of("station_playlist", id)
 
         return response['message']
     
@@ -408,10 +422,26 @@ class Station:
 
         return [QueueItem(**qi) for qi in response]
     
+    # Had to do this cuz the API doesn't support a GET request for a 
+    # single queue item. Throws a 405 error instead.
     def queue_item(self, id: int) -> QueueItem:
-        response = self._request_single_instance_of("station_queue_item", id)
+        queue_response = self._request_multiple_instances_of("station_queue")
 
-        return QueueItem(**response)
+        queue = [QueueItem(**qi) for qi in queue_response]
+
+        id = id - 1
+        if id < 0:
+            raise IndexError("Requested resource not found.")
+        
+        try:
+            return queue[id]
+        except IndexError:
+            raise IndexError("Requested resource not found.")
+
+    def delete_queue_item(self, id: int):
+        response = self._delete_single_instance_of("station_queue_item", id)
+
+        return response['message']
     
     def remote_relays(self) -> List[RemoteRelay]:
         response = self._request_multiple_instances_of("station_remote_relays")
@@ -452,3 +482,8 @@ class Station:
         response = self._request_single_instance_of("station_webhook", id)
 
         return Webhook(**response)
+    
+    def delete_webhook(self, id: int):
+        response = self._delete_single_instance_of("station_webhook", id)
+
+        return response['message']
