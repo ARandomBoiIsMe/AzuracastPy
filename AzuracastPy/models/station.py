@@ -334,12 +334,12 @@ class Station:
     def streamers(self) -> List[Streamer]:
         response = self._request_multiple_instances_of("station_streamers")
 
-        return [Streamer(**s) for s in response]
+        return [Streamer(**s, _station=self) for s in response]
     
     def streamer(self, id: int) -> Streamer:
         response = self._request_single_instance_of("station_streamer", id)
 
-        return Streamer(**response)
+        return Streamer(**response, _station=self)
     
     # Gives me an error about body properties being of wrong data type, even though they're all valid and the JSON body works in Postman?
     # TODO: Idk man. I'll look into it more later I guess.

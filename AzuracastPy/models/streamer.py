@@ -1,6 +1,8 @@
 from typing import List
 from datetime import datetime
 
+from AzuracastPy.constants import API_ENDPOINTS
+
 class Links:
     def __init__(self_, self: str, broadcasts: str, art: str):
         self_.self = self
@@ -32,10 +34,11 @@ class ScheduleItem:
 
 class Streamer:
     def __init__(
-            self, streamer_username: str, streamer_password: str, display_name: str, comments: str,
-            is_active: bool, enforce_schedule: bool, reactivate_at: int, art_updated_at: int,
-            schedule_items: List[ScheduleItem], id: int, links: Links, has_custom_art: bool, art: str
-        ):
+        self, streamer_username: str, streamer_password: str, display_name: str, comments: str,
+        is_active: bool, enforce_schedule: bool, reactivate_at: int, art_updated_at: int,
+        schedule_items: List[ScheduleItem], id: int, links: Links, has_custom_art: bool,
+        art: str, _station
+    ):
         self.streamer_username = streamer_username
         self.streamer_password = streamer_password
         self.display_name = display_name
@@ -49,6 +52,7 @@ class Streamer:
         self.links = links
         self.has_custom_art = has_custom_art
         self.art = art
+        self._station = _station
 
     def __repr__(self):
         return (
@@ -59,3 +63,33 @@ class Streamer:
             f"art_updated_at={self.art_updated_at!r}, schedule_items={self.schedule_items!r}, "
             f"links={self.links!r}, has_custom_art={self.has_custom_art!r}, art={self.art!r})"
         )
+    
+    def delete(self):
+        url = API_ENDPOINTS["station_streamer"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
+            id=self.id
+        )
+
+        response = self._station._request_handler.delete(url)
+
+        if response['success'] is True:
+            self._clear_properties()
+
+        return response
+    
+    def _clear_properties(self):
+        self.streamer_username = None
+        self.streamer_password = None
+        self.display_name = None
+        self.comments = None
+        self.is_active = None
+        self.enforce_schedule = None
+        self.reactivate_at = None
+        self.art_updated_at = None
+        self.schedule_items = None
+        self.id = None
+        self.links = None
+        self.has_custom_art = None
+        self.art = None
+        self._station = None
