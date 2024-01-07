@@ -52,3 +52,21 @@ class AzuracastClient:
         response = self._request_handler.get(url)
 
         return Station(**response, _request_handler=self._request_handler)
+    
+    def status(self):
+        url = API_ENDPOINTS["api_status"].format(
+            radio_url=self._request_handler.radio_url
+        )
+
+        response = self._request_handler.get(url)
+
+        return response
+
+    def time(self):
+        url = API_ENDPOINTS["time"].format(
+            radio_url=self._request_handler.radio_url
+        )
+
+        response = self._request_handler.get(url)
+
+        return response
