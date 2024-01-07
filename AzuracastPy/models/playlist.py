@@ -220,3 +220,4 @@ class Playlist:
         self.include_in_requests = None
         self.include_in_on_demand = None
         self.avoid_duplicates = None
+        self._station = None

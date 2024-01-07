@@ -289,62 +289,17 @@ class Station:
 
         return Podcast(**response, _station=self)
     
-    def edit_podcast(
-        self, id: str, title: Optional[str] = None, description: Optional[str] = None, language: Optional[str] = None,
-        categories: Optional[List[str]] = None, author: Optional[str] = None, email: Optional[str] = None,
-        website: Optional[str] = None
-    ):
-        old_podcast = self.podcast(id)
-
-        url = API_ENDPOINTS["station_podcast"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=id
-        )
-
-        if language is not None and len(language) > 2:
-            language = language.lower().replace(' ', '_')
-            language = general_util.get_language_code(language)
-
-        body = {
-            "title": title if title else old_podcast.title,
-            "description": description if description else old_podcast.description,
-            "language": language if language else old_podcast.language,
-            "author": author if author else old_podcast.author,
-            "email": email if email else old_podcast.email,
-            "link": website if website else old_podcast.link,
-            "categories": categories if categories else old_podcast.categories
-        }
-
-        response = self._request_handler.put(url, body)
-
-        return response['message']
-
-    def delete_podcast(self, id: str) -> str:
-        if type(id) is not str:
-            raise TypeError("id param should be of type string.")
-        
-        url = API_ENDPOINTS["station_podcast"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=id
-        )
-
-        response = self._request_handler.delete(url)
-
-        return response['message']
-    
     def queue(self) -> List[QueueItem]:
         response = self._request_multiple_instances_of("station_queue")
 
-        return [QueueItem(**qi) for qi in response]
+        return [QueueItem(**qi, _station=self) for qi in response]
     
     # Had to do this cuz the API doesn't support a GET request for a 
     # single queue item. Throws a 405 error instead.
     def queue_item(self, id: int) -> QueueItem:
         queue_response = self._request_multiple_instances_of("station_queue")
 
-        queue = [QueueItem(**qi) for qi in queue_response]
+        queue = [QueueItem(**qi, _station=self) for qi in queue_response]
 
         id = id - 1
         if id < 0:
@@ -354,11 +309,6 @@ class Station:
             return queue[id]
         except IndexError:
             raise IndexError("Requested resource not found.")
-
-    def delete_queue_item(self, id: int):
-        response = self._delete_single_instance_of("station_queue_item", id)
-
-        return response['message']
     
     def remote_relays(self) -> List[RemoteRelay]:
         response = self._request_multiple_instances_of("station_remote_relays")

@@ -134,6 +134,7 @@ class Podcast:
         self.email = None
         self.link = None
         self.categories = None
+        self._station = None
 
     def podcast_episodes(self) -> List[PodcastEpisode]:
         url = API_ENDPOINTS["podcast_episodes"].format(
