@@ -374,14 +374,14 @@ class Station:
 
         response = self._request_handler.post(url, body)
 
-        return Webhook(**response)
+        return Webhook(**response, _station=self)
 
     def webhooks(self) -> List[Webhook]:
         response = self._request_multiple_instances_of("station_webhooks")
 
-        return [Webhook(**s) for s in response]
+        return [Webhook(**s, _station=self) for s in response]
     
     def webhook(self, id: int) -> Webhook:
         response = self._request_single_instance_of("station_webhook", id)
 
-        return Webhook(**response)
+        return Webhook(**response, _station=self)
