@@ -17,18 +17,19 @@ from .sftp_user import SFTPUser
 from .streamer import Streamer
 from .webhook import Webhook
 
-from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.constants import API_ENDPOINTS, WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
 from AzuracastPy.request_handler import RequestHandler
 from AzuracastPy.util import file_upload_util, general_util
+from AzuracastPy.exceptions import ClientException
 
 class Station:
     def __init__(
-            self, id: str, name: str, shortcode: str, description: str, frontend: str, backend: str,
-            listen_url: str, url: str, public_player_url: str, is_public: bool, hls_enabled: bool,
-            hls_listeners: int, mounts: List[Mount], remotes: List[Remote], hls_is_default: bool = None,
-            playlist_pls_url: Optional[str] = None, playlist_m3u_url: Optional[str] = None,
-            hls_url: Optional[str] = None, _request_handler: RequestHandler = None
-        ):
+        self, id: str, name: str, shortcode: str, description: str, frontend: str, backend: str,
+        listen_url: str, url: str, public_player_url: str, is_public: bool, hls_enabled: bool,
+        hls_listeners: int, mounts: List[Mount], remotes: List[Remote], hls_is_default: bool = None,
+        playlist_pls_url: Optional[str] = None, playlist_m3u_url: Optional[str] = None,
+        hls_url: Optional[str] = None, _request_handler: RequestHandler = None
+    ):
         self.id = id
         self.name = name
         self.shortcode = shortcode
@@ -198,11 +199,11 @@ class Station:
         return MountPoint(**response)
     
     def add_playlist(
-            self, name: str, type: str = "default", source: str = "songs", order: str = "shuffle",
-            remote_url: Optional[str] = None, remote_type: str = "stream", remote_buffer: int = 0,
-            play_per_value: int = 0, weight: int = 3, include_in_requests: bool = True, 
-            include_in_on_demand: bool = False, avoid_duplicates: bool = True, is_jingle: bool = False
-        ):
+        self, name: str, type: str = "default", source: str = "songs", order: str = "shuffle",
+        remote_url: Optional[str] = None, remote_type: str = "stream", remote_buffer: int = 0,
+        play_per_value: int = 0, weight: int = 3, include_in_requests: bool = True, 
+        include_in_on_demand: bool = False, avoid_duplicates: bool = True, is_jingle: bool = False
+    ):
         url = API_ENDPOINTS["station_playlists"].format(
             radio_url=self._request_handler.radio_url,
             station_id=self.id
@@ -340,6 +341,41 @@ class Station:
 
         return Streamer(**response)
     
+    # Gives me an error about body properties being of wrong data type, even though they're all valid and the JSON body works in Postman?
+    # TODO: Idk man. I'll look into it more later I guess.
+    def add_webhook(
+        self, name: str, type: str, config: Dict[str, Any], triggers: Optional[List[str]] = None 
+    ):
+        valid_types = set(WEBHOOK_CONFIG_TEMPLATES.keys())
+        if type not in valid_types:
+            message = f"type param must be one of {', '.join(valid_types)}"
+            raise ClientException(message)
+        
+        if triggers is not None:
+            if not all(trigger in WEBHOOK_TRIGGERS for trigger in set(triggers)):
+                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
+                raise ClientException(message)
+        
+        if not all(key in WEBHOOK_CONFIG_TEMPLATES[type] for key in config):
+            message = f"The provided 'config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
+            raise ClientException(message)
+        
+        url = API_ENDPOINTS["station_webhooks"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+        
+        body = {
+            "name": name,
+            "type": type,
+            "triggers": triggers if triggers else [],
+            "config": config
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return Webhook(**response)
+
     def webhooks(self) -> List[Webhook]:
         response = self._request_multiple_instances_of("station_webhooks")
 

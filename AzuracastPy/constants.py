@@ -406,3 +406,37 @@ LANGUAGES = {
     "zulu": "zu"
 }
 # ----------------------
+
+# Configuration templates for webhooks
+# --------------------------
+WEBHOOK_CONFIG_TEMPLATES = {
+    'generic': ["webhook_url", "basic_auth_username", "basic_auth_password", "timeout"],
+    'email': ["to", "subject", "message"],
+    'discord': ["webhook_url", "content", "title", "description", "url", "author", "thumbnail", "footer"],
+    'telegram': ["bot_token", "chat_id", "api", "text", "parse_mode"],
+    'mastodon': [
+        "instance_url", "access_token", "visibility", "rate_limit",
+        "message", "message_song_changed_live", "message_live_connect",
+        "message_live_disconnect", "message_station_offline", "message_station_online"
+    ],
+    'tunein': ["station_id", "partner_id", "partner_key"],
+    'radiode': ["broadcastsubdomain", "apikey"],
+    'getmeradio': ["token", "station_id"],
+    'google_analytics_v4': ["api_secret", "measurement_id"],
+    'matomo_analytics': ["matomo_url", "site_id", "token"],
+}
+# ---------------------------
+
+# Triggers for webhooks
+# ---------------------
+WEBHOOK_TRIGGERS = [
+    "song_changed",
+    "song_changed_live",
+    "station_online",
+    "station_offline",
+    "live_disconnect",
+    "live_connect",
+    "listener_lost",
+    "listener_gained"
+]
+# ---------------------
