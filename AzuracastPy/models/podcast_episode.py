@@ -98,9 +98,6 @@ class PodcastEpisode:
 
         return response
 
-    def get_art(self):
-        return self._podcast._station._request_handler.get(self.art)
-
     def _build_update_body(
         self, old_episode: "PodcastEpisode", title, description, explicit
     ):
