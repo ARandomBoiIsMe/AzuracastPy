@@ -65,8 +65,8 @@ class StationFile:
         old_file = self._station.file(self.id)
 
         url = API_ENDPOINTS["station_file"].format(
-            radio_url=self.station._request_handler.radio_url,
-            station_id=self.station.id,
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
             id=self.id
         )
 
@@ -121,9 +121,9 @@ class StationFile:
         }
     
     def _update_properties(
-            self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
-            playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
-        ):
+        self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
+        playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
+    ):
         self.album = album if album else old_file.album
         self.genre = genre if genre else old_file.genre
         self.lyrics = lyrics if lyrics else old_file.lyrics

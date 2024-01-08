@@ -166,6 +166,24 @@ class Station:
 
         return [ScheduleTime(**st) for st in response]
     
+    def update_fallback(self, path: str, file: str):
+        url = API_ENDPOINTS["station_fallback"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        upload_body = file_upload_util.generate_file_upload_structure(path, file)
+
+        response = self._request_handler.post(url, upload_body)
+
+        return response
+
+    def fallback(self):
+        # Request requires no ID, so I shall use this function
+        response = self._request_multiple_instances_of("station_fallback")
+
+        return response
+    
     def upload_file(self, path: str, file: str) -> StationFile:
         url = API_ENDPOINTS["station_files"].format(
             radio_url=self._request_handler.radio_url,
@@ -330,6 +348,28 @@ class Station:
         response = self._request_single_instance_of("station_sftp_user", id)
 
         return SFTPUser(**response)
+    
+    def add_streamer(
+        self, streamer_username: str, streamer_password: str, display_name: Optional[str] = None,
+        comments: Optional[str] = None, is_active: bool = True, enforce_schedule: bool = False
+    ):
+        url = API_ENDPOINTS["station_streamers"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        body = {
+            "streamer_username": streamer_username,
+            "streamer_password": streamer_password,
+            "display_name": display_name if display_name else "",
+            "comments": comments if comments else "",
+            "is_active": is_active,
+            "enforce_schedule": enforce_schedule
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return Streamer(**response, _station=self)
     
     def streamers(self) -> List[Streamer]:
         response = self._request_multiple_instances_of("station_streamers")
