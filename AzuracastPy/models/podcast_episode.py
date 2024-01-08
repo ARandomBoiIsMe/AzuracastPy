@@ -1,4 +1,4 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util import file_upload_util
@@ -57,3 +57,76 @@ class PodcastEpisode:
             f"media={self.media!r}, has_custom_art={self.has_custom_art!r}, art={self.art!r}, "
             f"art_updated_at={self.art_updated_at!r}, links={self.links!r})"
         )
+    
+    def edit(
+        self, title: Optional[str] = None, description: Optional[str] = None, explicit: Optional[bool] = None
+    ):
+        old_episode = self._podcast.get_episode(self.id)
+
+        url = API_ENDPOINTS["podcast_episode"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            podcast_id=self._podcast.id,
+            id=self.id
+        )
+
+        body = self._build_update_body(
+            old_episode, title, description, explicit
+        )
+
+        response = self._podcast._station._request_handler.put(url, body)
+
+        if response['success'] is True:
+            self._update_properties(
+                old_episode, title, description, explicit
+            )
+
+        return response
+
+    def delete(self):
+        url = API_ENDPOINTS["podcast_episode"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            podcast_id=self._podcast.id,
+            id=self.id
+        )
+
+        response = self._podcast._station._request_handler.delete(url)
+
+        if response['success'] is True:
+            self._clear_properties()
+
+        return response
+
+    def get_art(self):
+        return self._podcast._station._request_handler.get(self.art)
+
+    def _build_update_body(
+        self, old_episode: "PodcastEpisode", title, description, explicit
+    ):
+        return {
+            "title": title if title else old_episode.title,
+            "description": description if description else old_episode.description,
+            "explicit": explicit if explicit else old_episode.explicit
+        }
+    
+    def _update_properties(
+        self, old_episode: "PodcastEpisode", title, description, explicit
+    ):
+        self.title = title if title else old_episode.title
+        self.description = description if description else old_episode.description
+        self.explicit = explicit if explicit else old_episode.explicit
+
+    def _clear_properties(self):
+        self.id = None
+        self.title = None
+        self.description = None
+        self.explicit = None
+        self.publish_at = None
+        self.has_media = None
+        self.media = None
+        self.has_custom_art = None
+        self.art = None
+        self.art_updated_at = None
+        self.links = None
+        self._podcast = None

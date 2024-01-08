@@ -136,28 +136,48 @@ class Podcast:
         self.categories = None
         self._station = None
 
-    def podcast_episodes(self) -> List[PodcastEpisode]:
-        url = API_ENDPOINTS["podcast_episodes"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.station_id,
+    def add_episode(
+        self, title: str, description: str, explicit: bool = False, publish_date: Optional[str] = None,
+        publish_time: Optional[str] = None
+    ):
+        url = url = API_ENDPOINTS["podcast_episodes"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
             podcast_id=self.id
         )
 
-        response = self._request_handler.get(url)
+        body = {
+            "title": title,
+            "description": description,
+            "explicit": explicit
+        }
+
+        response = self._station._request_handler.post(url, body)
+
+        return PodcastEpisode(**response, _podcast=self)
+
+    def get_episodes(self) -> List[PodcastEpisode]:
+        url = API_ENDPOINTS["podcast_episodes"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
+            podcast_id=self.id
+        )
+
+        response = self._station._request_handler.get(url)
 
         return [PodcastEpisode(**pe, _podcast=self) for pe in response]
     
-    def podcast_episode(self, id: str) -> PodcastEpisode:
+    def get_episode(self, id: str) -> PodcastEpisode:
         if type(id) is not str:
             raise TypeError("id param should be of type string.")
         
         url = API_ENDPOINTS["podcast_episode"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.station_id,
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
             podcast_id=self.id,
             id=id
         )
 
-        response = self._request_handler.get(url)
+        response = self._station._request_handler.get(url)
 
         return PodcastEpisode(**response, _podcast=self)
