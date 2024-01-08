@@ -346,7 +346,7 @@ class Station:
     def add_webhook(
         self, name: str, type: str, config: Dict[str, Any], triggers: Optional[List[str]] = None 
     ):
-        valid_types = set(WEBHOOK_CONFIG_TEMPLATES.keys())
+        valid_types = WEBHOOK_CONFIG_TEMPLATES.keys()
         if type not in valid_types:
             message = f"type param must be one of {', '.join(valid_types)}"
             raise ClientException(message)

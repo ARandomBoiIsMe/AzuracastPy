@@ -1,6 +1,6 @@
 from typing import Optional, List, Union
 
-from .models import Station
+from .models import Station, NowPlaying
 
 from .request_handler import RequestHandler
 from .constants import API_ENDPOINTS
@@ -17,6 +17,41 @@ class AzuracastClient:
         """
         # TODO: Handle lack of url and x_api_key here. Soon.
         self._request_handler = RequestHandler(radio_url=radio_url, x_api_key=x_api_key)
+
+    def _build_now_playing_url(self, station_id: Optional[int] = None):
+        if station_id is None:
+            return API_ENDPOINTS["all_now_playing"].format(radio_url=self._request_handler.radio_url)
+
+        if type(station_id) is not int:
+            raise TypeError("station_id must be an integer.")
+        
+        if station_id < 0:
+            raise ValueError("station_id must be a non-negative number.")
+        
+        return API_ENDPOINTS["station_now_playing"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=station_id
+        )
+
+    def now_playing(self, station_id: Optional[int] = None) -> Union[List[NowPlaying], NowPlaying]:
+        """
+        Retrieves now playing information for a specific station or all stations.
+        Constructs and returns a list of :class:`NowPlaying` instances, or a single :class:`NowPlaying` instance. 
+
+        :param station_id: (Optional) The ID of the station to retrieve data for. If None, retrieves data for all stations.
+        """
+        url = self._build_now_playing_url(station_id)
+
+        response = self._request_handler.get(url)
+
+        if station_id is not None:
+            # It returns the entire now_playing list when an invalid ID is passed, apparently
+            if isinstance(response, list):
+                return [NowPlaying(**data) for data in response]
+            
+            return NowPlaying(**response)
+        
+        return [NowPlaying(**data) for data in response]
 
     def stations(self) -> List[Station]:
         """
