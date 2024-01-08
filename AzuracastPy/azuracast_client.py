@@ -105,3 +105,12 @@ class AzuracastClient:
         response = self._request_handler.get(url)
 
         return response
+    
+    def cpu_stats(self):
+        url = API_ENDPOINTS["cpu_stats"].format(
+            radio_url=self._request_handler.radio_url
+        )
+
+        response = self._request_handler.get(url)
+
+        return response
