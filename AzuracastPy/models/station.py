@@ -339,15 +339,31 @@ class Station:
 
         return RemoteRelay(**response)
     
+    def add_sftp_user(self, username: str, password: str, public_keys: Optional[str] = None):
+        url = API_ENDPOINTS["station_sftp_users"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        body = {
+            "username": username,
+            "password": password,
+            "publicKeys": public_keys if public_keys else ""
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return SFTPUser(**response, _station=self)
+
     def sftp_users(self) -> List[SFTPUser]:
         response = self._request_multiple_instances_of("station_sftp_users")
 
-        return [SFTPUser(**su) for su in response]
+        return [SFTPUser(**su, _station=self) for su in response]
     
     def sftp_user(self, id: int) -> SFTPUser:
         response = self._request_single_instance_of("station_sftp_user", id)
 
-        return SFTPUser(**response)
+        return SFTPUser(**response, _station=self)
     
     def add_streamer(
         self, streamer_username: str, streamer_password: str, display_name: Optional[str] = None,
