@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 from AzuracastPy.constants import API_ENDPOINTS
 
 class Links:
-    def __init__(self_, self, toggle, test):
+    def __init__(self_, self: str, toggle: str, test: str):
         self_.self = self
         self_.toggle = toggle
         self_.test = test

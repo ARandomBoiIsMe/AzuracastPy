@@ -440,3 +440,10 @@ WEBHOOK_TRIGGERS = [
     "listener_gained"
 ]
 # ---------------------
+
+# Formats for HLS (HTTP Live Streams)
+# ---------------------
+HLS_FORMATS = [
+    'mp3', 'ogg', 'aac', 'opus', 'flac'
+]
+# ---------------------

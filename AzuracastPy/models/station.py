@@ -16,8 +16,14 @@ from .remote_relay import RemoteRelay
 from .sftp_user import SFTPUser
 from .streamer import Streamer
 from .webhook import Webhook
+from .hls_stream import HLSStream
 
-from AzuracastPy.constants import API_ENDPOINTS, WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
+from AzuracastPy.constants import (
+    API_ENDPOINTS,
+    WEBHOOK_CONFIG_TEMPLATES,
+    WEBHOOK_TRIGGERS,
+    HLS_FORMATS
+)
 from AzuracastPy.request_handler import RequestHandler
 from AzuracastPy.util import file_upload_util, general_util
 from AzuracastPy.exceptions import ClientException
@@ -365,10 +371,39 @@ class Station:
 
         return SFTPUser(**response, _station=self)
     
+    def add_hls_stream(self, name: str, format: str = "aac") -> HLSStream:
+        if format not in HLS_FORMATS:
+            message = f"format param must be one of {', '.join(HLS_FORMATS)}"
+            raise ClientException(message)
+
+        url = API_ENDPOINTS['hls_streams'].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        body = {
+            "name": name,
+            "format": format
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return HLSStream(**response, _station=self)
+
+    def hls_streams(self) -> List[HLSStream]:
+        response = self._request_multiple_instances_of("hls_streams")
+
+        return [HLSStream(**hs, _station=self) for hs in response]
+    
+    def hls_stream(self, id: int) -> HLSStream:
+        response = self._request_single_instance_of("hls_stream", id)
+
+        return HLSStream(**response, _station=self)
+    
     def add_streamer(
         self, streamer_username: str, streamer_password: str, display_name: Optional[str] = None,
         comments: Optional[str] = None, is_active: bool = True, enforce_schedule: bool = False
-    ):
+    ) -> Streamer:
         url = API_ENDPOINTS["station_streamers"].format(
             radio_url=self._request_handler.radio_url,
             station_id=self.id
@@ -401,7 +436,7 @@ class Station:
     # TODO: Idk man. I'll look into it more later I guess.
     def add_webhook(
         self, name: str, type: str, config: Dict[str, Any], triggers: Optional[List[str]] = None 
-    ):
+    ) -> Webhook:
         valid_types = WEBHOOK_CONFIG_TEMPLATES.keys()
         if type not in valid_types:
             message = f"type param must be one of {', '.join(valid_types)}"
