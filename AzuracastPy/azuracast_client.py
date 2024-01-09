@@ -45,7 +45,7 @@ class AzuracastClient:
         response = self._request_handler.get(url)
 
         if station_id is not None:
-            # It returns the entire now_playing list when an invalid ID is passed, apparently
+            # The entire now_playing list is returned when an invalid station ID is passed.
             if isinstance(response, list):
                 return [NowPlaying(**data) for data in response]
             
