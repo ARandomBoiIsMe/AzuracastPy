@@ -101,21 +101,6 @@ class Station:
         )
 
         return self._request_handler.get(url)
-    
-    def _delete_single_instance_of(self, resource_name: str, resource_id: int):
-        if type(resource_id) is not int:
-            raise TypeError("id param should be of type int.")
-        
-        if resource_id < 0:
-            raise ValueError("id must be a non-negative number.")
-        
-        url = API_ENDPOINTS[resource_name].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id,
-            id=resource_id
-        )
-
-        return self._request_handler.delete(url)
 
     def requestable_songs(self) -> List[RequestableSong]:
         response = self._request_multiple_instances_of("requestable_songs")
@@ -432,8 +417,6 @@ class Station:
 
         return Streamer(**response, _station=self)
     
-    # Gives me an error about body properties being of wrong data type, even though they're all valid and the JSON body works in Postman?
-    # TODO: Idk man. I'll look into it more later I guess.
     def add_webhook(
         self, name: str, type: str, config: Dict[str, Any], triggers: Optional[List[str]] = None 
     ) -> Webhook:
@@ -463,7 +446,7 @@ class Station:
             "config": config
         }
 
-        response = self._request_handler.post(url, body)
+        response = self._request_handler.post(url=url, body=body)
 
         return Webhook(**response, _station=self)
 

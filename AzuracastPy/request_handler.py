@@ -33,8 +33,8 @@ class RequestHandler:
     # This behaviour seems to be random. As a result, on top of the normal error logic, I added logic to check for these occurences,
     # just incase. Better safe than sorry I guess.
     # -----------------------------------
-    def _send_request(self, method: str, url: str, body: Optional[str] = None) -> Dict[str, Any]:
-        with requests.request(method=method, url=url, data=body, headers=self._headers) as response:
+    def _send_request(self, method: str, url: str, body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        with requests.request(method=method, url=url, json=body, headers=self._headers) as response:
             if response.status_code == 500:
                 self._handle_500_error(url=url, response=response)
 
