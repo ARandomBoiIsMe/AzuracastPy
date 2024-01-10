@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util import general_util
+from AzuracastPy.util.general_util import generate_repr_string
 
 from .podcast_episode import PodcastEpisode
 
@@ -18,13 +19,8 @@ class Links:
         self_.episode_new_art = episode_new_art
         self_.episode_new_media = episode_new_media
 
-    def __repr__(self_):
-        return (
-            f"Links(self={self_.self!r}, episodes={self_.episodes!r}, "
-            f"public_episodes={self_.public_episodes!r}, public_feed={self_.public_feed!r}, "
-            f"art={self_.art!r}, episode_new_art={self_.episode_new_art!r}, "
-            f"episode_new_media={self_.episode_new_media!r})"
-        )
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class Podcast:
     def __init__(
@@ -49,14 +45,7 @@ class Podcast:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"Podcast(id={self.id!r}, storage_location_id={self.storage_location_id!r}, "
-            f"title={self.title!r}, link={self.link!r}, description={self.description!r}, "
-            f"language={self.language!r}, author={self.author!r}, email={self.email!r}, "
-            f"has_custom_art={self.has_custom_art!r}, art={self.art!r}, "
-            f"art_updated_at={self.art_updated_at!r}, categories={self.categories!r}, "
-            f"episodes={self.episodes!r}, links={self.links!r})"
-        )
+        return generate_repr_string(self)
     
     def edit(
         self, title: Optional[str] = None, description: Optional[str] = None, language: Optional[str] = None,

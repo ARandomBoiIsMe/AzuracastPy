@@ -1,5 +1,7 @@
 from typing import List
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class RemoteRelay:
     def __init__(
             self, links: List[str], id: int, display_name: str, is_visible_on_public_pages: bool,
@@ -30,14 +32,4 @@ class RemoteRelay:
         self.listeners_total = listeners_total
 
     def __repr__(self):
-        return (
-            f"RemoteRelay(links={self.links!r}, id={self.id!r}, display_name={self.display_name!r}, "
-            f"is_visible_on_public_pages={self.is_visible_on_public_pages}, type={self.type!r}, "
-            f"is_editable={self.is_editable}, enable_autodj={self.enable_autodj}, "
-            f"autodj_format={self.autodj_format!r}, autodj_bitrate={self.autodj_bitrate!r}, "
-            f"custom_listen_url={self.custom_listen_url!r}, url={self.url!r}, mount={self.mount!r}, "
-            f"admin_password={self.admin_password!r}, source_port={self.source_port!r}, "
-            f"source_mount={self.source_mount!r}, source_username={self.source_username!r}, "
-            f"source_password={self.source_password!r}, is_public={self.is_public}, "
-            f"listeners_unique={self.listeners_unique!r}, listeners_total={self.listeners_total!r})"
-        )
+        return generate_repr_string(self)

@@ -1,3 +1,5 @@
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Device:
     def __init__(
             self, client: str, is_browser: bool, is_mobile: bool, is_bot: bool, browser_family: str,
@@ -11,10 +13,7 @@ class Device:
         self.os_family = os_family
 
     def __repr__(self):
-        return (
-            f"Device(client={self.client!r}, is_browser={self.is_browser}, is_mobile={self.is_mobile}, "
-            f"is_bot={self.is_bot}, browser_family={self.browser_family!r}, os_family={self.os_family!r})"
-        )
+        return generate_repr_string(self)
 
 class Location:
     def __init__(self, description: str, region: str, city: str, country: str, lat, lon):
@@ -26,10 +25,7 @@ class Location:
         self.lon = lon
 
     def __repr__(self):
-        return (
-            f"Location(description={self.description!r}, region={self.region!r}, city={self.city!r}, "
-            f"country={self.country!r}, lat={self.lat}, lon={self.lon})"
-        )
+        return generate_repr_string(self)
 
 class Listener:
     def __init__(
@@ -49,9 +45,4 @@ class Listener:
         self.location = location
 
     def __repr__(self):
-        return (
-            f"Listener(ip={self.ip!r}, user_agent={self.user_agent!r}, hash={self.hash!r}, "
-            f"mount_is_local={self.mount_is_local}, mount_name={self.mount_name!r}, "
-            f"connected_on={self.connected_on}, connected_until={self.connected_until}, "
-            f"connected_time={self.connected_time}, device={self.device!r}, location={self.location!r})"
-        )
+        return generate_repr_string(self)

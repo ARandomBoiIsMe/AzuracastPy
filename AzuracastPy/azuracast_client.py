@@ -1,6 +1,7 @@
 from typing import Optional, List, Union
 
 from .models import Station, NowPlaying
+from .models.admin.admin import Admin
 
 from .request_handler import RequestHandler
 from .constants import API_ENDPOINTS
@@ -32,7 +33,10 @@ class AzuracastClient:
             radio_url=self._request_handler.radio_url,
             station_id=station_id
         )
-
+    
+    def admin(self) -> Admin:
+        return Admin(_request_handler=self._request_handler)
+    
     def now_playing(self, station_id: Optional[int] = None) -> Union[List[NowPlaying], NowPlaying]:
         """
         Retrieves now playing information for a specific station or all stations.
@@ -64,7 +68,7 @@ class AzuracastClient:
 
         response = self._request_handler.get(url)
 
-        return [Station(**station, _request_handler=self._request_handler) for station in response]
+        return [Station(**s, _request_handler=self._request_handler) for s in response]
 
     def station(self, id: int) -> Station:
         """

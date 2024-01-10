@@ -5,6 +5,8 @@ from .song_history import SongHistory
 
 from typing import List
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Live:
     def __init__(self, is_live: bool, streamer_name: str, broadcast_start, art: str):
         self.is_live = is_live
@@ -13,10 +15,7 @@ class Live:
         self.art = art
 
     def __repr__(self):
-        return (
-            f"Live(is_live={self.is_live!r}, streamer_name={self.streamer_name!r}, "
-            f"broadcast_start={self.broadcast_start!r}, art={self.art!r})"
-        )
+        return generate_repr_string(self)
 
 class CurrentSong:
     def __init__(
@@ -34,12 +33,7 @@ class CurrentSong:
         self.remaining = remaining
 
     def __repr__(self):
-        return (
-            f"CurrentSong(sh_id={self.sh_id!r}, played_at={self.played_at!r}, "
-            f"duration={self.duration!r}, playlist={self.playlist!r}, streamer={self.streamer!r}, "
-            f"is_request={self.is_request!r}, song={self.song!r}, elapsed={self.elapsed!r}, "
-            f"remaining={self.remaining!r})"
-        )
+        return generate_repr_string(self)
 
 class PlayingNext:
     def __init__(
@@ -53,11 +47,7 @@ class PlayingNext:
         self.song = song
 
     def __repr__(self):
-        return (
-            f"PlayingNext(cued_at={self.cued_at!r}, played_at={self.played_at!r}, "
-            f"duration={self.duration!r}, playlist={self.playlist!r}, "
-            f"is_request={self.is_request!r}, song={self.song!r})"
-        )
+        return generate_repr_string(self)
 
 class NowPlaying:
     def __init__(self, station: Station, listeners: Listeners, live: Live, now_playing: CurrentSong, playing_next: PlayingNext, song_history: List[SongHistory], is_online: bool, cache: str):
@@ -71,9 +61,4 @@ class NowPlaying:
         self.cache = cache
 
     def __repr__(self):
-        return (
-            f"NowPlaying(station={self.station!r}, listeners={self.listeners!r}, "
-            f"live={self.live!r}, now_playing={self.now_playing!r}, "
-            f"playing_next={self.playing_next!r}, song_history={self.song_history!r}, "
-            f"is_online={self.is_online!r}, cache={self.cache!r})"
-        )
+        return generate_repr_string(self)

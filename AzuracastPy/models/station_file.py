@@ -3,6 +3,7 @@ from typing import List, Optional
 from .links import Links
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Playlist:
     def __init__(self, id: int, name: str, weight: int):
@@ -11,7 +12,7 @@ class Playlist:
         self.weight = weight
 
     def __repr__(self):
-        return f"Playlist(id={self.id!r}, name={self.name!r}, weight={self.weight!r})"
+        return generate_repr_string(self)
 
 class StationFile:
     def __init__(
@@ -47,13 +48,7 @@ class StationFile:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"StationFile(unique_id={self.unique_id!r}, album={self.album!r}, genre={self.genre!r}, "
-            f"lyrics={self.lyrics!r}, isrc={self.isrc!r}, length={self.length!r}, length_text={self.length_text!r}, "
-            f"path={self.path!r}, mtime={self.mtime!r}, playlists={self.playlists!r}, id={self.id!r}, "
-            f"song_id={self.song_id!r}, text={self.text!r}, artist={self.artist!r}, title={self.title!r}, "
-            f"custom_fields={self.custom_fields!r}, links={self.links!r})"
-        )
+        return generate_repr_string(self)
     
     def edit(
         self, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,

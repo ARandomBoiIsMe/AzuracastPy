@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util import file_upload_util
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
     def __init__(self_, self: str, public: str, download: str, art: str, media: str):
@@ -11,11 +12,8 @@ class Links:
         self_.art = art
         self_.media = media
 
-    def __repr__(self_):
-        return (
-            f"Links(self={self_.self!r}, public={self_.public!r}, download={self_.download!r}, "
-            f"art={self_.art!r}, media={self_.media!r})"
-        )
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class Media:
     def __init__(self, id: str, original_name: str, length: int, length_text: str, path: str):
@@ -26,10 +24,7 @@ class Media:
         self.path = path
 
     def __repr__(self):
-        return (
-            f"Media(id={self.id!r}, original_name={self.original_name!r}, length={self.length!r}, "
-            f"length_text={self.length_text!r}, path={self.path!r})"
-        )
+        return generate_repr_string(self)
 
 class PodcastEpisode:
     def __init__(
@@ -51,12 +46,7 @@ class PodcastEpisode:
         self._podcast = _podcast
 
     def __repr__(self):
-        return (
-            f"PodcastEpisode(id={self.id!r}, title={self.title!r}, description={self.description!r}, "
-            f"explicit={self.explicit!r}, publish_at={self.publish_at!r}, has_media={self.has_media!r}, "
-            f"media={self.media!r}, has_custom_art={self.has_custom_art!r}, art={self.art!r}, "
-            f"art_updated_at={self.art_updated_at!r}, links={self.links!r})"
-        )
+        return generate_repr_string(self)
     
     def edit(
         self, title: Optional[str] = None, description: Optional[str] = None, explicit: Optional[bool] = None

@@ -1,5 +1,7 @@
 from .listeners import Listeners
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Remote:
     def __init__(self, id: int, name: str, url: str, bitrate: int, format: str, listeners: Listeners):
         self.id = id
@@ -10,7 +12,4 @@ class Remote:
         self.listeners = listeners
 
     def __repr__(self):
-        return (
-            f"Remote(id={self.id}, name={self.name!r}, url={self.url!r}, bitrate={self.bitrate}, "
-            f"format={self.format!r}, listeners={self.listeners!r})"
-        )
+        return generate_repr_string(self)

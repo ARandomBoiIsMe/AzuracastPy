@@ -1,3 +1,5 @@
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Listeners:
     def __init__(self, total, unique, current):
         self.total = total
@@ -5,6 +7,4 @@ class Listeners:
         self.current = current
 
     def __repr__(self):
-        return (
-            f"Listeners(total={self.total}, unique={self.unique}, current={self.current})"
-        )
+        return generate_repr_string(self)

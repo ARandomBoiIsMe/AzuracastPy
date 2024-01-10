@@ -26,6 +26,7 @@ from AzuracastPy.constants import (
 )
 from AzuracastPy.request_handler import RequestHandler
 from AzuracastPy.util import file_upload_util, general_util
+from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.exceptions import ClientException
 
 class Station:
@@ -57,13 +58,7 @@ class Station:
         self._request_handler = _request_handler
 
     def __repr__(self):
-        return (
-            f"Station(id={self.id!r}, name={self.name!r}, shortcode={self.shortcode!r}, "
-            f"description={self.description!r}, frontend={self.frontend!r}, backend={self.backend!r}, "
-            f"listen_url={self.listen_url!r}, url={self.url!r}, public_player_url={self.public_player_url!r}, "
-            f"is_public={self.is_public}, hls_enabled={self.hls_enabled}, hls_listeners={self.hls_listeners}, "
-            f"mounts={self.mounts!r}, remotes={self.remotes!r})"
-        )
+        return generate_repr_string(self)
     
     def _perform_service_action(self, action: str, service_type: str):
         if action not in ['start', 'stop', 'restart']:

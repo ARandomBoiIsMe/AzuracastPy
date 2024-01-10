@@ -1,5 +1,7 @@
 from .song import Song
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class SongHistory:
     def __init__(
             self, sh_id: int, played_at: int, duration: int, playlist: str, streamer: str,
@@ -19,9 +21,4 @@ class SongHistory:
         self.is_visible = is_visible
 
     def __repr__(self):
-        return (
-            f"SongHistory(sh_id={self.sh_id}, played_at={self.played_at}, duration={self.duration}, "
-            f"playlist={self.playlist!r}, streamer={self.streamer!r}, is_request={self.is_request}, "
-            f"song={self.song!r}, listeners_start={self.listeners_start}, listeners_end={self.listeners_end}, "
-            f"delta_total={self.delta_total}, is_visible={self.is_visible})"
-        )
+        return generate_repr_string(self)

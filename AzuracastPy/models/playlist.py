@@ -2,14 +2,15 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Export:
     def __init__(self, pls: str, m3u: str):
         self.pls = pls
         self.m3u = m3u
 
-    def __repr__(self):
-        return f"Export(pls={self.pls!r}, m3u={self.m3u!r})"
+    def __repr__(self) -> str:
+        return generate_repr_string(self)
 
 class Links:
     def __init__(
@@ -26,12 +27,8 @@ class Links:
         self.empty = empty
         self.export = export
 
-    def __repr__(self):
-        return (
-            f"Links(self={self._self!r}, toggle={self.toggle!r}, clone={self.clone!r}, "
-            f"queue={self.queue!r}, import={self._import!r}, reshuffle={self.reshuffle!r}, "
-            f"applyto={self.applyto!r}, empty={self.empty!r}, export={self.export!r})"
-        )
+    def __repr__(self) -> str:
+        return generate_repr_string(self)
 
     @classmethod
     def from_dict(cls, links_dict: Dict[str, Any]):
@@ -60,12 +57,8 @@ class ScheduleItem:
         self.loop_once = loop_once
         self.id = id
 
-    def __repr__(self):
-        return (
-            f"ScheduleItem(start_time={self.start_time!r}, end_time={self.end_time!r}, "
-            f"start_date={self.start_date!r}, end_date={self.end_date!r}, "
-            f"days={self.days!r}, loop_once={self.loop_once!r}, id={self.id!r})"
-        )
+    def __repr__(self) -> str:
+        return generate_repr_string(self)
 
 class Playlist:
     def __init__(
@@ -74,7 +67,7 @@ class Playlist:
         play_per_hour_minute: int, weight: int, include_in_requests: bool, include_in_on_demand: bool,
         backend_options: List[str], avoid_duplicates: bool, played_at: int, queue_reset_at: int,
         schedule_items: List[ScheduleItem], id: int, short_name: str, num_songs: int, total_length: int,
-        links: Dict[str, Any], _station
+        links: Links, _station
     ):
         self.name = name
         self.type = type
@@ -103,20 +96,8 @@ class Playlist:
         self.links = Links.from_dict(links) if links else None
         self._station = _station
 
-    def __repr__(self):
-        return (
-            f"Playlist(name={self.name!r}, type={self.type!r}, source={self.source!r}, "
-            f"order={self.order!r}, remote_url={self.remote_url!r}, remote_type={self.remote_type!r}, "
-            f"remote_buffer={self.remote_buffer!r}, is_enabled={self.is_enabled!r}, is_jingle={self.is_jingle!r}, "
-            f"play_per_songs={self.play_per_songs!r}, play_per_minutes={self.play_per_minutes!r}, "
-            f"play_per_hour_minute={self.play_per_hour_minute!r}, weight={self.weight!r}, "
-            f"include_in_requests={self.include_in_requests!r}, include_in_on_demand={self.include_in_on_demand!r}, "
-            f"backend_options={self.backend_options!r}, avoid_duplicates={self.avoid_duplicates!r}, "
-            f"played_at={self.played_at!r}, queue_reset_at={self.queue_reset_at!r}, "
-            f"schedule_items={self.schedule_items!r}, id={self.id!r}, short_name={self.short_name!r}, "
-            f"num_songs={self.num_songs!r}, total_length={self.total_length!r}, "
-            f"links={self.links!r})"
-        )
+    def __repr__(self) -> str:
+        return generate_repr_string(self)
     
     def edit(
         self, name: Optional[str] = None, type: Optional[str] = None, source: Optional[str] = None,

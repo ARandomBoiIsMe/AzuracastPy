@@ -1,5 +1,7 @@
 from .listeners import Listeners
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Mount:
     def __init__(
             self, id: int, name: str, url: str, bitrate: int, format: str, path: str, is_default: bool,
@@ -15,8 +17,4 @@ class Mount:
         self.is_default = is_default
 
     def __repr__(self):
-        return (
-            f"Mount(id={self.id}, name={self.name!r}, url={self.url!r}, bitrate={self.bitrate}, "
-            f"format={self.format!r}, path={self.path!r}, is_default={self.is_default}, "
-            f"listeners={self.listeners!r})"
-        )
+        return generate_repr_string(self)

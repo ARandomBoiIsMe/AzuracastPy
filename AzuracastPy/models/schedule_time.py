@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class ScheduleTime:
     def __init__(
             self, id: int, type: str, name: str, title: str, description: str, start_timestamp: int,
@@ -17,8 +19,4 @@ class ScheduleTime:
         self.is_now = is_now
 
     def __repr__(self):
-        return (
-            f"ScheduleTime(id={self.id!r}, type={self.type!r}, name={self.name!r}, title={self.title!r}, "
-            f"description={self.description!r}, start_timestamp={self.start_timestamp}, "
-            f"start={self.start!r}, end_timestamp={self.end_timestamp}, end={self.end!r}, is_now={self.is_now!r})"
-        )
+        return generate_repr_string(self)

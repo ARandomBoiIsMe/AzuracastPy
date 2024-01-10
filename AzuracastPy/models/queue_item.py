@@ -3,13 +3,14 @@ from .song import Song
 from typing import List
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
     def __init__(self_, self: str):
         self_.self = self
 
-    def __repr__(self_):
-        return f"Links(self={self_.self!r})"
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class QueueItem:
     def __init__(
@@ -31,12 +32,7 @@ class QueueItem:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"QueueItem(cued_at={self.cued_at!r}, played_at={self.played_at!r}, duration={self.duration!r}, "
-            f"playlist={self.playlist!r}, is_request={self.is_request}, song={self.song!r}, "
-            f"sent_to_autodj={self.sent_to_autodj}, is_played={self.is_played}, "
-            f"autodj_custom_uri={self.autodj_custom_uri!r}, log={self.log!r}, links={self.links!r})"
-        )
+        return generate_repr_string(self)
     
     # Doesn't work lol
     def delete(self):

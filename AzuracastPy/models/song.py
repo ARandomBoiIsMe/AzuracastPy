@@ -1,5 +1,7 @@
 from typing import List
 
+from AzuracastPy.util.general_util import generate_repr_string
+
 class Song:
     def __init__(
             self, id: str, text: str, artist: str, title: str, album: str, genre: str, isrc: str,
@@ -16,8 +18,5 @@ class Song:
         self.art = art
         self.custom_fields = custom_fields
 
-    def __repr__(self):
-        return (
-            f"Song(id={self.id!r}, artist={self.artist!r}, title={self.title!r}, album={self.album!r}, "
-            f"genre={self.genre!r}, isrc={self.isrc!r})"
-        )
+    def __repr__(self) -> str:
+        return generate_repr_string(self)

@@ -2,6 +2,7 @@ from typing import List, Optional
 from datetime import datetime
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
     def __init__(self_, self: str, broadcasts: str, art: str):
@@ -10,7 +11,7 @@ class Links:
         self_.art = art
 
     def __repr__(self):
-        return f"Links(self={self.self!r}, broadcasts={self.broadcasts!r}, art={self.art!r})"
+        return generate_repr_string(self)
 
 class ScheduleItem:
     def __init__(
@@ -26,11 +27,7 @@ class ScheduleItem:
         self.id = id
 
     def __repr__(self):
-        return (
-            f"ScheduleItem(start_time={self.start_time!r}, end_time={self.end_time!r}, "
-            f"start_date={self.start_date!r}, end_date={self.end_date!r}, days={self.days!r}, "
-            f"loop_once={self.loop_once!r}, id={self.id!r})"
-        )
+        return generate_repr_string(self)
 
 class Streamer:
     def __init__(
@@ -55,14 +52,7 @@ class Streamer:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"Streamer(id={self.id!r}, streamer_username={self.streamer_username!r}, "
-            f"streamer_password={self.streamer_password!r}, display_name={self.display_name!r}, "
-            f"comments={self.comments!r}, is_active={self.is_active!r}, "
-            f"enforce_schedule={self.enforce_schedule!r}, reactivate_at={self.reactivate_at!r}, "
-            f"art_updated_at={self.art_updated_at!r}, schedule_items={self.schedule_items!r}, "
-            f"links={self.links!r}, has_custom_art={self.has_custom_art!r}, art={self.art!r})"
-        )
+        return generate_repr_string(self) 
     
     def edit(
         self, streamer_username: Optional[str] = None, display_name: Optional[str] = None,

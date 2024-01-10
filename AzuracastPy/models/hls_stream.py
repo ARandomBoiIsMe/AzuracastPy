@@ -1,5 +1,6 @@
 from AzuracastPy.constants import API_ENDPOINTS, HLS_FORMATS
 from AzuracastPy.exceptions import ClientException
+from AzuracastPy.util.general_util import generate_repr_string
 
 from typing import Optional
 
@@ -7,8 +8,8 @@ class Links:
     def __init__(self_, self):
         self_.self = self
 
-    def __repr__(self_):
-        return f"Links(self='{self_.self}')"
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class HLSStream:
     def __init__(self, name: str, format: str, bitrate: int, listeners: int, id: int, links: Links, _station):
@@ -21,9 +22,7 @@ class HLSStream:
         self._station = _station
 
     def __repr__(self):
-        return (
-        f"HLSStream(name='{self.name}', format='{self.format}', bitrate={self.bitrate}, listeners={self.listeners}, id={self.id}, links={self.links})"
-        )
+        return generate_repr_string(self)
     
     def edit(self, name: Optional[str] = None, format: Optional[str] = None):
         if format is not None:

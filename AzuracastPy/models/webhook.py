@@ -2,6 +2,7 @@ from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS, WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
 from AzuracastPy.exceptions import ClientException
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
     def __init__(self_, self: str, toggle: str, test: str):
@@ -10,7 +11,7 @@ class Links:
         self_.test = test
 
     def __repr__(self):
-        return f"Links(self={self.self!r}, toggle={self.toggle!r}, test={self.test!r})"
+        return generate_repr_string(self)
 
 class Webhook:
     def __init__(
@@ -27,10 +28,7 @@ class Webhook:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"Webhook(name={self.name!r}, type={self.type!r}, is_enabled={self.is_enabled!r}, "
-            f"triggers={self.triggers!r}, config={self.config!r}, id={self.id!r}, links={self.links!r})"
-        )
+        return generate_repr_string(self)
     
     def edit(
         self, name: Optional[str] = None, type: Optional[str] = None, config: Optional[Dict[str, Any]] = None,

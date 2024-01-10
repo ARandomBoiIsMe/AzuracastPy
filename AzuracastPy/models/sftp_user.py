@@ -1,13 +1,14 @@
 from typing import Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
     def __init__(self_, self):
         self_.self = self
 
-    def __repr__(self_):
-        return (f"Links(self={self_.self!r})")
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class SFTPUser:
     def __init__(self, id: int, username: str, password: str, publicKeys: str, links: Links, _station):
@@ -19,10 +20,7 @@ class SFTPUser:
         self._station = _station
 
     def __repr__(self):
-        return (
-            f"SFTPUser(id={self.id!r}, username={self.username!r}, password={self.password!r}, "
-            f"public_keys={self.public_keys!r})"
-        )
+        return generate_repr_string(self)
     
     def edit(self, username: Optional[str] = None, public_keys: Optional[str] = None):
         old_sftp_user = self._station.sftp_user(self.id)
