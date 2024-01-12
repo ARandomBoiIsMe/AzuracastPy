@@ -4,4 +4,4 @@ meh.py
 *.egg-info
 setup.py
 random_auto.py
-models/admin/
+AzuracastPy/models/administration/
