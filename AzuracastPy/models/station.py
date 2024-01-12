@@ -15,7 +15,7 @@ from .queue_item import QueueItem
 from .remote_relay import RemoteRelay
 from .sftp_user import SFTPUser
 from .streamer import Streamer
-from .webhook import Webhook
+from .webhook import Webhook, WebhookConfig
 from .hls_stream import HLSStream
 
 from AzuracastPy.constants import (
@@ -413,7 +413,7 @@ class Station:
         return Streamer(**response, _station=self)
     
     def add_webhook(
-        self, name: str, type: str, config: Dict[str, Any], triggers: Optional[List[str]] = None 
+        self, name: str, type: str, webhook_config: WebhookConfig, triggers: Optional[List[str]] = None 
     ) -> Webhook:
         valid_types = WEBHOOK_CONFIG_TEMPLATES.keys()
         if type not in valid_types:
@@ -425,8 +425,9 @@ class Station:
                 message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
         
-        if not all(key in WEBHOOK_CONFIG_TEMPLATES[type] for key in config):
-            message = f"The provided 'config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
+        config = webhook_config.to_dict()
+        if not all(key in config for key in WEBHOOK_CONFIG_TEMPLATES['email']):
+            message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
             raise ClientException(message)
         
         url = API_ENDPOINTS["station_webhooks"].format(
