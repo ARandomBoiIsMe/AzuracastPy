@@ -1,7 +1,7 @@
 from typing import Optional, List, Union
 
 from .models import Station, NowPlaying
-from .models.admin.admin import Admin
+from .models.administration.admin import Admin
 
 from .request_handler import RequestHandler
 from .constants import API_ENDPOINTS
