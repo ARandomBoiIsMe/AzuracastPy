@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Union
 
 from .mount import Mount
 from .remote import Remote
@@ -125,17 +125,17 @@ class Station:
 
         response = self._request_handler.post(url)
 
-        return response['message']
+        return response
     
     def perform_frontend_action(self, action: str = 'restart'):
         response = self._perform_service_action(action=action, service_type="frontend")
 
-        return response['message']
+        return response
     
     def perform_backend_action(self, action: str = 'restart'):
         response = self._perform_service_action(action=action, service_type="backend")
 
-        return response['message']
+        return response
     
     def history(self) -> List[SongHistory]:
         response = self._request_multiple_instances_of("station_history")
@@ -192,15 +192,48 @@ class Station:
 
         return StationFile(**response, _station=self)
     
+    # TODO: intro_path requires file upload
+    def add_mount_point(
+        self, mount_point_url: str, display_name: Optional[str] = None, show_on_public_pages: bool = True,
+        is_default: bool = False, is_public: bool = True, relay_stream_url: Optional[str] = None,
+        max_listener_duration: int = 0, fallback_mount: str = "/error.mp3", enable_autodj: bool = True,
+        autodj_format: str = "mp3", autodj_bitrate: int = 128, custom_url: Optional[str] = None,
+        custom_frontend_config: Optional[Union[Dict[str, Any], str]] = None 
+    ):
+        url = API_ENDPOINTS["station_mount_points"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        body = {
+            "name": mount_point_url,
+            "display_name": display_name if display_name else "",
+            "is_visible_on_public_pages": show_on_public_pages,
+            "is_default": is_default,
+            "is_public": is_public,
+            "fallback_mount": fallback_mount,
+            "relay_url": relay_stream_url if relay_stream_url else "",
+            "max_listener_duration": max_listener_duration,
+            "enable_autodj": enable_autodj,
+            "autodj_format": autodj_format,
+            "autodj_bitrate": autodj_bitrate,
+            "custom_listen_url": custom_url,
+            "frontend_config": custom_frontend_config,
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return MountPoint(**response, _station=self)
+    
     def mount_points(self) -> List[MountPoint]:
         response = self._request_multiple_instances_of("station_mount_points")
 
-        return [MountPoint(**mp) for mp in response]
+        return [MountPoint(**mp, _station=self) for mp in response]
     
     def mount_point(self, id: int) -> MountPoint:
         response = self._request_single_instance_of("station_mount_point", id)
 
-        return MountPoint(**response)
+        return MountPoint(**response, _station=self)
     
     def add_playlist(
         self, name: str, type: str = "default", source: str = "songs", order: str = "shuffle",
@@ -421,7 +454,7 @@ class Station:
             raise ClientException(message)
         
         if triggers is not None:
-            if not all(trigger in WEBHOOK_TRIGGERS for trigger in set(triggers)):
+            if not all(trigger in WEBHOOK_TRIGGERS for trigger in triggers):
                 message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
         

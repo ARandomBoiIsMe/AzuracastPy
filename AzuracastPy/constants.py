@@ -702,3 +702,33 @@ HLS_FORMATS = [
     'mp3', 'ogg', 'aac', 'opus', 'flac'
 ]
 # ---------------------
+
+# Permissions for roles
+# ---------------------
+GLOBAL_PERMISSIONS = [
+    "administer all",
+    "view administration",
+    "view system logs",
+    "administer settings",
+    "administer api keys",
+    "administer stations",
+    "administer custom fields",
+    "administer backups",
+    "administer storage locations"
+]
+
+STATION_PERMISSIONS = [
+    "administer all",
+    "view station management",
+    "view station reports",
+    "view station logs",
+    "manage station profile",
+    "manage station broadcasting",
+    "manage station streamers",
+    "manage station mounts",
+    "manage station remotes",
+    "manage station media",
+    "manage station automation",
+    "manage station web hooks",
+    "manage station podcasts"
+]

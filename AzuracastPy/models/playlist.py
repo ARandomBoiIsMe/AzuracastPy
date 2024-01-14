@@ -67,7 +67,7 @@ class Playlist:
         play_per_hour_minute: int, weight: int, include_in_requests: bool, include_in_on_demand: bool,
         backend_options: List[str], avoid_duplicates: bool, played_at: int, queue_reset_at: int,
         schedule_items: List[ScheduleItem], id: int, short_name: str, num_songs: int, total_length: int,
-        links: Links, _station
+        links: Dict[str, Any], _station
     ):
         self.name = name
         self.type = type
