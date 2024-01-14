@@ -1,4 +1,4 @@
-from AzuracastPy.constants import API_ENDPOINTS, HLS_FORMATS
+from AzuracastPy.constants import API_ENDPOINTS, HLS_FORMATS, BITRATES
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
 
@@ -24,10 +24,15 @@ class HLSStream:
     def __repr__(self):
         return generate_repr_string(self)
     
-    def edit(self, name: Optional[str] = None, format: Optional[str] = None):
+    def edit(self, name: Optional[str] = None, format: Optional[str] = None, bitrate: Optional[int] = None):
         if format is not None:
             if format not in HLS_FORMATS:
-                message = f"format param must be one of {', '.join(HLS_FORMATS)}"
+                message = f"format param must be one of: {', '.join(HLS_FORMATS)}"
+                raise ClientException(message)
+        
+        if bitrate is not None:
+            if bitrate not in BITRATES:
+                message = f"bitrate param must be one of: {', '.join(BITRATES)}"
                 raise ClientException(message)
         
         old_hls_stream = self._station.hls_stream(self.id)
@@ -38,12 +43,12 @@ class HLSStream:
             id=self.id
         )
 
-        body = self._build_update_body(old_hls_stream, name, format)
+        body = self._build_update_body(old_hls_stream, name, format, bitrate)
 
         response = self._station._request_handler.put(url, body)
 
         if response['success'] is True:
-            self._update_properties(old_hls_stream, name, format)
+            self._update_properties(old_hls_stream, name, format, bitrate)
 
         return response
 
@@ -61,15 +66,17 @@ class HLSStream:
 
         return response
     
-    def _build_update_body(self, old_hls_stream: "HLSStream", name, format):
+    def _build_update_body(self, old_hls_stream: "HLSStream", name, format, bitrate):
         return {
             "name": name if name else old_hls_stream.name,
-            "format": format if format else old_hls_stream.format
+            "format": format if format else old_hls_stream.format,
+            "bitrate": bitrate if bitrate else old_hls_stream.bitrate
         }
     
-    def _update_properties(self, old_hls_stream: "HLSStream", name, format):
+    def _update_properties(self, old_hls_stream: "HLSStream", name, format, bitrate):
         self.name = name if name else old_hls_stream.name
         self.format = format if format else old_hls_stream.format
+        self.bitrate = bitrate if bitrate else old_hls_stream.bitrate
     
     def _clear_properties(self):
         self.name = None

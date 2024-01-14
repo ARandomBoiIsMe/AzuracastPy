@@ -22,7 +22,8 @@ from AzuracastPy.constants import (
     API_ENDPOINTS,
     WEBHOOK_CONFIG_TEMPLATES,
     WEBHOOK_TRIGGERS,
-    HLS_FORMATS
+    HLS_FORMATS,
+    BITRATES
 )
 from AzuracastPy.request_handler import RequestHandler
 from AzuracastPy.util import file_upload_util, general_util
@@ -384,9 +385,13 @@ class Station:
 
         return SFTPUser(**response, _station=self)
     
-    def add_hls_stream(self, name: str, format: str = "aac") -> HLSStream:
+    def add_hls_stream(self, name: str, format: str = "aac", bitrate: int = 128) -> HLSStream:
         if format not in HLS_FORMATS:
-            message = f"format param must be one of {', '.join(HLS_FORMATS)}"
+            message = f"format param must be one of: {', '.join(HLS_FORMATS)}"
+            raise ClientException(message)
+        
+        if bitrate not in BITRATES:
+            message = f"bitrate param must be one of: {', '.join(BITRATES)}"
             raise ClientException(message)
 
         url = API_ENDPOINTS['hls_streams'].format(
@@ -396,7 +401,8 @@ class Station:
 
         body = {
             "name": name,
-            "format": format
+            "format": format,
+            "bitrate": bitrate
         }
 
         response = self._request_handler.post(url, body)

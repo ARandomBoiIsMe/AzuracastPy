@@ -703,6 +703,17 @@ HLS_FORMATS = [
 ]
 # ---------------------
 
+BITRATES = [
+    32,
+    48,
+    64,
+    96,
+    128,
+    192,
+    256,
+    320
+]
+
 # Permissions for roles
 # ---------------------
 GLOBAL_PERMISSIONS = [
