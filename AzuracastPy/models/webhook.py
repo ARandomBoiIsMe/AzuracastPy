@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 from AzuracastPy.constants import API_ENDPOINTS, WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 class Links:
     def __init__(self_, self: str, toggle: str, test: str):
@@ -88,10 +89,8 @@ class Webhook:
         self, name: Optional[str] = None, type: Optional[str] = None, webhook_config: Optional[WebhookConfig] = None,
         triggers: Optional[List[str]] = None
     ):
-        old_webhook = self._station.webhook(self.id)
-
         # Attempting to update the type without updating the config to match the new type is a crime in my world.
-        if type is not None and type != old_webhook.type and config is None:
+        if type is not None and type != self.type and config is None:
             message = "To update the webhook type, the new config must be provided as well."
             raise ClientException(message)
 
@@ -102,10 +101,11 @@ class Webhook:
                 raise ClientException(message)
             
         if triggers is not None:
-            if not all(trigger in WEBHOOK_TRIGGERS for trigger in set(triggers)):
+            if not all(trigger in WEBHOOK_TRIGGERS for trigger in triggers):
                 message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
             
+        config = None
         if webhook_config is not None:
             config = webhook_config.to_dict()
 
@@ -113,48 +113,24 @@ class Webhook:
                 message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
                 raise ClientException(message)
 
-        url = API_ENDPOINTS["station_webhook"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        body = self._build_update_body(old_webhook, name, type, config, triggers)
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(old_webhook, name, type, config, triggers)
-            
-        return response
-
-    def delete(self):
-        url = API_ENDPOINTS["station_webhook"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return edit_resource(self, "station_webhook", name, type, config, triggers)
     
-    def _build_update_body(self, old_webhook: "Webhook", name, type, config, triggers):
+    def delete(self):
+        return delete_resource(self, "station_webhook")
+    
+    def _build_update_body(self, name, type, config, triggers):
         return {
-            "name": name if name else old_webhook.name,
-            "type": type if type else old_webhook.type,
-            "triggers": triggers if triggers else old_webhook.triggers,
-            "config": config if config else old_webhook.config
+            "name": name if name else self.name,
+            "type": type if type else self.type,
+            "triggers": triggers if triggers else self.triggers,
+            "config": config if config else self.config
         }
     
-    def _update_properties(self, old_webhook: "Webhook", name, type, config, triggers):
-        self.name = name if name else old_webhook.name
-        self.type = type if type else old_webhook.type
-        self.triggers = triggers if triggers else old_webhook.triggers
-        self.config = config if config else old_webhook.config
+    def _update_properties(self, name, type, config, triggers):
+        self.name = name if name else self.name
+        self.type = type if type else self.type
+        self.triggers = triggers if triggers else self.triggers
+        self.config = config if config else self.config
     
     def _clear_properties(self):
         self.name = None

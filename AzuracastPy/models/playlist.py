@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 class Export:
     def __init__(self, pls: str, m3u: str):
@@ -62,7 +63,7 @@ class ScheduleItem:
 
 class Playlist:
     def __init__(
-        self, name: str, type:str, source: str, order: str, remote_url: str, remote_type: str,
+        self, name: str, type: str, source: str, order: str, remote_url: str, remote_type: str,
         remote_buffer: int, is_enabled: bool, is_jingle: bool, play_per_songs: int, play_per_minutes: int,
         play_per_hour_minute: int, weight: int, include_in_requests: bool, include_in_on_demand: bool,
         backend_options: List[str], avoid_duplicates: bool, played_at: int, queue_reset_at: int,
@@ -106,84 +107,55 @@ class Playlist:
         include_in_requests: Optional[bool] = None, include_in_on_demand: Optional[bool] = None,
         avoid_duplicates: Optional[bool] = None, is_jingle: Optional[bool] = None
     ):
-        old_playlist = self._station.playlist(self.id)
-
-        url = API_ENDPOINTS["station_playlist"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
+        return edit_resource(
+            self, "station_playlist", name, type, source, order, remote_url, remote_type, remote_buffer,
+            is_jingle, play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
         )
-
-        body = self._build_update_body(
-            old_playlist, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
-            play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
-        )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_playlist, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
-                play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
-            )
-
-        return response
     
     def delete(self):
-        url = API_ENDPOINTS["station_playlist"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return delete_resource(self, "station_playlist")
     
     def _build_update_body(
-        self, old_playlist: "Playlist", name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
+        self, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
         play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
     ):
         return {
-            "name": name if name else old_playlist.name,
-            "type": type if type else old_playlist.type,
-            "source": source if source else old_playlist.source,
-            "order": order if order else old_playlist.order,
-            "remote_url": remote_url if remote_url else old_playlist.remote_url,
-            "remote_type": remote_type if remote_type else old_playlist.remote_type,
-            "remote_buffer": remote_buffer if remote_buffer else old_playlist.remote_buffer,
-            "is_jingle": is_jingle if is_jingle is not None else old_playlist.is_jingle,
-            "play_per_songs": play_per_value if type == "once_per_x_songs" else old_playlist.play_per_songs,
-            "play_per_minutes": play_per_value if type == "once_per_x_minutes" else old_playlist.play_per_minutes,
-            "play_per_hour_minute": play_per_value if type == "once_per_hour" else old_playlist.play_per_hour_minute,
-            "weight": weight if weight is not None else old_playlist.weight,
-            "include_in_requests": include_in_requests if include_in_requests is not None else old_playlist.include_in_requests,
-            "include_in_on_demand": include_in_on_demand if include_in_on_demand is not None else old_playlist.include_in_on_demand,
-            "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else old_playlist.avoid_duplicates
+            "name": name if name else self.name,
+            "type": type if type else self.type,
+            "source": source if source else self.source,
+            "order": order if order else self.order,
+            "remote_url": remote_url if remote_url else self.remote_url,
+            "remote_type": remote_type if remote_type else self.remote_type,
+            "remote_buffer": remote_buffer if remote_buffer else self.remote_buffer,
+            "is_jingle": is_jingle if is_jingle is not None else self.is_jingle,
+            "play_per_songs": play_per_value if type == "once_per_x_songs" else self.play_per_songs,
+            "play_per_minutes": play_per_value if type == "once_per_x_minutes" else self.play_per_minutes,
+            "play_per_hour_minute": play_per_value if type == "once_per_hour" else self.play_per_hour_minute,
+            "weight": weight if weight is not None else self.weight,
+            "include_in_requests": include_in_requests if include_in_requests is not None else self.include_in_requests,
+            "include_in_on_demand": include_in_on_demand if include_in_on_demand is not None else self.include_in_on_demand,
+            "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates
         }
     
     def _update_properties(
-        self, old_playlist: "Playlist", name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
+        self, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
         play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
     ):
-        self.name = name if name else old_playlist.name,
-        self.type = type if type else old_playlist.type,
-        self.source = source if source else old_playlist.source,
-        self.order = order if order else old_playlist.order,
-        self.remote_url = remote_url if remote_url else old_playlist.remote_url,
-        self.remote_type = remote_type if remote_type else old_playlist.remote_type,
-        self.remote_buffer = remote_buffer if remote_buffer else old_playlist.remote_buffer,
-        self.is_jingle = is_jingle if is_jingle is not None else old_playlist.is_jingle,
-        self.play_per_songs = play_per_value if type == "once_per_x_songs" else old_playlist.play_per_songs,
-        self.play_per_minutes = play_per_value if type == "once_per_x_minutes" else old_playlist.play_per_minutes,
-        self.play_per_hour_minute = play_per_value if type == "once_per_hour" else old_playlist.play_per_hour_minute,
-        self.weight = weight if weight is not None else old_playlist.weight,
-        self.include_in_requests = include_in_requests if include_in_requests is not None else old_playlist.include_in_requests,
-        self.include_in_on_demand = include_in_on_demand if include_in_on_demand is not None else old_playlist.include_in_on_demand,
-        self.avoid_duplicates = avoid_duplicates if avoid_duplicates is not None else old_playlist.avoid_duplicates
+        self.name = name if name else self.name
+        self.type = type if type else self.type
+        self.source = source if source else self.source
+        self.order = order if order else self.order
+        self.remote_url = remote_url if remote_url else self.remote_url
+        self.remote_type = remote_type if remote_type else self.remote_type
+        self.remote_buffer = remote_buffer if remote_buffer else self.remote_buffer
+        self.is_jingle = is_jingle if is_jingle is not None else self.is_jingle
+        self.play_per_songs = play_per_value if type == "once_per_x_songs" else self.play_per_songs
+        self.play_per_minutes = play_per_value if type == "once_per_x_minutes" else self.play_per_minutes
+        self.play_per_hour_minute = play_per_value if type == "once_per_hour" else self.play_per_hour_minute
+        self.weight = weight if weight is not None else self.weight
+        self.include_in_requests = include_in_requests if include_in_requests is not None else self.include_in_requests
+        self.include_in_on_demand = include_in_on_demand if include_in_on_demand is not None else self.include_in_on_demand
+        self.avoid_duplicates = avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates
 
     def _clear_properties(self):
         self.name = None
@@ -193,6 +165,7 @@ class Playlist:
         self.remote_url = None
         self.remote_type = None
         self.remote_buffer = None
+        self.is_enabled = None
         self.is_jingle = None
         self.play_per_songs = None
         self.play_per_minutes = None
@@ -200,5 +173,14 @@ class Playlist:
         self.weight = None
         self.include_in_requests = None
         self.include_in_on_demand = None
+        self.backend_options = None
         self.avoid_duplicates = None
+        self.played_at = None
+        self.queue_reset_at = None
+        self.schedule_items = None
+        self.id = None
+        self.short_name = None
+        self.num_songs = None
+        self.total_length = None
+        self.links = None
         self._station = None

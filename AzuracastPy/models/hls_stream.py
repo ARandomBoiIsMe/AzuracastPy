@@ -1,6 +1,7 @@
 from AzuracastPy.constants import API_ENDPOINTS, HLS_FORMATS, BITRATES
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 from typing import Optional
 
@@ -34,49 +35,23 @@ class HLSStream:
             if bitrate not in BITRATES:
                 message = f"bitrate param must be one of: {', '.join(BITRATES)}"
                 raise ClientException(message)
-        
-        old_hls_stream = self._station.hls_stream(self.id)
-
-        url = API_ENDPOINTS['hls_stream'].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        body = self._build_update_body(old_hls_stream, name, format, bitrate)
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(old_hls_stream, name, format, bitrate)
-
-        return response
-
-    def delete(self):
-        url = API_ENDPOINTS['hls_stream'].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+            
+        return edit_resource(self, "hls_stream", name, format, bitrate)
     
-    def _build_update_body(self, old_hls_stream: "HLSStream", name, format, bitrate):
+    def delete(self):
+        return delete_resource(self, "hls_stream")
+    
+    def _build_update_body(self, name, format, bitrate):
         return {
-            "name": name if name else old_hls_stream.name,
-            "format": format if format else old_hls_stream.format,
-            "bitrate": bitrate if bitrate else old_hls_stream.bitrate
+            "name": name if name else self.name,
+            "format": format if format else self.format,
+            "bitrate": bitrate if bitrate else self.bitrate
         }
     
-    def _update_properties(self, old_hls_stream: "HLSStream", name, format, bitrate):
-        self.name = name if name else old_hls_stream.name
-        self.format = format if format else old_hls_stream.format
-        self.bitrate = bitrate if bitrate else old_hls_stream.bitrate
+    def _update_properties(self, name, format, bitrate):
+        self.name = name if name else self.name
+        self.format = format if format else self.format
+        self.bitrate = bitrate if bitrate else self.bitrate
     
     def _clear_properties(self):
         self.name = None

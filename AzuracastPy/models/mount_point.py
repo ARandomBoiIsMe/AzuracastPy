@@ -2,6 +2,7 @@ from .links import Links
 
 from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.constants import API_ENDPOINTS
+from .util.station_resource_operations import edit_resource, delete_resource
 
 from typing import Optional, Dict, Any, Union
 
@@ -46,84 +47,54 @@ class MountPoint:
         autodj_bitrate: Optional[int] = None, custom_url: Optional[str] = None,
         custom_frontend_config: Optional[Union[Dict[str, Any], str]] = None
     ):
-        old_mount_point = self._station.mount_point(self.id)
-
-        url = API_ENDPOINTS["station_mount_point"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
+        return edit_resource(
+            self, "station_mount_point", mount_point_url, display_name, show_on_public_pages, is_default,
+            is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
+            autodj_bitrate, custom_url, custom_frontend_config
         )
-
-        body = self._build_update_body(
-            old_mount_point, mount_point_url, display_name, show_on_public_pages, is_default, is_public,
-            relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format, autodj_bitrate,
-            custom_url, custom_frontend_config
-        )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_mount_point, mount_point_url, display_name, show_on_public_pages, is_default, is_public,
-                relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format, autodj_bitrate,
-                custom_url, custom_frontend_config
-            )
-
-        return response
     
     def delete(self):
-        url = API_ENDPOINTS["station_mount_point"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return delete_resource(self, "station_mount_point")
     
     def _build_update_body(
-        self, old_mount_point: "MountPoint", mount_point_url, display_name, show_on_public_pages, is_default,
+        self, mount_point_url, display_name, show_on_public_pages, is_default,
         is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
         autodj_bitrate, custom_url, custom_frontend_config
     ):
         return {
-            "name": mount_point_url if mount_point_url else old_mount_point.name,
-            "display_name": display_name if display_name else old_mount_point.display_name,
-            "is_visible_on_public_pages": show_on_public_pages if show_on_public_pages is not None else old_mount_point.is_visible_on_public_pages,
-            "is_default": is_default if is_default is not None else old_mount_point.is_default,
-            "is_public": is_public if is_public is not None else old_mount_point.is_public,
-            "fallback_mount": fallback_mount if fallback_mount else old_mount_point.fallback_mount,
-            "relay_url": relay_stream_url if relay_stream_url else old_mount_point.relay_url,
-            "max_listener_duration": max_listener_duration if max_listener_duration else old_mount_point.max_listener_duration,
-            "enable_autodj": enable_autodj if enable_autodj is not None else old_mount_point.enable_autodj,
-            "autodj_format": autodj_format if autodj_format else old_mount_point.autodj_format,
-            "autodj_bitrate": autodj_bitrate if autodj_bitrate else old_mount_point.autodj_bitrate,
-            "custom_listen_url": custom_url if custom_url else old_mount_point.custom_listen_url,
-            "frontend_config": custom_frontend_config if custom_frontend_config else old_mount_point.frontend_config,
+            "name": mount_point_url if mount_point_url else self.name,
+            "display_name": display_name if display_name else self.display_name,
+            "is_visible_on_public_pages": show_on_public_pages if show_on_public_pages is not None else self.is_visible_on_public_pages,
+            "is_default": is_default if is_default is not None else self.is_default,
+            "is_public": is_public if is_public is not None else self.is_public,
+            "fallback_mount": fallback_mount if fallback_mount else self.fallback_mount,
+            "relay_url": relay_stream_url if relay_stream_url else self.relay_url,
+            "max_listener_duration": max_listener_duration if max_listener_duration else self.max_listener_duration,
+            "enable_autodj": enable_autodj if enable_autodj is not None else self.enable_autodj,
+            "autodj_format": autodj_format if autodj_format else self.autodj_format,
+            "autodj_bitrate": autodj_bitrate if autodj_bitrate else self.autodj_bitrate,
+            "custom_listen_url": custom_url if custom_url else self.custom_listen_url,
+            "frontend_config": custom_frontend_config if custom_frontend_config else self.frontend_config,
         }
     
     def _update_properties(
-        self, old_mount_point: "MountPoint", mount_point_url, display_name, show_on_public_pages, is_default,
+        self, mount_point_url, display_name, show_on_public_pages, is_default,
         is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
         autodj_bitrate, custom_url, custom_frontend_config
     ):
-        self.name = mount_point_url if mount_point_url else old_mount_point.name
-        self.display_name = display_name if display_name else old_mount_point.display_name
-        self.is_visible_on_public_pages = show_on_public_pages if show_on_public_pages is not None else old_mount_point.is_visible_on_public_pages
-        self.is_default = is_default if is_default is not None else old_mount_point.is_default
-        self.is_public = is_public if is_public is not None else old_mount_point.is_public
-        self.fallback_mount = fallback_mount if fallback_mount else old_mount_point.fallback_mount
-        self.relay_url = relay_stream_url if relay_stream_url else old_mount_point.relay_url
-        self.max_listener_duration = max_listener_duration if max_listener_duration else old_mount_point.max_listener_duration
-        self.enable_autodj = enable_autodj if enable_autodj is not None else old_mount_point.enable_autodj
-        self.autodj_format = autodj_format if autodj_format else old_mount_point.autodj_format
-        self.autodj_bitrate = autodj_bitrate if autodj_bitrate else old_mount_point.autodj_bitrate
-        self.custom_listen_url = custom_url if custom_url else old_mount_point.custom_listen_url
-        self.frontend_config = custom_frontend_config if custom_frontend_config else old_mount_point.frontend_config
+        self.name = mount_point_url if mount_point_url else self.name
+        self.display_name = display_name if display_name else self.display_name
+        self.is_visible_on_public_pages = show_on_public_pages if show_on_public_pages is not None else self.is_visible_on_public_pages
+        self.is_default = is_default if is_default is not None else self.is_default
+        self.is_public = is_public if is_public is not None else self.is_public
+        self.fallback_mount = fallback_mount if fallback_mount else self.fallback_mount
+        self.relay_url = relay_stream_url if relay_stream_url else self.relay_url
+        self.max_listener_duration = max_listener_duration if max_listener_duration else self.max_listener_duration
+        self.enable_autodj = enable_autodj if enable_autodj is not None else self.enable_autodj
+        self.autodj_format = autodj_format if autodj_format else self.autodj_format
+        self.autodj_bitrate = autodj_bitrate if autodj_bitrate else self.autodj_bitrate
+        self.custom_listen_url = custom_url if custom_url else self.custom_listen_url
+        self.frontend_config = custom_frontend_config if custom_frontend_config else self.frontend_config
 
     def _clear_properties(self):
         self.name = None

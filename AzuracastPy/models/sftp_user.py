@@ -2,6 +2,7 @@ from typing import Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 class Links:
     def __init__(self_, self):
@@ -23,26 +24,7 @@ class SFTPUser:
         return generate_repr_string(self)
     
     def edit(self, username: Optional[str] = None, public_keys: Optional[str] = None):
-        old_sftp_user = self._station.sftp_user(self.id)
-
-        url = API_ENDPOINTS["station_sftp_user"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        body = self._build_update_body(
-            old_sftp_user, username, public_keys
-        )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_sftp_user, username, public_keys
-            )
-            
-        return response
+        return edit_resource(self, "station_sftp_user", username, public_keys)
     
     def update_password(self, password: str):
         url = API_ENDPOINTS["station_sftp_user"].format(
@@ -60,28 +42,17 @@ class SFTPUser:
         return response
     
     def delete(self):
-        url = API_ENDPOINTS["station_sftp_user"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return delete_resource(self, "station_sftp_user")
     
-    def _build_update_body(self, old_sftp_user: "SFTPUser", username, public_keys):
+    def _build_update_body(self, username, public_keys):
         return {
-            "username": username if username else old_sftp_user.username,
-            "publicKeys": public_keys if public_keys else old_sftp_user.public_keys
+            "username": username if username else self.username,
+            "publicKeys": public_keys if public_keys else self.public_keys
         }
     
-    def _update_properties(self, old_sftp_user: "SFTPUser", username, public_keys):
-        self.username = username if username else old_sftp_user.username
-        self.public_keys = public_keys if public_keys else old_sftp_user.public_keys
+    def _update_properties(self, username, public_keys):
+        self.username = username if username else self.username
+        self.public_keys = public_keys if public_keys else self.public_keys
 
     def _clear_properties(self):
         self.id = None

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 class Links:
     def __init__(self_, self: str, broadcasts: str, art: str):
@@ -58,28 +59,10 @@ class Streamer:
         self, streamer_username: Optional[str] = None, display_name: Optional[str] = None,
         comments: Optional[str] = None, is_active: Optional[bool] = None, enforce_schedule: Optional[bool] = None
     ):
-        old_streamer = self._station.streamer(self.id)
-
-        url = API_ENDPOINTS["station_streamer"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        body = self._build_update_body(
-            old_streamer, streamer_username, display_name, comments, is_active,
+        return edit_resource(
+            self, "station_streamer", streamer_username, display_name, comments, is_active,
             enforce_schedule
         )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_streamer, streamer_username, display_name, comments, is_active,
-                enforce_schedule
-            )
-            
-        return response
     
     def update_password(self, password: str):
         url = API_ENDPOINTS["station_streamer"].format(
@@ -97,40 +80,29 @@ class Streamer:
         return response
     
     def delete(self):
-        url = API_ENDPOINTS["station_streamer"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return delete_resource(self, "station_streamer")
     
     def _build_update_body(
-        self, old_streamer: "Streamer", streamer_username, display_name, comments, is_active,
+        self, streamer_username, display_name, comments, is_active,
         enforce_schedule
     ):
         return {
-            "streamer_username": streamer_username if streamer_username else old_streamer.streamer_username,
-            "display_name": display_name if display_name else old_streamer.display_name,
-            "comments": comments if comments else old_streamer.comments,
-            "is_active": is_active if is_active is not None else old_streamer.is_active,
-            "enforce_schedule": enforce_schedule if enforce_schedule is not None else old_streamer.enforce_schedule
+            "streamer_username": streamer_username if streamer_username else self.streamer_username,
+            "display_name": display_name if display_name else self.display_name,
+            "comments": comments if comments else self.comments,
+            "is_active": is_active if is_active is not None else self.is_active,
+            "enforce_schedule": enforce_schedule if enforce_schedule is not None else self.enforce_schedule
         }
     
     def _update_properties(
-        self, old_streamer: "Streamer", streamer_username, display_name, comments, is_active,
+        self, streamer_username, display_name, comments, is_active,
         enforce_schedule
     ):
-        self.streamer_username = streamer_username if streamer_username else old_streamer.streamer_username
-        self.display_name = display_name if display_name else old_streamer.display_name
-        self.comments = comments if comments else old_streamer.comments
-        self.is_active = is_active if is_active is not None else old_streamer.is_active
-        self.enforce_schedule = enforce_schedule if enforce_schedule is not None else old_streamer.enforce_schedule
+        self.streamer_username = streamer_username if streamer_username else self.streamer_username
+        self.display_name = display_name if display_name else self.display_name
+        self.comments = comments if comments else self.comments
+        self.is_active = is_active if is_active is not None else self.is_active
+        self.enforce_schedule = enforce_schedule if enforce_schedule is not None else self.enforce_schedule
 
     def _clear_properties(self):
         self.streamer_username = None

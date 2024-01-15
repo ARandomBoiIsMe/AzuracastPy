@@ -4,6 +4,7 @@ from .links import Links
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 class Playlist:
     def __init__(self, id: int, name: str, weight: int):
@@ -57,82 +58,53 @@ class StationFile:
         fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
         cue_in: Optional[int] = None, cue_out: Optional[int] = None
     ):
-        old_file = self._station.file(self.id)
-
-        url = API_ENDPOINTS["station_file"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        body = self._build_update_body(
-            old_file, title, artist, path, genre, album, lyrics, isrc,
+        return edit_resource(
+            self, "station_file", title, artist, path, genre, album, lyrics, isrc,
             playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
         )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_file, title, artist, path, genre, album, lyrics, isrc,
-                playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
-            )
-            
-        return response
     
     def delete(self):
-        url = API_ENDPOINTS["station_file"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self.station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
+        return delete_resource(self, "station_file")
 
     def _build_update_body(
-        self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
+        self, title, artist, path, genre, album, lyrics, isrc,
         playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
     ):
         return {
-            "artist": artist if artist else old_file.artist,
-            "title": title if title else old_file.title,
-            "album": album if album else old_file.album,
-            "genre": genre if genre else old_file.genre,
-            "lyrics": lyrics if lyrics else old_file.lyrics,
-            "path": path if path else old_file.path,
-            "isrc": isrc if isrc else old_file.isrc,
-            "amplify": amplify if amplify else old_file.amplify,
-            "fade_overlap": fade_overlap if fade_overlap else old_file.fade_overlap,
-            "fade_in": fade_in if fade_in else old_file.fade_in,
-            "fade_out": fade_out if fade_out else old_file.fade_out,
-            "cue_in": cue_in if cue_in else old_file.cue_in,
-            "cue_out": cue_out if cue_out else old_file.cue_out,
-            "playlists": playlists if playlists else old_file.playlists
+            "artist": artist if artist else self.artist,
+            "title": title if title else self.title,
+            "album": album if album else self.album,
+            "genre": genre if genre else self.genre,
+            "lyrics": lyrics if lyrics else self.lyrics,
+            "path": path if path else self.path,
+            "isrc": isrc if isrc else self.isrc,
+            "amplify": amplify if amplify else self.amplify,
+            "fade_overlap": fade_overlap if fade_overlap else self.fade_overlap,
+            "fade_in": fade_in if fade_in else self.fade_in,
+            "fade_out": fade_out if fade_out else self.fade_out,
+            "cue_in": cue_in if cue_in else self.cue_in,
+            "cue_out": cue_out if cue_out else self.cue_out,
+            "playlists": playlists if playlists else self.playlists
         }
     
     def _update_properties(
-        self, old_file: "StationFile", title, artist, path, genre, album, lyrics, isrc,
+        self, title, artist, path, genre, album, lyrics, isrc,
         playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
     ):
-        self.album = album if album else old_file.album
-        self.genre = genre if genre else old_file.genre
-        self.lyrics = lyrics if lyrics else old_file.lyrics
-        self.isrc = isrc if isrc else old_file.isrc
-        self.path = path if path else old_file.path
-        self.amplify = amplify if amplify else old_file.amplify
-        self.fade_overlap = fade_overlap if fade_overlap else old_file.fade_overlap
-        self.fade_in = fade_in if fade_in else old_file.fade_in
-        self.fade_out = fade_out if fade_out else old_file.fade_out
-        self.cue_in = cue_in if cue_in else old_file.cue_in
-        self.cue_out = cue_out if cue_out else old_file.cue_out
-        self.playlists = playlists if playlists else old_file.playlists
-        self.artist = artist if artist else old_file.artist
-        self.title = title if title else old_file.title
+        self.album = album if album else self.album
+        self.genre = genre if genre else self.genre
+        self.lyrics = lyrics if lyrics else self.lyrics
+        self.isrc = isrc if isrc else self.isrc
+        self.path = path if path else self.path
+        self.amplify = amplify if amplify else self.amplify
+        self.fade_overlap = fade_overlap if fade_overlap else self.fade_overlap
+        self.fade_in = fade_in if fade_in else self.fade_in
+        self.fade_out = fade_out if fade_out else self.fade_out
+        self.cue_in = cue_in if cue_in else self.cue_in
+        self.cue_out = cue_out if cue_out else self.cue_out
+        self.playlists = playlists if playlists else self.playlists
+        self.artist = artist if artist else self.artist
+        self.title = title if title else self.title
 
     def _clear_properties(self):
         self.unique_id = None

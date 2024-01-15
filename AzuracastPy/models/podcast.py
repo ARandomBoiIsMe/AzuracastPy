@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util import general_util
 from AzuracastPy.util.general_util import generate_repr_string
+from .util.station_resource_operations import edit_resource, delete_resource
 
 from .podcast_episode import PodcastEpisode
 
@@ -52,77 +53,56 @@ class Podcast:
         categories: Optional[List[str]] = None, author: Optional[str] = None, email: Optional[str] = None,
         website: Optional[str] = None
     ):
-        old_podcast = self._station.podcast(self.id)
-
-        url = API_ENDPOINTS["station_podcast"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
         if language is not None and len(language) > 2:
             language = language.lower().replace(' ', '_')
             language = general_util.get_language_code(language)
 
-        body = self._build_update_body(
-            old_podcast, title, description, language, author, email, website, categories
+        return edit_resource(
+            self, "station_podcast", title, description, language, author, email, website, categories
         )
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success'] is True:
-            self._update_properties(
-                old_podcast, title, description, language, author, email, website, categories
-            )
-
-        return response
 
     def delete(self):
-        url = API_ENDPOINTS["station_podcast"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        response = self._station._request_handler.delete(url)
-
-        if response['success'] is True:
-            self._clear_properties()
-
-        return response
-
+        return delete_resource(self, "station_podcast")
+    
     def _build_update_body(
-        self, old_podcast: "Podcast", title, description, language, author, email, website, categories
+        self, title, description, language, author, email, website, categories
     ):
         return {
-            "title": title if title else old_podcast.title,
-            "description": description if description else old_podcast.description,
-            "language": language if language else old_podcast.language,
-            "author": author if author else old_podcast.author,
-            "email": email if email else old_podcast.email,
-            "link": website if website else old_podcast.link,
-            "categories": categories if categories else old_podcast.categories
+            "title": title if title else self.title,
+            "description": description if description else self.description,
+            "language": language if language else self.language,
+            "author": author if author else self.author,
+            "email": email if email else self.email,
+            "link": website if website else self.link,
+            "categories": categories if categories else self.categories
         }
     
     def _update_properties(
-        self, old_podcast: "Podcast", title, description, language, author, email, website, categories
+        self, title, description, language, author, email, website, categories
     ):
-        self.title = title if title else old_podcast.title
-        self.description = description if description else old_podcast.description
-        self.language = language if language else old_podcast.language
-        self.author = author if author else old_podcast.author
-        self.email = email if email else old_podcast.email
-        self.link = website if website else old_podcast.link
-        self.categories = categories if categories else old_podcast.categories
+        self.title = title if title else self.title
+        self.description = description if description else self.description
+        self.language = language if language else self.language
+        self.author = author if author else self.author
+        self.email = email if email else self.email
+        self.link = website if website else self.link
+        self.categories = categories if categories else self.categories
 
     def _clear_properties(self):
+        self.id = None
+        self.storage_location_id = None
         self.title = None
+        self.link = None
         self.description = None
         self.language = None
         self.author = None
         self.email = None
-        self.link = None
+        self.has_custom_art = None
+        self.art = None
+        self.art_updated_at = None
         self.categories = None
+        self.episodes = None
+        self.links = None
         self._station = None
 
     # TODO: Media and art require file uploads
