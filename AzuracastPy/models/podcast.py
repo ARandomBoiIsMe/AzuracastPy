@@ -125,6 +125,8 @@ class Podcast:
         self.categories = None
         self._station = None
 
+    # TODO: Media and art require file uploads
+    # TODO: Schedule episode release
     def add_episode(
         self, title: str, description: str, explicit: bool = False, publish_date: Optional[str] = None,
         publish_time: Optional[str] = None

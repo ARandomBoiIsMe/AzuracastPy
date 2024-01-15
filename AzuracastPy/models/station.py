@@ -236,6 +236,8 @@ class Station:
 
         return MountPoint(**response, _station=self)
     
+    # TODO: Schedule playlist
+    # TODO: Value checks
     def add_playlist(
         self, name: str, type: str = "default", source: str = "songs", order: str = "shuffle",
         remote_url: Optional[str] = None, remote_type: str = "stream", remote_buffer: int = 0,
@@ -279,6 +281,7 @@ class Station:
 
         return Playlist(**response, _station=self)
     
+    # TODO: Art requires file upload
     def add_podcast(
         self, title: str, description: str, language: str, categories: Optional[List[str]] = None,
         author: Optional[str] = None, email: Optional[str] = None, website: Optional[str] = None
@@ -349,15 +352,61 @@ class Station:
         except IndexError:
             raise IndexError("Requested resource not found.")
     
+    def add_remote_relay(
+        self, station_listening_url: str, remote_type: str = "icecast", display_name: Optional[str] = None,
+        station_listening_mount_point: Optional[str] = None, station_admin_password: Optional[str] = None,
+        show_on_public_pages: bool = True, enable_autodj: bool = False, autodj_format: str = "mp3",
+        autodj_bitrate: int = 128, station_source_port: Optional[int] = None,
+        station_source_mount_point: Optional[str] = None, station_source_username: Optional[str] = None,
+        station_source_password: Optional[str] = None, is_public: bool = False
+    ):
+        if remote_type not in ["icecast", "shoutcast1", "shoutcast2"]:
+            message = "remote_type param has to be one of: icecast, shoutcast1, shoutcast2"
+            raise ClientException(message)
+        
+        if autodj_format not in HLS_FORMATS:
+            message = f"autodj_format param must be one of: {', '.join(HLS_FORMATS)}"
+            raise ClientException(message)
+        
+        if autodj_bitrate not in BITRATES:
+            message = f"autodj_bitrate param must be one of: {', '.join(BITRATES)}"
+            raise ClientException(message)
+
+        url = API_ENDPOINTS["station_remote_relays"].format(
+            radio_url=self._request_handler.radio_url,
+            station_id=self.id
+        )
+
+        body = {
+            "display_name": display_name if display_name else "",
+            "is_visible_on_public_pages": show_on_public_pages,
+            "type": remote_type,
+            "enable_autodj": enable_autodj,
+            "autodj_format": autodj_format,
+            "autodj_bitrate": autodj_bitrate,
+            "url": station_listening_url,
+            "mount": station_listening_mount_point if station_listening_mount_point else "",
+            "admin_password": station_admin_password if station_admin_password else "",
+            "source_port": station_source_port,
+            "source_mount": station_source_mount_point if station_source_mount_point else "",
+            "source_username": station_source_username if station_source_username else "",
+            "source_password": station_source_password if station_source_password else "",
+            "is_public": is_public
+        }
+
+        response = self._request_handler.post(url, body)
+
+        return RemoteRelay(**response, _station=self)
+
     def remote_relays(self) -> List[RemoteRelay]:
         response = self._request_multiple_instances_of("station_remote_relays")
 
-        return [RemoteRelay(**rr) for rr in response]
+        return [RemoteRelay(**rr, _station=self) for rr in response]
     
     def remote_relay(self, id: int) -> RemoteRelay:
         response = self._request_single_instance_of("station_remote_relay_item", id)
 
-        return RemoteRelay(**response)
+        return RemoteRelay(**response, _station=self)
     
     def add_sftp_user(self, username: str, password: str, public_keys: Optional[str] = None):
         url = API_ENDPOINTS["station_sftp_users"].format(
@@ -419,6 +468,7 @@ class Station:
 
         return HLSStream(**response, _station=self)
     
+    # TODO: Schedule streamer
     def add_streamer(
         self, streamer_username: str, streamer_password: str, display_name: Optional[str] = None,
         comments: Optional[str] = None, is_active: bool = True, enforce_schedule: bool = False
