@@ -3,6 +3,7 @@ from datetime import datetime
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
+from AzuracastPy.util.media_util import get_resource_art
 from .util.station_resource_operations import edit_resource, delete_resource
 
 class Links:
@@ -119,3 +120,6 @@ class Streamer:
         self.has_custom_art = None
         self.art = None
         self._station = None
+
+    def get_art(self) -> bytes:
+        return get_resource_art(self)

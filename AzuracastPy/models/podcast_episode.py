@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util import file_upload_util
+from AzuracastPy.util.media_util import get_resource_art
 from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
@@ -49,9 +49,13 @@ class PodcastEpisode:
         return generate_repr_string(self)
     
     def edit(
-        self, title: Optional[str] = None, description: Optional[str] = None, explicit: Optional[bool] = None
+        self, title: Optional[str] = None, description: Optional[str] = None, explicit: Optional[bool] = None,
+        publish_date: Optional[str] = None, publish_time: Optional[str] = None
     ):
-        old_episode = self._podcast.get_episode(self.id)
+        publish_at = None
+        if publish_date is not None and publish_time is not None:
+            # Generate UTC based off of station timezone
+            pass
 
         url = API_ENDPOINTS["podcast_episode"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
@@ -60,16 +64,12 @@ class PodcastEpisode:
             id=self.id
         )
 
-        body = self._build_update_body(
-            old_episode, title, description, explicit
-        )
+        body = self._build_update_body(title, description, explicit, publish_at)
 
         response = self._podcast._station._request_handler.put(url, body)
 
         if response['success'] is True:
-            self._update_properties(
-                old_episode, title, description, explicit
-            )
+            self._update_properties(title, description, explicit, publish_at)
 
         return response
 
@@ -88,21 +88,19 @@ class PodcastEpisode:
 
         return response
 
-    def _build_update_body(
-        self, old_episode: "PodcastEpisode", title, description, explicit
-    ):
+    def _build_update_body(self, title, description, explicit, publish_at):
         return {
-            "title": title if title else old_episode.title,
-            "description": description if description else old_episode.description,
-            "explicit": explicit if explicit else old_episode.explicit
+            "title": title if title else self.title,
+            "description": description if description else self.description,
+            "explicit": explicit if explicit else self.explicit,
+            "publish_at": publish_at if publish_at else self.publish_at
         }
     
-    def _update_properties(
-        self, old_episode: "PodcastEpisode", title, description, explicit
-    ):
-        self.title = title if title else old_episode.title
-        self.description = description if description else old_episode.description
-        self.explicit = explicit if explicit else old_episode.explicit
+    def _update_properties(self, title, description, explicit, publish_at):
+        self.title = title if title else self.title
+        self.description = description if description else self.description
+        self.explicit = explicit if explicit else self.explicit
+        self.publish_at = publish_at if publish_at else self.publish_at
 
     def _clear_properties(self):
         self.id = None
@@ -117,3 +115,9 @@ class PodcastEpisode:
         self.art_updated_at = None
         self.links = None
         self._podcast = None
+
+    def get_art(self) -> bytes:
+        return get_resource_art(self)
+    
+    def delete_art(self):
+        return

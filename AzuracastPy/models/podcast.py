@@ -1,8 +1,10 @@
+from datetime import datetime, timedelta
+
 from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util import general_util
-from AzuracastPy.util.general_util import generate_repr_string
+from AzuracastPy.util.general_util import generate_repr_string, get_language_code
+from AzuracastPy.util.media_util import get_resource_art
 from .util.station_resource_operations import edit_resource, delete_resource
 
 from .podcast_episode import PodcastEpisode
@@ -55,7 +57,7 @@ class Podcast:
     ):
         if language is not None and len(language) > 2:
             language = language.lower().replace(' ', '_')
-            language = general_util.get_language_code(language)
+            language = get_language_code(language)
 
         return edit_resource(
             self, "station_podcast", title, description, language, author, email, website, categories
@@ -105,12 +107,20 @@ class Podcast:
         self.links = None
         self._station = None
 
+    def get_art(self) -> bytes:
+        return get_resource_art(self)
+
     # TODO: Media and art require file uploads
     # TODO: Schedule episode release
     def add_episode(
         self, title: str, description: str, explicit: bool = False, publish_date: Optional[str] = None,
         publish_time: Optional[str] = None
     ):
+        publish_at = None
+        if publish_date is not None and publish_time is not None:
+            # Generate UTC based off of station timezone
+            pass
+
         url = url = API_ENDPOINTS["podcast_episodes"].format(
             radio_url=self._station._request_handler.radio_url,
             station_id=self._station.id,
@@ -120,7 +130,8 @@ class Podcast:
         body = {
             "title": title,
             "description": description,
-            "explicit": explicit
+            "explicit": explicit,
+            "publish_at": publish_at
         }
 
         response = self._station._request_handler.post(url, body)

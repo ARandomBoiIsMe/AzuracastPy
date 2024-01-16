@@ -26,7 +26,7 @@ from AzuracastPy.constants import (
     BITRATES
 )
 from AzuracastPy.request_handler import RequestHandler
-from AzuracastPy.util import file_upload_util, general_util
+from AzuracastPy.util import general_util, media_util
 from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.exceptions import ClientException
 
@@ -159,7 +159,7 @@ class Station:
             station_id=self.id
         )
 
-        upload_body = file_upload_util.generate_file_upload_structure(path, file)
+        upload_body = media_util.generate_file_upload_structure(path, file)
 
         response = self._request_handler.post(url, upload_body)
 
@@ -177,7 +177,7 @@ class Station:
             station_id=self.id
         )
 
-        upload_body = file_upload_util.generate_file_upload_structure(path, file)
+        upload_body = media_util.generate_file_upload_structure(path, file)
 
         response = self._request_handler.post(url, upload_body)
 
