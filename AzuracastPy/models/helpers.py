@@ -383,7 +383,7 @@ class HLSStreamHelper:
             "bitrate": bitrate
         }
 
-        response = self._request_handler.post(url, body)
+        response = self._station._request_handler.post(url, body)
 
         return HLSStream(**response, _station=self._station)
     
@@ -493,7 +493,7 @@ class WebhookHelper:
         
         if triggers is not None:
             if not all(trigger in WEBHOOK_TRIGGERS for trigger in triggers):
-                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
+                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of: {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
         
         config = webhook_config.to_dict()
