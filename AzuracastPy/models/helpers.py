@@ -9,7 +9,7 @@ from .remote_relay import RemoteRelay
 from .webhook import Webhook, WebhookConfig
 
 from AzuracastPy.util.media_util import generate_file_upload_structure
-from AzuracastPy.util.general_util import get_language_code
+from AzuracastPy.util.general_util import get_language_code, get_day_number
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.constants import (
     API_ENDPOINTS,
@@ -543,7 +543,24 @@ class StreamerHelper:
 
         return Streamer(**response, _station=self._station)
     
-    # TODO: Schedule streamer
+    def generate_streamer_schedule_item(
+        self,
+        start_time: str,
+        end_time: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        days: List[str] = None
+    ) -> Dict[str, Any]:
+        days = [get_day_number(day.strip().lower()) for day in days]
+
+        return {
+            "start_time": int(start_time.replace(':', '')),
+            "end_time": int(end_time.replace(':', '')),
+            "start_date": start_date, # year-month-day
+            "end_date": end_date, # year-month-day
+            "days": days if days else []
+        }
+    
     def create(
         self, 
         streamer_username: str, 
@@ -551,7 +568,8 @@ class StreamerHelper:
         display_name: Optional[str] = None,
         comments: Optional[str] = None, 
         is_active: bool = True, 
-        enforce_schedule: bool = False
+        enforce_schedule: bool = False,
+        schedule: Optional[List[Dict[str, Any]]] = None
     ) -> Streamer:
         """
         Adds a streamer to the station.
@@ -562,6 +580,7 @@ class StreamerHelper:
         :param comments:
         :param is_active:
         :param enforce_schedule:
+        :param schedule:
 
         :returns: A :class:`Streamer` object for the newly created streamer.
         """
@@ -576,12 +595,16 @@ class StreamerHelper:
             "display_name": display_name if display_name else "",
             "comments": comments if comments else "",
             "is_active": is_active,
-            "enforce_schedule": enforce_schedule
+            "enforce_schedule": enforce_schedule,
+            "schedule_items": schedule if schedule else []
         }
 
         response = self._station._request_handler.post(url, body)
 
-        return Streamer(**response, _station=self._station)
+        # This is stupid and wasteful, but the schedule_items attribute of the new Streamer won't be 
+        # returned otherwise. I'll find a better way soon.
+        streamer_id = response['id']
+        return self.__call__(streamer_id)
     
 class RemoteRelayHelper:
     def __init__(
