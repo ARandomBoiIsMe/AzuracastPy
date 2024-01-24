@@ -5,15 +5,21 @@ from typing import List, Dict, Any, Optional
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string, get_language_code
 from AzuracastPy.util.media_util import get_resource_art
-from .util.station_resource_operations import edit_resource, delete_resource
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 from .podcast_episode import PodcastEpisode
 
 class Links:
     def __init__(
-            self_, self: str, episodes: str, public_episodes: str, public_feed: str, art: str,
-            episode_new_art: str, episode_new_media: str
-        ):
+        self_, 
+        self: str, 
+        episodes: str, 
+        public_episodes: str, 
+        public_feed: str, 
+        art: str,
+        episode_new_art: str, 
+        episode_new_media: str
+    ):
         self_.self = self
         self_.episodes = episodes
         self_.public_episodes = public_episodes
@@ -27,9 +33,22 @@ class Links:
 
 class Podcast:
     def __init__(
-        self, id: str, storage_location_id: int, title: str, link: str, description: str, language: str,
-        author: str, email: str, has_custom_art: bool, art: str, art_updated_at: int, categories: List[str],
-        episodes: List[str], links: Links, _station
+        self, 
+        id: str, 
+        storage_location_id: int, 
+        title: str, 
+        link: str, 
+        description: str, 
+        language: str,
+        author: str, 
+        email: str, 
+        has_custom_art: bool, 
+        art: str, 
+        art_updated_at: int, 
+        categories: List[str],
+        episodes: List[str], 
+        links: Links, 
+        _station
     ):
         self.id = id
         self.storage_location_id = storage_location_id
@@ -51,23 +70,49 @@ class Podcast:
         return generate_repr_string(self)
     
     def edit(
-        self, title: Optional[str] = None, description: Optional[str] = None, language: Optional[str] = None,
-        categories: Optional[List[str]] = None, author: Optional[str] = None, email: Optional[str] = None,
+        self, 
+        title: Optional[str] = None, 
+        description: Optional[str] = None, 
+        language: Optional[str] = None,
+        categories: Optional[List[str]] = None, 
+        author: Optional[str] = None, 
+        email: Optional[str] = None,
         website: Optional[str] = None
     ):
+        """
+        Edits the podcast's properties
+        
+        :param title:
+        :param description:
+        :param language:
+        :param categories:
+        :param author:
+        :param email:
+        :param website:
+        """
         if language is not None and len(language) > 2:
             language = language.lower().replace(' ', '_')
             language = get_language_code(language)
 
-        return edit_resource(
+        return edit_station_resource(
             self, "station_podcast", title, description, language, author, email, website, categories
         )
 
     def delete(self):
-        return delete_resource(self, "station_podcast")
+        """
+        Deletes the podcast from the station.
+        """
+        return delete_station_resource(self, "station_podcast")
     
     def _build_update_body(
-        self, title, description, language, author, email, website, categories
+        self, 
+        title, 
+        description, 
+        language, 
+        author, 
+        email, 
+        website, 
+        categories
     ):
         return {
             "title": title if title else self.title,
@@ -80,7 +125,14 @@ class Podcast:
         }
     
     def _update_properties(
-        self, title, description, language, author, email, website, categories
+        self, 
+        title, 
+        description, 
+        language, 
+        author, 
+        email, 
+        website, 
+        categories
     ):
         self.title = title if title else self.title
         self.description = description if description else self.description
@@ -113,9 +165,24 @@ class Podcast:
     # TODO: Media and art require file uploads
     # TODO: Schedule episode release
     def add_episode(
-        self, title: str, description: str, explicit: bool = False, publish_date: Optional[str] = None,
+        self, 
+        title: str, 
+        description: str, 
+        explicit: bool = False, 
+        publish_date: Optional[str] = None,
         publish_time: Optional[str] = None
     ):
+        """
+        Adds an episode to the podcast.
+
+        :param title: 
+        :param description: (Optional) Default: ``None``
+        :param explicit:
+        :param publish_date:
+        :param publish_time:
+
+        :returns: A :class:`PodcastEpisode` object for the newly created episode.
+        """
         publish_at = None
         if publish_date is not None and publish_time is not None:
             # Generate UTC based off of station timezone
@@ -139,6 +206,11 @@ class Podcast:
         return PodcastEpisode(**response, _podcast=self)
 
     def get_episodes(self) -> List[PodcastEpisode]:
+        """
+        Retrieves the episodes of the podcast.
+
+        :returns: A list of :class:`PodcastEpisode` objects.
+        """
         url = API_ENDPOINTS["podcast_episodes"].format(
             radio_url=self._station._request_handler.radio_url,
             station_id=self._station.id,
@@ -149,7 +221,17 @@ class Podcast:
 
         return [PodcastEpisode(**pe, _podcast=self) for pe in response]
     
-    def get_episode(self, id: str) -> PodcastEpisode:
+    def get_episode(
+        self, 
+        id: str
+    ) -> PodcastEpisode:
+        """
+        Retrieves a specific episode from the podcast.
+
+        :param id: The ID of the episode to be retrieved.
+
+        :returns: A :class:`PodcastEpisode` object.
+        """
         if type(id) is not str:
             raise TypeError("id param should be of type string.")
         

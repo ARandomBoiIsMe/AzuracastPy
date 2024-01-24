@@ -1,11 +1,18 @@
-from typing import List, Dict, Any, Optional
+from typing import Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.media_util import get_resource_art
 from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
-    def __init__(self_, self: str, public: str, download: str, art: str, media: str):
+    def __init__(
+        self_, 
+        self: str, 
+        public: str, 
+        download: str, 
+        art: str, 
+        media: str
+    ):
         self_.self = self
         self_.public = public
         self_.download = download
@@ -16,7 +23,14 @@ class Links:
         return generate_repr_string(self)
 
 class Media:
-    def __init__(self, id: str, original_name: str, length: int, length_text: str, path: str):
+    def __init__(
+        self, 
+        id: str, 
+        original_name: str, 
+        length: int, 
+        length_text: str, 
+        path: str
+    ):
         self.id = id
         self.original_name = original_name
         self.length = length
@@ -28,8 +42,18 @@ class Media:
 
 class PodcastEpisode:
     def __init__(
-        self, id: str, title: str, description: str, explicit: bool, publish_at: int, has_media: bool,
-        media: Media, has_custom_art: bool, art: str, art_updated_at: int, links: Links,
+        self, 
+        id: str, 
+        title: str, 
+        description: str, 
+        explicit: bool, 
+        publish_at: int, 
+        has_media: bool,
+        media: Media, 
+        has_custom_art: bool, 
+        art: str, 
+        art_updated_at: int, 
+        links: Links,
         _podcast
     ):
         self.id = id
@@ -49,8 +73,12 @@ class PodcastEpisode:
         return generate_repr_string(self)
     
     def edit(
-        self, title: Optional[str] = None, description: Optional[str] = None, explicit: Optional[bool] = None,
-        publish_date: Optional[str] = None, publish_time: Optional[str] = None
+        self, 
+        title: Optional[str] = None, 
+        description: Optional[str] = None, 
+        explicit: Optional[bool] = None,
+        publish_date: Optional[str] = None, 
+        publish_time: Optional[str] = None
     ):
         publish_at = None
         if publish_date is not None and publish_time is not None:
@@ -88,7 +116,13 @@ class PodcastEpisode:
 
         return response
 
-    def _build_update_body(self, title, description, explicit, publish_at):
+    def _build_update_body(
+        self, 
+        title, 
+        description, 
+        explicit, 
+        publish_at
+    ):
         return {
             "title": title if title else self.title,
             "description": description if description else self.description,
@@ -96,7 +130,13 @@ class PodcastEpisode:
             "publish_at": publish_at if publish_at else self.publish_at
         }
     
-    def _update_properties(self, title, description, explicit, publish_at):
+    def _update_properties(
+        self, 
+        title, 
+        description, 
+        explicit, 
+        publish_at
+    ):
         self.title = title if title else self.title
         self.description = description if description else self.description
         self.explicit = explicit if explicit else self.explicit

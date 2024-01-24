@@ -1,6 +1,6 @@
 from AzuracastPy.constants import API_ENDPOINTS
 
-def edit_resource(self, resource_type: str, *args): 
+def edit_station_resource(self, resource_type: str, *args): 
     url = API_ENDPOINTS[resource_type].format(
         radio_url=self._station._request_handler.radio_url,
         station_id=self._station.id,
@@ -16,7 +16,7 @@ def edit_resource(self, resource_type: str, *args):
     
     return response
 
-def delete_resource(self, resource_type: str): 
+def delete_station_resource(self, resource_type: str): 
     url = API_ENDPOINTS[resource_type].format(
         radio_url=self._station._request_handler.radio_url,
         station_id=self._station.id,

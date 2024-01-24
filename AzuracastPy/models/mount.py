@@ -4,9 +4,16 @@ from AzuracastPy.util.general_util import generate_repr_string
 
 class Mount:
     def __init__(
-            self, id: int, name: str, url: str, bitrate: int, format: str, path: str, is_default: bool,
-            listeners: Listeners
-        ):
+        self, 
+        id: int, 
+        name: str, 
+        url: str, 
+        bitrate: int, 
+        format: str, 
+        path: str, 
+        is_default: bool,
+        listeners: Listeners
+    ):
         self.id = id
         self.name = name
         self.url = url

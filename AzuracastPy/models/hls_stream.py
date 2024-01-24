@@ -1,19 +1,32 @@
-from AzuracastPy.constants import API_ENDPOINTS, HLS_FORMATS, BITRATES
+from AzuracastPy.constants import FORMATS, BITRATES
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
-from .util.station_resource_operations import edit_resource, delete_resource
+
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 from typing import Optional
 
 class Links:
-    def __init__(self_, self):
+    def __init__(
+        self_, 
+        self: str
+    ):
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class HLSStream:
-    def __init__(self, name: str, format: str, bitrate: int, listeners: int, id: int, links: Links, _station):
+    def __init__(
+        self,
+        name: str,
+        format: str,
+        bitrate: int,
+        listeners: int,
+        id: int,
+        links: Links,
+        _station
+    ):
         self.name = name
         self.format = format
         self.bitrate = bitrate
@@ -25,10 +38,22 @@ class HLSStream:
     def __repr__(self):
         return generate_repr_string(self)
     
-    def edit(self, name: Optional[str] = None, format: Optional[str] = None, bitrate: Optional[int] = None):
+    def edit(
+        self,
+        name: Optional[str] = None,
+        format: Optional[str] = None,
+        bitrate: Optional[int] = None
+    ):
+        """
+        Edits the HTTP Live Streaming (HLS) stream's properties.
+
+        :param name:
+        :param format:
+        :param bitrate:
+        """
         if format is not None:
-            if format not in HLS_FORMATS:
-                message = f"format param must be one of: {', '.join(HLS_FORMATS)}"
+            if format not in FORMATS:
+                message = f"format param must be one of: {', '.join(FORMATS)}"
                 raise ClientException(message)
         
         if bitrate is not None:
@@ -36,19 +61,32 @@ class HLSStream:
                 message = f"bitrate param must be one of: {', '.join(BITRATES)}"
                 raise ClientException(message)
             
-        return edit_resource(self, "hls_stream", name, format, bitrate)
+        return edit_station_resource(self, "hls_stream", name, format, bitrate)
     
     def delete(self):
-        return delete_resource(self, "hls_stream")
+        """
+        Deletes the HTTP Live Streaming (HLS) stream from the station.
+        """
+        return delete_station_resource(self, "hls_stream")
     
-    def _build_update_body(self, name, format, bitrate):
+    def _build_update_body(
+        self,
+        name,
+        format,
+        bitrate
+    ):
         return {
             "name": name if name else self.name,
             "format": format if format else self.format,
             "bitrate": bitrate if bitrate else self.bitrate
         }
     
-    def _update_properties(self, name, format, bitrate):
+    def _update_properties(
+        self,
+        name,
+        format,
+        bitrate
+    ):
         self.name = name if name else self.name
         self.format = format if format else self.format
         self.bitrate = bitrate if bitrate else self.bitrate

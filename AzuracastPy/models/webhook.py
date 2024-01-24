@@ -1,12 +1,18 @@
 from typing import List, Dict, Any, Optional
 
-from AzuracastPy.constants import API_ENDPOINTS, WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
+from AzuracastPy.constants import WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
-from .util.station_resource_operations import edit_resource, delete_resource
+
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
-    def __init__(self_, self: str, toggle: str, test: str):
+    def __init__(
+        self_, 
+        self: str, 
+        toggle: str, 
+        test: str
+    ):
         self_.self = self
         self_.toggle = toggle
         self_.test = test
@@ -16,16 +22,42 @@ class Links:
     
 class WebhookConfig:
     def __init__(
-        self, webhook_url: Optional[str] = None, basic_auth_username: Optional[str] = None, basic_auth_password: Optional[str] = None,
-        timeout: Optional[int] = None, to: Optional[str] = None, subject: Optional[str] = None, message: Optional[str] = None,
-        content: Optional[str] = None, title: Optional[str] = None, description: Optional[str] = None, url: Optional[str] = None,
-        author: Optional[str] = None, thumbnail: Optional[str] = None, footer: Optional[str] = None, bot_token: Optional[str] = None,
-        chat_id: Optional[str] = None, api: Optional[str] = None, text: Optional[str] = None, parse_mode: Optional[str] = None,
-        instance_url: Optional[str] = None, access_token: Optional[str] = None, visibility: Optional[str] = None, rate_limit: Optional[str] = None,
-        message_song_changed_live: Optional[str] = None, message_live_connect: Optional[str] = None, message_live_disconnect: Optional[str] = None,
-        message_station_offline: Optional[str] = None, message_station_online: Optional[str] = None, station_id: Optional[str] = None,
-        partner_id: Optional[str] = None, partner_key: Optional[str] = None, broadcastsubdomain: Optional[str] = None, apikey: Optional[str] = None,
-        token: Optional[str] = None, measurement_id: Optional[str] = None, matomo_url: Optional[str] = None, site_id: Optional[str] = None
+        self, 
+        webhook_url: Optional[str] = None, 
+        basic_auth_username: Optional[str] = None,
+        basic_auth_password: Optional[str] = None,
+        timeout: Optional[int] = None, 
+        to: Optional[str] = None, 
+        subject: Optional[str] = None, 
+        message: Optional[str] = None,
+        content: Optional[str] = None, 
+        title: Optional[str] = None, 
+        description: Optional[str] = None, 
+        url: Optional[str] = None,
+        author: Optional[str] = None, 
+        thumbnail: Optional[str] = None, 
+        footer: Optional[str] = None, 
+        bot_token: Optional[str] = None,
+        chat_id: Optional[str] = None, 
+        api: Optional[str] = None, 
+        text: Optional[str] = None, 
+        parse_mode: Optional[str] = None,
+        instance_url: Optional[str] = None, 
+        access_token: Optional[str] = None, 
+        visibility: Optional[str] = None, rate_limit: Optional[str] = None,
+        message_song_changed_live: Optional[str] = None, 
+        message_live_connect: Optional[str] = None, 
+        message_live_disconnect: Optional[str] = None,
+        message_station_offline: Optional[str] = None, 
+        message_station_online: Optional[str] = None, 
+        station_id: Optional[str] = None,
+        partner_id: Optional[str] = None,
+        partner_key: Optional[str] = None, 
+        broadcastsubdomain: Optional[str] = None, apikey: Optional[str] = None,
+        token: Optional[str] = None, 
+        measurement_id: Optional[str] = None, 
+        matomo_url: Optional[str] = None, 
+        site_id: Optional[str] = None
     ):        
         self.webhook_url = webhook_url
         self.basic_auth_username = basic_auth_username
@@ -70,9 +102,16 @@ class WebhookConfig:
 
 class Webhook:
     def __init__(
-            self, name: str, type: str, is_enabled: bool, triggers: List[str], config: Dict[str, Any],
-            id: int, links: Links, _station
-        ):
+        self, 
+        name: str, 
+        type: str, 
+        is_enabled: bool, 
+        triggers: List[str], 
+        config: Dict[str, Any],
+        id: int, 
+        links: Links, 
+        _station
+    ):
         self.name = name
         self.type = type
         self.is_enabled = is_enabled
@@ -86,10 +125,22 @@ class Webhook:
         return generate_repr_string(self)
     
     def edit(
-        self, name: Optional[str] = None, type: Optional[str] = None, webhook_config: Optional[WebhookConfig] = None,
+        self, 
+        name: Optional[str] = None, 
+        type: Optional[str] = None, 
+        webhook_config: Optional[WebhookConfig] = None,
         triggers: Optional[List[str]] = None
     ):
-        # Attempting to update the type without updating the config to match the new type is a crime in my world.
+        """
+        Edits the webhook's properties.
+
+        :param name:
+        :param type:
+        :param webhook_config:
+        :param triggers:
+        """
+        # Attempting to update the type without updating the config to match the new type is a crime 
+        # in my world.
         if type is not None and type != self.type and config is None:
             message = "To update the webhook type, the new config must be provided as well."
             raise ClientException(message)
@@ -97,12 +148,12 @@ class Webhook:
         if type is not None:
             valid_types = WEBHOOK_CONFIG_TEMPLATES.keys()
             if type not in valid_types:
-                message = f"type param must be one of {', '.join(valid_types)}"
+                message = f"type param must be one of: {', '.join(valid_types)}"
                 raise ClientException(message)
             
         if triggers is not None:
             if not all(trigger in WEBHOOK_TRIGGERS for trigger in triggers):
-                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of {', '.join(WEBHOOK_TRIGGERS)}."
+                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of: {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
             
         config = None
@@ -113,12 +164,21 @@ class Webhook:
                 message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
                 raise ClientException(message)
 
-        return edit_resource(self, "station_webhook", name, type, config, triggers)
+        return edit_station_resource(self, "station_webhook", name, type, config, triggers)
     
     def delete(self):
-        return delete_resource(self, "station_webhook")
+        """
+        Deletes the webhook from the station.
+        """
+        return delete_station_resource(self, "station_webhook")
     
-    def _build_update_body(self, name, type, config, triggers):
+    def _build_update_body(
+        self, 
+        name, 
+        type, 
+        config, 
+        triggers
+    ):
         return {
             "name": name if name else self.name,
             "type": type if type else self.type,
@@ -126,7 +186,13 @@ class Webhook:
             "config": config if config else self.config
         }
     
-    def _update_properties(self, name, type, config, triggers):
+    def _update_properties(
+        self, 
+        name, 
+        type, 
+        config, 
+        triggers
+    ):
         self.name = name if name else self.name
         self.type = type if type else self.type
         self.triggers = triggers if triggers else self.triggers

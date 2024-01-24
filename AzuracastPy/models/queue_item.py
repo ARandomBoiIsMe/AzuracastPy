@@ -6,7 +6,10 @@ from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
 
 class Links:
-    def __init__(self_, self: str):
+    def __init__(
+        self_, 
+        self: str
+    ):
         self_.self = self
 
     def __repr__(self):
@@ -14,9 +17,19 @@ class Links:
 
 class QueueItem:
     def __init__(
-        self, cued_at: int, played_at: int, duration: int, playlist: str, is_request: bool,
-        song: Song, sent_to_autodj: bool, is_played: bool, autodj_custom_uri: str, log: List[str],
-        links: Links, _station
+        self, 
+        cued_at: int, 
+        played_at: int, 
+        duration: int, 
+        playlist: str, 
+        is_request: bool,
+        song: Song, 
+        sent_to_autodj: bool, 
+        is_played: bool, 
+        autodj_custom_uri: str, 
+        log: List[str],
+        links: Links, 
+        _station
     ):
         self.cued_at = cued_at
         self.played_at = played_at

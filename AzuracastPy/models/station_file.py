@@ -1,14 +1,27 @@
 from typing import List, Optional
 
-from .links import Links
-
 from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.util.media_util import get_media_file_art
 
-from .util.station_resource_operations import edit_resource, delete_resource
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
+
+class Links:
+    def __init__(
+        self_,
+        self: str
+    ):
+        self_.self = self
+
+    def __repr__(self):
+        return generate_repr_string(self)
 
 class Playlist:
-    def __init__(self, id: int, name: str, weight: int):
+    def __init__(
+        self, 
+        id: int, 
+        name: str, 
+        weight: int
+    ):
         self.id = id
         self.name = name
         self.weight = weight
@@ -18,10 +31,32 @@ class Playlist:
 
 class StationFile:
     def __init__(
-        self, unique_id: str, album: str, genre: str, lyrics: str, isrc: str, length: float,
-        length_text: str, path: str, mtime: int, amplify, fade_overlap, fade_in, fade_out, cue_in,
-        cue_out, art_updated_at: int, playlists: List[Playlist], id: int, song_id: str, text: str,
-        artist: str, title: str, custom_fields: List[str], links: Links, _station
+        self, 
+        unique_id: str, 
+        album: str, 
+        genre: str, 
+        lyrics: str, 
+        isrc: str, 
+        length: float,
+        length_text: str, 
+        path: str, 
+        mtime: int, 
+        amplify, 
+        fade_overlap,
+        fade_in, 
+        fade_out, 
+        cue_in,
+        cue_out, 
+        art_updated_at: int, 
+        playlists: List[Playlist], 
+        id: int, 
+        song_id: str, 
+        text: str,
+        artist: str, 
+        title: str, 
+        custom_fields: List[str], 
+        links: Links, 
+        _station
     ):
         self.unique_id = unique_id
         self.album = album
@@ -53,23 +88,67 @@ class StationFile:
         return generate_repr_string(self)
     
     def edit(
-        self, title: Optional[str] = None, artist: Optional[str] = None, path: Optional[str] = None,
-        genre: Optional[str] = None, album: Optional[str] = None, lyrics: Optional[str] = None,
-        isrc: Optional[str] = None, playlists: Optional[List[str]] = None, amplify: Optional[int] = None,
-        fade_overlap: Optional[int] = None, fade_in: Optional[int] = None, fade_out: Optional[int] = None,
-        cue_in: Optional[int] = None, cue_out: Optional[int] = None
+        self, 
+        title: Optional[str] = None, 
+        artist: Optional[str] = None, 
+        path: Optional[str] = None,
+        genre: Optional[str] = None, 
+        album: Optional[str] = None, 
+        lyrics: Optional[str] = None,
+        isrc: Optional[str] = None, 
+        playlists: Optional[List[str]] = None, 
+        amplify: Optional[int] = None,
+        fade_overlap: Optional[int] = None, 
+        fade_in: Optional[int] = None, 
+        fade_out: Optional[int] = None,
+        cue_in: Optional[int] = None, 
+        cue_out: Optional[int] = None
     ):
-        return edit_resource(
+        """
+        Edits the file's properties.
+
+        :param title:
+        :param artist:
+        :param path:
+        :param genre:
+        :param album:
+        :param lyrics:
+        :param isrc:
+        :param playlists:
+        :param amplify:
+        :param fade_overlap:
+        :param fade_in:
+        :param fade_out:
+        :param cue_in:
+        :param cue_out:
+        """
+        return edit_station_resource(
             self, "station_file", title, artist, path, genre, album, lyrics, isrc,
             playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
         )
     
     def delete(self):
-        return delete_resource(self, "station_file")
+        """
+        Deletes the file from the station.
+        """
+        return delete_station_resource(self, "station_file")
 
     def _build_update_body(
-        self, title, artist, path, genre, album, lyrics, isrc,
-        playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
+        self, 
+        title, 
+        artist, 
+        path, 
+        genre, 
+        album, 
+        lyrics, 
+        isrc,
+        playlists, 
+        amplify, 
+        fade_overlap, 
+        fade_in, 
+        fade_out, 
+        cue_in, 
+        cue_out
     ):
         return {
             "artist": artist if artist else self.artist,
@@ -89,8 +168,21 @@ class StationFile:
         }
     
     def _update_properties(
-        self, title, artist, path, genre, album, lyrics, isrc,
-        playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
+        self, 
+        title, 
+        artist, 
+        path, 
+        genre, 
+        album, 
+        lyrics, 
+        isrc,
+        playlists, 
+        amplify, 
+        fade_overlap, 
+        fade_in, 
+        fade_out, 
+        cue_in, 
+        cue_out
     ):
         self.album = album if album else self.album
         self.genre = genre if genre else self.genre

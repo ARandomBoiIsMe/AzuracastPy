@@ -2,7 +2,10 @@ import requests
 from json.decoder import JSONDecodeError
 
 from .exceptions import (
-    AccessDeniedException, AzuracastAPIException, UnexpectedErrorException, ClientException
+    AccessDeniedException,
+    AzuracastAPIException,
+    UnexpectedErrorException,
+    ClientException
 )
 
 from lxml import html # A HTML parser is needed to extract some errors
@@ -10,21 +13,39 @@ from lxml import html # A HTML parser is needed to extract some errors
 from typing import Optional, Tuple, Dict, Any
 
 class RequestHandler:
-    def __init__(self, radio_url: str, x_api_key: Optional[str] = None):
+    def __init__(
+        self, 
+        radio_url: str, 
+        x_api_key: Optional[str] = None
+    ):
         self.radio_url = radio_url
         self._x_api_key = x_api_key
         self._headers = self._set_headers()
 
-    def post(self, url: str, body: Optional[Dict[str, Any]] = None):
+    def post(
+        self,
+        url: str,
+        body: Optional[Dict[str, Any]] = None
+    ):
         return self._send_request(method='POST', url=url, body=body)
     
-    def get(self, url: str):
+    def get(
+        self, 
+        url: str
+    ):
         return self._send_request(method='GET', url=url)
     
-    def put(self, url: str, body: Dict[str, Any]):
+    def put(
+        self, 
+        url: str, 
+        body: Dict[str, Any]
+    ):
         return self._send_request(method='PUT', url=url, body=body)
     
-    def delete(self, url: str):
+    def delete(
+        self, 
+        url: str
+    ):
         return self._send_request(method='DELETE', url=url)
     
     # -----------------------------------
@@ -33,7 +54,12 @@ class RequestHandler:
     # This behaviour seems to be random. As a result, on top of the normal error logic, I added logic to check for these occurences,
     # just incase. Better safe than sorry I guess.
     # -----------------------------------
-    def _send_request(self, method: str, url: str, body: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _send_request(
+        self,
+        method: str,
+        url: str,
+        body: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         with requests.request(method=method, url=url, json=body, headers=self._headers) as response:
             if response.status_code == 500:
                 self._handle_500_error(url=url, response=response)
@@ -62,14 +88,18 @@ class RequestHandler:
     def _set_headers(self) -> Dict[str, str]:
         return {'accept': 'application/json', 'X-API-Key': self._x_api_key}
     
-    def _handle_500_error(self, url: str, response: requests.Response):
+    def _handle_500_error(
+        self, 
+        url: str, 
+        response: requests.Response
+    ):
         # Attempts to parse error json response for details.
         try:
             error = response.json()
             self._raise_request_exception(error['type'], error['message'])
         except (ValueError, KeyError, JSONDecodeError):
             pass
-            
+
         # Error is not valid JSON.
         # Assumes response is error HTML response and tries to parse it to get details.
         try:
@@ -79,7 +109,10 @@ class RequestHandler:
             # Error is neither JSON nor expected HTML. Unexpected error found.
             self._raise_unexpected_error_exception(url, response.text)
 
-    def _get_specific_error(self, text: str) -> Tuple:
+    def _get_specific_error(
+        self, 
+        text: str
+    ) -> Tuple:
         doc = html.fromstring(text)
         error_title = doc.xpath(".//p[@class='text-muted card-text']")[0].text
         error_description = doc.find('.//h4').text.strip()
@@ -88,7 +121,10 @@ class RequestHandler:
 
         return (error_title, error_description)
 
-    def _confirm_login_error(self, text: str) -> bool:
+    def _confirm_login_error(
+        self, 
+        text: str
+    ) -> bool:
         try:
             doc = html.fromstring(text)
             title = doc.find('.//title')
@@ -97,11 +133,19 @@ class RequestHandler:
         except:
             return False
     
-    def _raise_request_exception(self, error_type: str, error_message: str):
+    def _raise_request_exception(
+        self, 
+        error_type: str, 
+        error_message: str
+    ):
         raise AzuracastAPIException(f"Encountered request error: {error_type} - {error_message}")
     
     def _raise_access_denied_exception(self):
-        raise AccessDeniedException("You silly goose. You need a valid x-api-key to perform this action. Update yours and try again.")
+        raise AccessDeniedException("You silly goose. You need a valid x-api-key to perform this action. Provide a valid key and try again.")
     
-    def _raise_unexpected_error_exception(self, url: str, text: str):
+    def _raise_unexpected_error_exception(
+        self, 
+        url: str, 
+        text: str
+    ):
         raise UnexpectedErrorException(f"Unexpected error occured while trying to access this url: {url}.\nError details: {text}")

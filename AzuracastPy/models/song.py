@@ -4,9 +4,18 @@ from AzuracastPy.util.general_util import generate_repr_string
 
 class Song:
     def __init__(
-            self, id: str, text: str, artist: str, title: str, album: str, genre: str, isrc: str,
-            lyrics: str, art: str, custom_fields: List[str]
-        ):
+        self, 
+        id: str, 
+        text: str, 
+        artist: str, 
+        title: str, 
+        album: str, 
+        genre: str, 
+        isrc: str,
+        lyrics: str, 
+        art: str, 
+        custom_fields: List[str]
+    ):
         self.id = id
         self.text = text
         self.artist = artist

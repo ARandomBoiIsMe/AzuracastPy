@@ -1,12 +1,16 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
-from .util.station_resource_operations import edit_resource, delete_resource
+
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Export:
-    def __init__(self, pls: str, m3u: str):
+    def __init__(
+        self, 
+        pls: str, 
+        m3u: str
+    ):
         self.pls = pls
         self.m3u = m3u
 
@@ -15,8 +19,16 @@ class Export:
 
 class Links:
     def __init__(
-        self, _self: str, toggle: str, clone: str, queue: str, _import: str, reshuffle: str,
-        applyto: str, empty: str, export: Export
+        self, 
+        _self: str, 
+        toggle: str, 
+        clone: str, 
+        queue: str, 
+        _import: str, 
+        reshuffle: str,
+        applyto: str, 
+        empty: str, 
+        export: Export
     ):
         self._self = _self
         self.toggle = toggle
@@ -32,7 +44,10 @@ class Links:
         return generate_repr_string(self)
 
     @classmethod
-    def from_dict(cls, links_dict: Dict[str, Any]):
+    def from_dict(
+        cls, 
+        links_dict: Dict[str, Any]
+    ):
         return cls(
             _self=links_dict.get("self"),
             toggle=links_dict.get("toggle"),
@@ -47,8 +62,14 @@ class Links:
 
 class ScheduleItem:
     def __init__(
-        self, start_time: int, end_time: int, start_date: str, end_date: str, days: List[int],
-        loop_once: bool, id: int
+        self, 
+        start_time: int,
+         end_time: int, 
+        start_date: str, 
+        end_date: str, 
+        days: List[int],
+        loop_once: bool, 
+        id: int
     ):
         self.start_time = start_time
         self.end_time = end_time
@@ -63,12 +84,33 @@ class ScheduleItem:
 
 class Playlist:
     def __init__(
-        self, name: str, type: str, source: str, order: str, remote_url: str, remote_type: str,
-        remote_buffer: int, is_enabled: bool, is_jingle: bool, play_per_songs: int, play_per_minutes: int,
-        play_per_hour_minute: int, weight: int, include_in_requests: bool, include_in_on_demand: bool,
-        backend_options: List[str], avoid_duplicates: bool, played_at: int, queue_reset_at: int,
-        schedule_items: List[ScheduleItem], id: int, short_name: str, num_songs: int, total_length: int,
-        links: Dict[str, Any], _station
+        self, 
+        name: str, 
+        type: str, 
+        source: str, 
+        order: str, 
+        remote_url: str, 
+        remote_type: str,
+        remote_buffer: int, 
+        is_enabled: bool, 
+        is_jingle: bool, 
+        play_per_songs: int, 
+        play_per_minutes: int,
+        play_per_hour_minute: int, 
+        weight: int, 
+        include_in_requests: bool, 
+        include_in_on_demand: bool,
+        backend_options: List[str], 
+        avoid_duplicates: bool, 
+        played_at: int, 
+        queue_reset_at: int,
+        schedule_items: List[ScheduleItem], 
+        id: int, 
+        short_name: str, 
+        num_songs: int, 
+        total_length: int,
+        links: Dict[str, Any], 
+        _station
     ):
         self.name = name
         self.type = type
@@ -101,23 +143,64 @@ class Playlist:
         return generate_repr_string(self)
     
     def edit(
-        self, name: Optional[str] = None, type: Optional[str] = None, source: Optional[str] = None,
-        order: Optional[str] = None, remote_url: Optional[str] = None, remote_type: Optional[str] = None,
-        remote_buffer: Optional[int] = None, play_per_value: Optional[int] = None, weight: Optional[int] = None,
-        include_in_requests: Optional[bool] = None, include_in_on_demand: Optional[bool] = None,
-        avoid_duplicates: Optional[bool] = None, is_jingle: Optional[bool] = None
+        self, 
+        name: Optional[str] = None, 
+        type: Optional[str] = None, 
+        source: Optional[str] = None,
+        order: Optional[str] = None, 
+        remote_url: Optional[str] = None, 
+        remote_type: Optional[str] = None,
+        remote_buffer: Optional[int] = None, 
+        play_per_value: Optional[int] = None, 
+        weight: Optional[int] = None,
+        include_in_requests: Optional[bool] = None, 
+        include_in_on_demand: Optional[bool] = None,
+        avoid_duplicates: Optional[bool] = None, 
+        is_jingle: Optional[bool] = None
     ):
-        return edit_resource(
+        """
+        Edits the playlist's properties.
+
+        :param name:
+        :param type:
+        :param source:
+        :param order:
+        :param remote_url:
+        :param remote_type:
+        :param remote_buffer:
+        :param play_per_value:
+        :param weight:
+        :param include_in_requests:
+        :param include_in_on_demand:
+        :param avoid_duplicates:
+        :param is_jingle:
+        """
+        return edit_station_resource(
             self, "station_playlist", name, type, source, order, remote_url, remote_type, remote_buffer,
             is_jingle, play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
         )
     
     def delete(self):
-        return delete_resource(self, "station_playlist")
+        """
+        Deletes the playlist from the station.
+        """
+        return delete_station_resource(self, "station_playlist")
     
     def _build_update_body(
-        self, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
-        play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
+        self, 
+        name, 
+        type, 
+        source, 
+        order, 
+        remote_url, 
+        remote_type, 
+        remote_buffer, 
+        is_jingle,
+        play_per_value, 
+        weight, 
+        include_in_requests, 
+        include_in_on_demand, 
+        avoid_duplicates
     ):
         return {
             "name": name if name else self.name,
@@ -138,8 +221,20 @@ class Playlist:
         }
     
     def _update_properties(
-        self, name, type, source, order, remote_url, remote_type, remote_buffer, is_jingle,
-        play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
+        self, 
+        name, 
+        type, 
+        source, 
+        order, 
+        remote_url, 
+        remote_type, 
+        remote_buffer, 
+        is_jingle,
+        play_per_value, 
+        weight, 
+        include_in_requests, 
+        include_in_on_demand, 
+        avoid_duplicates
     ):
         self.name = name if name else self.name
         self.type = type if type else self.type

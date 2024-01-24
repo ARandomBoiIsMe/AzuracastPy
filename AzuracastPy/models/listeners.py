@@ -1,7 +1,12 @@
 from AzuracastPy.util.general_util import generate_repr_string
 
 class Listeners:
-    def __init__(self, total, unique, current):
+    def __init__(
+        self, 
+        total, 
+        unique, 
+        current
+    ):
         self.total = total
         self.unique = unique
         self.current = current

@@ -13,7 +13,6 @@ def generate_file_upload_structure(path: str, file: str):
     with open(file, 'rb') as f:
         contents = f.read()
 
-    # Decoding to ASCII makes file uploads possible
     contents = base64.b64encode(contents).decode('ascii')
 
     return {

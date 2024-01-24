@@ -1,18 +1,46 @@
-from .links import Links
-
 from AzuracastPy.util.general_util import generate_repr_string
-from AzuracastPy.constants import API_ENDPOINTS
-from .util.station_resource_operations import edit_resource, delete_resource
+
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 from typing import Optional, Dict, Any, Union
 
+class Links:
+    def __init__(
+        self_, 
+        self: str, 
+        intro: str, 
+        listen: str
+    ):
+        self_.self = self
+        self_.intro = intro
+        self_.listen = listen
+
+    def __repr__(self):
+        return generate_repr_string(self)
+    
 class MountPoint:
     def __init__(
-        self, name: str, display_name: str, is_visible_on_public_pages: bool, is_default: bool,
-        is_public: bool, fallback_mount, relay_url: str, authhash: str, max_listener_duration: int,
-        enable_autodj: bool, autodj_format: str, autodj_bitrate: int, custom_listen_url: str,
-        intro_path: str, frontend_config, listeners_unique: int, listeners_total: int, id: int,
-        links: Links, _station
+        self, 
+        name: str, 
+        display_name: str, 
+        is_visible_on_public_pages: bool, 
+        is_default: bool,
+        is_public: bool, 
+        fallback_mount, 
+        relay_url: str, 
+        authhash: str, 
+        max_listener_duration: int,
+        enable_autodj: bool, 
+        autodj_format: str, 
+        autodj_bitrate: int, 
+        custom_listen_url: str,
+        intro_path: str, 
+        frontend_config, 
+        listeners_unique: int, 
+        listeners_total: int, 
+        id: int,
+        links: Links,
+        _station
     ):
         self.name = name
         self.display_name = display_name
@@ -39,27 +67,65 @@ class MountPoint:
         return generate_repr_string(self)
     
     def edit(
-        self, mount_point_url: Optional[str] = None, display_name: Optional[str] = None,
-        show_on_public_pages: Optional[bool] = None, is_default: Optional[bool] = None,
-        is_public: Optional[bool] = None, relay_stream_url: Optional[str] = None,
-        max_listener_duration: Optional[int] = None, fallback_mount: Optional[str] = None,
-        enable_autodj: Optional[bool] = None, autodj_format: Optional[str] = None,
-        autodj_bitrate: Optional[int] = None, custom_url: Optional[str] = None,
+        self, 
+        mount_point_url: Optional[str] = None, 
+        display_name: Optional[str] = None,
+        show_on_public_pages: Optional[bool] = None, 
+        is_default: Optional[bool] = None,
+        is_public: Optional[bool] = None, 
+        relay_stream_url: Optional[str] = None,
+        max_listener_duration: Optional[int] = None, 
+        fallback_mount: Optional[str] = None,
+        enable_autodj: Optional[bool] = None, 
+        autodj_format: Optional[str] = None,
+        autodj_bitrate: Optional[int] = None, 
+        custom_url: Optional[str] = None,
         custom_frontend_config: Optional[Union[Dict[str, Any], str]] = None
     ):
-        return edit_resource(
+        """
+        Edits the mount point's properties.
+
+        :param mount_point_url:
+        :param display_name:
+        :param show_on_public_pages:
+        :param is_default:
+        :param is_public:
+        :param relay_stream_url:
+        :param max_listener_duration:
+        :param fallback_mount:
+        :param enable_autodj:
+        :param autodj_format:
+        :param autodj_bitrate:
+        :param custom_url:
+        :param custom_frontend_config:
+        """
+        return edit_station_resource(
             self, "station_mount_point", mount_point_url, display_name, show_on_public_pages, is_default,
             is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
             autodj_bitrate, custom_url, custom_frontend_config
         )
     
     def delete(self):
-        return delete_resource(self, "station_mount_point")
+        """
+        Deletes the mount point from the station.
+        """
+        return delete_station_resource(self, "station_mount_point")
     
     def _build_update_body(
-        self, mount_point_url, display_name, show_on_public_pages, is_default,
-        is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
-        autodj_bitrate, custom_url, custom_frontend_config
+        self, 
+        mount_point_url, 
+        display_name, 
+        show_on_public_pages, 
+        is_default,
+        is_public, 
+        relay_stream_url, 
+        max_listener_duration, 
+        fallback_mount, 
+        enable_autodj, 
+        autodj_format,
+        autodj_bitrate, 
+        custom_url, 
+        custom_frontend_config
     ):
         return {
             "name": mount_point_url if mount_point_url else self.name,
@@ -78,9 +144,20 @@ class MountPoint:
         }
     
     def _update_properties(
-        self, mount_point_url, display_name, show_on_public_pages, is_default,
-        is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,
-        autodj_bitrate, custom_url, custom_frontend_config
+        self, 
+        mount_point_url, 
+        display_name, 
+        show_on_public_pages, 
+        is_default,
+        is_public, 
+        relay_stream_url, 
+        max_listener_duration, 
+        fallback_mount, 
+        enable_autodj, 
+        autodj_format,
+        autodj_bitrate, 
+        custom_url, 
+        custom_frontend_config
     ):
         self.name = mount_point_url if mount_point_url else self.name
         self.display_name = display_name if display_name else self.display_name

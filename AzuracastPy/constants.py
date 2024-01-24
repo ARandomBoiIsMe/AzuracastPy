@@ -1,5 +1,4 @@
 # Dictionary of Azuracast API Endpoints
-# -------------------------------------
 API_ENDPOINTS = {
     "all_now_playing":            "{radio_url}/api/nowplaying",
     "station_now_playing":        "{radio_url}/api/nowplaying/{station_id}",
@@ -60,10 +59,8 @@ API_ENDPOINTS = {
     "time":                       "{radio_url}/api/time",
     "cpu_stats":                  "{radio_url}/api/admin/server/stats"
 }
-# -------------------------------------
 
 # Categories for podcasts
-# -----------------------
 CATEGORIES = {
     'ARTS': {
         'BOOKS': 'Arts|Books',
@@ -190,10 +187,8 @@ CATEGORIES = {
         'TV_REVIEWS': 'TV & Film|TV Reviews'
     }
 }
-# -----------------------
 
 # Countries for whichever class needs them lol
-# -------------------------------------------
 COUNTRIES = {
     "Afghanistan": "AF",
     "Åland Islands": "AX",
@@ -445,10 +440,8 @@ COUNTRIES = {
     "Zambia": "ZM",
     "Zimbabwe": "ZW"
 }
-# -------------------------------------------
 
 # Languages for podcasts
-# ----------------------
 LANGUAGES = {
     "abkhazian": "ab",
     "afar": "aa",
@@ -660,10 +653,8 @@ LANGUAGES = {
     "chuang": "za",
     "zulu": "zu"
 }
-# ----------------------
 
 # Configuration templates for webhooks
-# --------------------------
 WEBHOOK_CONFIG_TEMPLATES = {
     'generic': ["webhook_url", "basic_auth_username", "basic_auth_password", "timeout"],
     'email': ["to", "subject", "message"],
@@ -680,10 +671,8 @@ WEBHOOK_CONFIG_TEMPLATES = {
     'google_analytics_v4': ["api_secret", "measurement_id"],
     'matomo_analytics': ["matomo_url", "site_id", "token"],
 }
-# ---------------------------
 
 # Triggers for webhooks
-# ---------------------
 WEBHOOK_TRIGGERS = [
     "song_changed",
     "song_changed_live",
@@ -694,28 +683,14 @@ WEBHOOK_TRIGGERS = [
     "listener_lost",
     "listener_gained"
 ]
-# ---------------------
 
-# Formats for HLS (HTTP Live Streams)
-# ---------------------
-HLS_FORMATS = [
-    'mp3', 'ogg', 'aac', 'opus', 'flac'
-]
-# ---------------------
+# Formats
+FORMATS = ['mp3', 'ogg', 'aac', 'opus', 'flac']
 
-BITRATES = [
-    32,
-    48,
-    64,
-    96,
-    128,
-    192,
-    256,
-    320
-]
+# Bitrates
+BITRATES = [32, 48, 64, 96, 128, 192, 256, 320]
 
 # Permissions for roles
-# ---------------------
 GLOBAL_PERMISSIONS = [
     "administer all",
     "view administration",

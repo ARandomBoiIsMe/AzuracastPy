@@ -2,9 +2,14 @@ from AzuracastPy.util.general_util import generate_repr_string
 
 class Device:
     def __init__(
-            self, client: str, is_browser: bool, is_mobile: bool, is_bot: bool, browser_family: str,
-            os_family: str
-        ):
+        self,
+        client: str, 
+        is_browser: bool, 
+        is_mobile: bool, 
+        is_bot: bool, 
+        browser_family: str,
+        os_family: str
+    ):
         self.client = client
         self.is_browser = is_browser
         self.is_mobile = is_mobile
@@ -16,7 +21,15 @@ class Device:
         return generate_repr_string(self)
 
 class Location:
-    def __init__(self, description: str, region: str, city: str, country: str, lat, lon):
+    def __init__(
+        self, 
+        description: str, 
+        region: str, 
+        city: str, 
+        country: str, 
+        lat, 
+        lon
+    ):
         self.description = description
         self.region = region
         self.city = city
@@ -29,10 +42,18 @@ class Location:
 
 class Listener:
     def __init__(
-            self, ip: str, user_agent: str, hash: str, mount_is_local: bool, mount_name: str,
-            connected_on: int, connected_until: int, connected_time: int,
-            device: Device, location: Location
-        ):
+        self, 
+        ip: str, 
+        user_agent: str, 
+        hash: str, 
+        mount_is_local: bool, 
+        mount_name: str,
+        connected_on: int, 
+        connected_until: int, 
+        connected_time: int,
+        device: Device, 
+        location: Location
+    ):
         self.ip = ip
         self.user_agent = user_agent
         self.hash = hash

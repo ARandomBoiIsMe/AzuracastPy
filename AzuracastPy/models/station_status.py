@@ -1,7 +1,13 @@
 from AzuracastPy.util.general_util import generate_repr_string
 
 class StationStatus:
-    def __init__(self, backend_running, frontend_running, station_has_started, station_needs_restart):
+    def __init__(
+        self, 
+        backend_running, 
+        frontend_running, 
+        station_has_started, 
+        station_needs_restart
+    ):
         self.backend_running = backend_running
         self.frontend_running = frontend_running
         self.station_has_started = station_has_started
