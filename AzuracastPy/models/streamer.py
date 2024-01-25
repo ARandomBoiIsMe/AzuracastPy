@@ -69,7 +69,7 @@ class Streamer:
         self.enforce_schedule = enforce_schedule
         self.reactivate_at = reactivate_at
         self.art_updated_at = art_updated_at
-        self.schedule_items = [ScheduleItem(**item) for item in schedule_items] if schedule_items else []
+        self.schedule_items = [ScheduleItem(**si) for si in schedule_items] if schedule_items else []
         self.id = id
         self.links = links
         self.has_custom_art = has_custom_art
