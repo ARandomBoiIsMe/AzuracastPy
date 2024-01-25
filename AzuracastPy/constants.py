@@ -729,3 +729,11 @@ STATION_PERMISSIONS = [
     "manage station web hooks",
     "manage station podcasts"
 ]
+
+PLAYLIST_TYPES = ["default", "once_per_x_songs", "once_per_x_minutes", "once_per_hour", "custom"]
+
+PLAYLIST_ORDERS = ["random", "shuffle", "sequential"]
+
+PLAYLIST_SOURCES = ["songs", "remote_url"]
+
+PLAYLIST_REMOTE_TYPES = ["stream", "playlist", "other"]

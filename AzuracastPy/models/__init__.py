@@ -14,5 +14,5 @@ from .station_status import StationStatus
 from .podcast import Podcast
 from .podcast_episode import PodcastEpisode
 from .now_playing import NowPlaying
-from .webhook import Webhook, WebhookConfig
+from .webhook import Webhook
 from .helpers import MountPointHelper

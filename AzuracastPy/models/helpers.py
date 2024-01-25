@@ -6,7 +6,7 @@ from .hls_stream import HLSStream
 from .sftp_user import SFTPUser
 from .streamer import Streamer
 from .remote_relay import RemoteRelay
-from .webhook import Webhook, WebhookConfig
+from .webhook import Webhook
 
 from AzuracastPy.util.media_util import generate_file_upload_structure
 from AzuracastPy.util.general_util import get_language_code, get_day_number
@@ -16,7 +16,11 @@ from AzuracastPy.constants import (
     WEBHOOK_CONFIG_TEMPLATES,
     WEBHOOK_TRIGGERS,
     FORMATS,
-    BITRATES
+    BITRATES,
+    PLAYLIST_ORDERS,
+    PLAYLIST_TYPES,
+    PLAYLIST_SOURCES,
+    PLAYLIST_REMOTE_TYPES
 )
 
 from typing import Optional, Union, Dict, Any, List
@@ -215,7 +219,6 @@ class PlaylistHelper:
             "loop_once": loop_once
         }
     
-    # TODO: Value checks
     def create(
         self, 
         name: str, 
@@ -233,6 +236,22 @@ class PlaylistHelper:
         is_jingle: bool = False,
         schedule: Optional[List[Dict[str, Any]]] = None
     ):
+        if type not in PLAYLIST_TYPES:
+            message = f"type param must be one of: {', '.join(PLAYLIST_TYPES)}"
+            raise ClientException(message)
+        
+        if source not in PLAYLIST_SOURCES:
+            message = f"source param must be one of: {', '.join(PLAYLIST_SOURCES)}"
+            raise ClientException(message)
+        
+        if order not in PLAYLIST_ORDERS:
+            message = f"order param must be one of: {', '.join(PLAYLIST_ORDERS)}"
+            raise ClientException(message)
+        
+        if remote_type not in PLAYLIST_REMOTE_TYPES:
+            message = f"remote_type param must be one of: {', '.join(PLAYLIST_REMOTE_TYPES)}"
+            raise ClientException(message)
+        
         url = API_ENDPOINTS["station_playlists"].format(
             radio_url=self._station._request_handler.radio_url,
             station_id=self._station.id
@@ -492,12 +511,58 @@ class WebhookHelper:
         )
 
         return Webhook(**response, _station=self._station)
+
+    def generate_webhook_config(
+        self,
+        webhook_url: Optional[str] = None, 
+        basic_auth_username: Optional[str] = None,
+        basic_auth_password: Optional[str] = None,
+        timeout: Optional[int] = None, 
+        to: Optional[str] = None, 
+        subject: Optional[str] = None, 
+        message: Optional[str] = None,
+        content: Optional[str] = None, 
+        title: Optional[str] = None, 
+        description: Optional[str] = None, 
+        url: Optional[str] = None,
+        author: Optional[str] = None, 
+        thumbnail: Optional[str] = None, 
+        footer: Optional[str] = None, 
+        bot_token: Optional[str] = None,
+        chat_id: Optional[str] = None, 
+        api: Optional[str] = None, 
+        text: Optional[str] = None, 
+        parse_mode: Optional[str] = None,
+        instance_url: Optional[str] = None, 
+        access_token: Optional[str] = None, 
+        visibility: Optional[str] = None,
+        rate_limit: Optional[str] = None,
+        message_song_changed_live: Optional[str] = None, 
+        message_live_connect: Optional[str] = None, 
+        message_live_disconnect: Optional[str] = None,
+        message_station_offline: Optional[str] = None, 
+        message_station_online: Optional[str] = None, 
+        station_id: Optional[str] = None,
+        partner_id: Optional[str] = None,
+        partner_key: Optional[str] = None, 
+        broadcastsubdomain: Optional[str] = None,
+        apikey: Optional[str] = None,
+        token: Optional[str] = None, 
+        measurement_id: Optional[str] = None, 
+        matomo_url: Optional[str] = None, 
+        site_id: Optional[str] = None
+    ):
+        return {
+            key: value
+            for key, value in locals().items()
+            if value is not None and key != "self"
+        }
     
     def create(
         self, 
         name: str, 
         type: str, 
-        webhook_config: WebhookConfig, 
+        webhook_config: Dict[str, Any], 
         triggers: Optional[List[str]] = None 
     ) -> Webhook:
         """
@@ -520,8 +585,7 @@ class WebhookHelper:
                 message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of: {', '.join(WEBHOOK_TRIGGERS)}."
                 raise ClientException(message)
         
-        config = webhook_config.to_dict()
-        if not all(key in config for key in WEBHOOK_CONFIG_TEMPLATES['email']):
+        if not all(key in webhook_config for key in WEBHOOK_CONFIG_TEMPLATES[type]):
             message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{type}' webhook. The '{type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[type])}. Refer to the documentation for the config structure of each webhook type."
             raise ClientException(message)
         
@@ -534,7 +598,7 @@ class WebhookHelper:
             "name": name,
             "type": type,
             "triggers": triggers if triggers else [],
-            "config": config
+            "config": webhook_config
         }
 
         response = self._station._request_handler.post(url=url, body=body)
