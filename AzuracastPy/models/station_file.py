@@ -74,7 +74,7 @@ class StationFile:
         self.cue_in = cue_in
         self.cue_out = cue_out
         self.art_updated_at = art_updated_at
-        self.playlists = playlists
+        self.playlists = [Playlist(**p) for p in playlists] if playlists else []
         self.id = id
         self.song_id = song_id
         self.text = text

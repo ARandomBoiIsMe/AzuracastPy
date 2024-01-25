@@ -85,7 +85,7 @@ class NowPlaying:
         self.live = live
         self.now_playing = now_playing
         self.playing_next = playing_next
-        self.song_history = song_history
+        self.song_history = [SongHistory(**sh) for sh in song_history] if song_history else []
         self.is_online = is_online
         self.cache = cache
 

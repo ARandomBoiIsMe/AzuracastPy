@@ -75,8 +75,8 @@ class Station:
         self.playlist_pls_url = playlist_pls_url
         self.playlist_m3u_url = playlist_m3u_url
         self.is_public = is_public
-        self.mounts = mounts
-        self.remotes = remotes
+        self.mounts = [Mount(**m) for m in mounts] if mounts else []
+        self.remotes = [Remote(**r) for r in remotes] if remotes else []
         self.hls_enabled = hls_enabled
         self.hls_is_default = hls_is_default
         self.hls_url = hls_url

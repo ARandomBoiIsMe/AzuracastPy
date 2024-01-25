@@ -8,8 +8,6 @@ from AzuracastPy.util.media_util import get_resource_art
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
-import json
-
 class Links:
     def __init__(
         self_, 
@@ -71,7 +69,7 @@ class Streamer:
         self.enforce_schedule = enforce_schedule
         self.reactivate_at = reactivate_at
         self.art_updated_at = art_updated_at
-        self.schedule_items = [ScheduleItem(**item) for item in schedule_items]
+        self.schedule_items = [ScheduleItem(**item) for item in schedule_items] if schedule_items else []
         self.id = id
         self.links = links
         self.has_custom_art = has_custom_art

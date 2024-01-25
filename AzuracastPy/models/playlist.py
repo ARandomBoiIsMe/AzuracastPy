@@ -131,7 +131,7 @@ class Playlist:
         self.avoid_duplicates = avoid_duplicates
         self.played_at = played_at
         self.queue_reset_at = queue_reset_at
-        self.schedule_items = schedule_items
+        self.schedule_items = [ScheduleItem(si) for si in schedule_items] if schedule_items else []
         self.id = id
         self.short_name = short_name
         self.num_songs = num_songs
