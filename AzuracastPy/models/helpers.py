@@ -601,7 +601,7 @@ class StreamerHelper:
 
         response = self._station._request_handler.post(url, body)
 
-        # This is stupid and wasteful, but the schedule_items attribute of the new Streamer won't be 
+        # This is probably inefficient, but the schedule_items attribute of the new Streamer won't be 
         # returned otherwise. I'll find a better way soon.
         streamer_id = response['id']
         return self.__call__(streamer_id)

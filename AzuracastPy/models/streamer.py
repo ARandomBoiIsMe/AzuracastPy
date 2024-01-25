@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 from datetime import datetime
 
@@ -7,6 +7,8 @@ from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.util.media_util import get_resource_art
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
+
+import json
 
 class Links:
     def __init__(
@@ -69,7 +71,7 @@ class Streamer:
         self.enforce_schedule = enforce_schedule
         self.reactivate_at = reactivate_at
         self.art_updated_at = art_updated_at
-        self.schedule_items = schedule_items
+        self.schedule_items = [ScheduleItem(**item) for item in schedule_items]
         self.id = id
         self.links = links
         self.has_custom_art = has_custom_art
@@ -77,7 +79,7 @@ class Streamer:
         self._station = _station
 
     def __repr__(self):
-        return generate_repr_string(self) 
+        return generate_repr_string(self)
     
     def edit(
         self, 
@@ -85,7 +87,8 @@ class Streamer:
         display_name: Optional[str] = None,
         comments: Optional[str] = None, 
         is_active: Optional[bool] = None,
-        enforce_schedule: Optional[bool] = None
+        enforce_schedule: Optional[bool] = None,
+        schedule: Optional[List[Dict[str, Any]]] = None
     ):
         """
         Edits the streamer's properties.
@@ -95,12 +98,43 @@ class Streamer:
         :param comments:
         :param is_active:
         :param enforce_schedule:
+        :param schedule:
         """
         return edit_station_resource(
             self, "station_streamer", streamer_username, display_name, comments, is_active,
-            enforce_schedule
+            enforce_schedule, schedule
         )
     
+    def add_schedule_item(
+        self,
+        schedule_item: Dict[str, Any]
+    ):
+        """
+        Adds a new schedule item to the streamer of the station.
+
+        :param schedule_item: The new schedule item to be added.
+        """
+        url = API_ENDPOINTS["station_streamer"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
+            id=self.id
+        )
+
+        # Adds the new schedule item.
+        schedule_items = [self._get_schedule_item_json(item) for item in self.schedule_items]
+        schedule_items.append(schedule_item)
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._station._request_handler.put(url, body)
+
+        # Updates the streamer's properties on the object.
+        # Inefficient, but can't think of a better way.
+        self.schedule_items = self._station.streamer(self.id).schedule_items
+
+        return response
+
     def update_password(
         self, 
         password: str
@@ -136,14 +170,16 @@ class Streamer:
         display_name, 
         comments, 
         is_active,
-        enforce_schedule
+        enforce_schedule,
+        schedule
     ):
         return {
             "streamer_username": streamer_username if streamer_username else self.streamer_username,
             "display_name": display_name if display_name else self.display_name,
             "comments": comments if comments else self.comments,
             "is_active": is_active if is_active is not None else self.is_active,
-            "enforce_schedule": enforce_schedule if enforce_schedule is not None else self.enforce_schedule
+            "enforce_schedule": enforce_schedule if enforce_schedule is not None else self.enforce_schedule,
+            "schedule_items": schedule if schedule else [self._get_schedule_item_json(item) for item in self.schedule_items]
         }
     
     def _update_properties(
@@ -152,13 +188,15 @@ class Streamer:
         display_name, 
         comments, 
         is_active,
-        enforce_schedule
+        enforce_schedule,
+        schedule
     ):
         self.streamer_username = streamer_username if streamer_username else self.streamer_username
         self.display_name = display_name if display_name else self.display_name
         self.comments = comments if comments else self.comments
         self.is_active = is_active if is_active is not None else self.is_active
         self.enforce_schedule = enforce_schedule if enforce_schedule is not None else self.enforce_schedule
+        self.schedule_items = self.schedule_items if schedule is None else self._station.streamer(self.id).schedule_items # I'm sorry.
 
     def _clear_properties(self):
         self.streamer_username = None
@@ -175,6 +213,23 @@ class Streamer:
         self.has_custom_art = None
         self.art = None
         self._station = None
+
+    # Reformats the schedule item of a streamer from a ScheduleItem to a valid schedule item json
+    # object to be sent in requests.
+    def _get_schedule_item_json(self, schedule_item):
+        if schedule_item is None:
+            return {}
+
+        start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
+        end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
+
+        return {
+            "start_time": schedule_item.start_time,
+            "end_time": schedule_item.end_time,
+            "start_date": start_date_formatted,
+            "end_date": end_date_formatted,
+            "days": schedule_item.days
+        }
 
     def get_art(self) -> bytes:
         return get_resource_art(self)
