@@ -195,7 +195,26 @@ class PlaylistHelper:
 
         return Playlist(**response, _station=self._station)
     
-    # TODO: Schedule playlist
+    def generate_schedule_item(
+        self,
+        start_time: str,
+        end_time: str,
+        start_date: Optional[str] = None,
+        end_date: Optional[str] = None,
+        days: List[str] = None,
+        loop_once: bool = False
+    ) -> Dict[str, Any]:
+        days = [get_day_number(day.strip().lower()) for day in days]
+
+        return {
+            "start_time": int(start_time.replace(':', '')),
+            "end_time": int(end_time.replace(':', '')),
+            "start_date": start_date, # year-month-day
+            "end_date": end_date, # year-month-day
+            "days": days if days else [],
+            "loop_once": loop_once
+        }
+    
     # TODO: Value checks
     def create(
         self, 
@@ -211,7 +230,8 @@ class PlaylistHelper:
         include_in_requests: bool = True, 
         include_in_on_demand: bool = False, 
         avoid_duplicates: bool = True, 
-        is_jingle: bool = False
+        is_jingle: bool = False,
+        schedule: Optional[List[Dict[str, Any]]] = None
     ):
         url = API_ENDPOINTS["station_playlists"].format(
             radio_url=self._station._request_handler.radio_url,
@@ -233,12 +253,16 @@ class PlaylistHelper:
             "weight": weight,
             "include_in_requests": include_in_requests,
             "include_in_on_demand": include_in_on_demand,
-            "avoid_duplicates": avoid_duplicates
+            "avoid_duplicates": avoid_duplicates,
+            "schedule_items": schedule if schedule else []
         }
 
         response = self._station._request_handler.post(url, body)
 
-        return Playlist(**response, _station=self._station)
+        # This is probably inefficient, but the schedule_items attribute of the new Playlist won't be 
+        # returned otherwise. I'll find a better way soon.
+        playlist_id = response['id']
+        return self.__call__(playlist_id)
     
 class PodcastHelper:
     def __init__(
@@ -543,7 +567,7 @@ class StreamerHelper:
 
         return Streamer(**response, _station=self._station)
     
-    def generate_streamer_schedule_item(
+    def generate_schedule_item(
         self,
         start_time: str,
         end_time: str,
