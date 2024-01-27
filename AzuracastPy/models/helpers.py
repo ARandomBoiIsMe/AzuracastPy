@@ -7,6 +7,7 @@ from .sftp_user import SFTPUser
 from .streamer import Streamer
 from .remote_relay import RemoteRelay
 from .webhook import Webhook
+from .queue_item import QueueItem
 
 from AzuracastPy.util.media_util import generate_file_upload_structure
 from AzuracastPy.util.general_util import get_language_code, get_day_number
@@ -794,3 +795,51 @@ class RemoteRelayHelper:
         response = self._station._request_handler.post(url, body)
 
         return RemoteRelay(**response, _station=self._station)
+    
+class QueueHelper:
+    def __init__(
+        self,
+        _station
+    ):
+        self._station = _station
+
+    def __call__(
+        self,
+        id: Optional[int] = None
+    ) -> Union[List[QueueItem], QueueItem]:
+        """
+        Retrieves a specific remote relay from the station.
+
+        :param id: (Optional) The numerical ID of the queue item to be retrieved. If None, all items in the queue are retrieved. Default: ``None``
+
+        :returns: A list of :class:`QueueItem` objects or a single :class:`QueueItem` object.
+        """
+        url = API_ENDPOINTS["station_queue"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id
+        )
+
+        response = self._station._request_handler.get(url)
+
+        queue = [QueueItem(**qi, _station=self._station) for qi in response]
+
+        # ---------------------------------------------
+        # Had to do this because, at the time of development, the API doesn't support a GET request for a 
+        # single queue item. Throws a 405 error instead.
+        # ---------------------------------------------
+        # If a valid id was given, return that element.
+        if id is not None:
+            if type(id) is not int:
+                pass
+
+            id = id - 1 # Convert to zero-based index form.
+            if id < 0:
+                raise ClientException("Requested resource not found.")
+            
+            try:
+                return queue[id]
+            except IndexError:
+                raise ClientException("Requested resource not found.")
+
+        # Else, return the entire queue.
+        return queue     

@@ -737,3 +737,19 @@ PLAYLIST_ORDERS = ["random", "shuffle", "sequential"]
 PLAYLIST_SOURCES = ["songs", "remote_url"]
 
 PLAYLIST_REMOTE_TYPES = ["stream", "playlist", "other"]
+
+RADIO_AVATAR_SERVICES = ["libravatar", "gravatar", "disabled"]
+
+ANALYTICS_TYPES = {
+    "full": "all",
+    "limited": "no_ip",
+    "none": "none"
+}
+
+IP_ADDRESS_SOURCES = {
+    "local": "local",
+    "cloudfare": "cloudfare",
+    "reverse": "xff"
+}
+
+HISTORY_KEEP_DAYS = [0, 14, 30, 60, 365, 730]

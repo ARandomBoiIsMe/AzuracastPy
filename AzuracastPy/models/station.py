@@ -11,7 +11,6 @@ from .station_file import StationFile
 from .mount_point import MountPoint
 from .playlist import Playlist
 from .podcast import Podcast
-from .queue_item import QueueItem
 from .remote_relay import RemoteRelay
 from .sftp_user import SFTPUser
 from .streamer import Streamer
@@ -27,7 +26,8 @@ from .helpers import (
     HLSStreamHelper,
     StreamerHelper,
     WebhookHelper,
-    RemoteRelayHelper
+    RemoteRelayHelper,
+    QueueHelper
 )
 
 from AzuracastPy.request_handler import RequestHandler
@@ -92,6 +92,7 @@ class Station:
         self.remote_relay = RemoteRelayHelper(_station=self)
         self.sftp_user = SFTPUserHelper(_station=self)
         self.hls_stream = HLSStreamHelper(_station=self)
+        self.queue = QueueHelper(_station=self)
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -295,28 +296,6 @@ class Station:
         response = self._request_multiple_instances_of("station_podcasts")
 
         return [Podcast(**p, _station=self) for p in response]
-
-    def queue(self) -> List[QueueItem]:
-        response = self._request_multiple_instances_of("station_queue")
-
-        return [QueueItem(**qi, _station=self) for qi in response]
-    
-    # Had to do this cuz, at the time of development, the API doesn't support a GET request for a 
-    # single queue item. Throws a 405 error instead.
-    def queue_item(self, 
-    id: int) -> QueueItem:
-        queue_response = self._request_multiple_instances_of("station_queue")
-
-        queue = [QueueItem(**qi, _station=self) for qi in queue_response]
-
-        id = id - 1
-        if id < 0:
-            raise IndexError("Requested resource not found.")
-        
-        try:
-            return queue[id]
-        except IndexError:
-            raise IndexError("Requested resource not found.")
     
     def remote_relays(self) -> List[RemoteRelay]:
         """

@@ -47,35 +47,42 @@ class QueueItem:
     def __repr__(self):
         return generate_repr_string(self)
     
-    # Doesn't work lol
-    def delete(self):
-        queue_response = self._station._request_multiple_instances_of("station_queue")
-        queue = [QueueItem(**qi, _station=self._station) for qi in queue_response]
-        id = queue.index(self)
+    # # Doesn't work lol
+    # def delete(self):
+    #     queue = self._station.queue()
 
-        url = API_ENDPOINTS["station_queue_item"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=id
-        )
+    #     # Linear search. Yay.
+    #     id = 0
+    #     for item in queue:
+    #         if item == self:
+    #             break
 
-        response = self._station._request_handler.delete(url)
+    #         id = id + 1
 
-        if response['success'] is True:
-            self._clear_properties()
+    #     id = id + 1 # Returning id back to normal format.
+    #     url = API_ENDPOINTS["station_queue_item"].format(
+    #         radio_url=self._station._request_handler.radio_url,
+    #         station_id=self._station.id,
+    #         id=id
+    #     )
 
-        return response
+    #     response = self._station._request_handler.delete(url)
+
+    #     if response['success'] is True:
+    #         self._clear_properties()
+
+    #     return response
     
-    def _clear_properties(self):
-        self.cued_at = None
-        self.played_at = None
-        self.duration = None
-        self.playlist = None
-        self.is_request = None
-        self.song = None
-        self.sent_to_autodj = None
-        self.is_played = None
-        self.autodj_custom_uri = None
-        self.log = None
-        self.links = None
-        self._station = None
+    # def _clear_properties(self):
+    #     self.cued_at = None
+    #     self.played_at = None
+    #     self.duration = None
+    #     self.playlist = None
+    #     self.is_request = None
+    #     self.song = None
+    #     self.sent_to_autodj = None
+    #     self.is_played = None
+    #     self.autodj_custom_uri = None
+    #     self.log = None
+    #     self.links = None
+    #     self._station = None
