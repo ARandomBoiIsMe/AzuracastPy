@@ -10,7 +10,7 @@ from .webhook import Webhook
 from .queue_item import QueueItem
 
 from AzuracastPy.util.media_util import generate_file_upload_structure
-from AzuracastPy.util.general_util import get_language_code, get_day_number
+from AzuracastPy.util.general_util import get_language_code, get_day_number, is_language_code_valid
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.constants import (
     API_ENDPOINTS,
@@ -206,10 +206,32 @@ class PlaylistHelper:
         end_time: str,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        days: List[str] = None,
+        days: Optional[List[str]] = None,
         loop_once: bool = False
     ) -> Dict[str, Any]:
-        days = [get_day_number(day.strip().lower()) for day in days]
+        """
+        Generates a single schedule item for a playlist.
+
+        :param start_time:
+        :param end_time:
+        :param start_date:
+        :param end_date:
+        :param days:
+        :param loop_once:
+
+        Usage:
+        .. code-block:: python
+            generate_schedule_items(
+                start_time="12:32", 
+                end_time="23:10", 
+                start_date="2024-09-08", 
+                end_date="2025-07-08", 
+                days=["monday", "thursday"], 
+                loop_once=False
+            )
+        """
+        if days is not None:
+            days = [get_day_number(day.strip().lower()) for day in days]
 
         return {
             "start_time": int(start_time.replace(':', '')),
@@ -219,6 +241,58 @@ class PlaylistHelper:
             "days": days if days else [],
             "loop_once": loop_once
         }
+    
+    def generate_schedule_items(self, *args) -> List[Dict[str, Any]]:
+        """
+        Generates a list of schedule items for a playlist by using the :meth:``.generate_schedule_item`` function on each argument.
+
+        :param args: Tuples in the format of ``(start_time, end_time, start_date, end_date, days, loop_once)``. Any of the tuple's values can be ``None``.
+
+        Usage:
+        .. code-block:: python
+            generate_schedule_items(
+                ("12:32", "23:10", "2024-09-08", "2025-07-08", None, False),
+                ("12:32", "23:10", "2024-09-18", "2025-07-08", ["monday", "thursday"], True)
+            )
+        """
+        schedule_items = []
+
+        for arg in args:
+            if type(arg) is not tuple:
+                message = "Each argument must be a tuple of values."
+                raise ClientException(message)
+
+            if len(arg) != 6:
+                message = "Each tuple must have a value for start_time, end_time and loop_once as well as either a value or None for start_date, end_date and days."
+                raise ClientException(message)
+            
+            if type(arg[0]) is not str:
+                message = "start_time must be a string."
+                raise ClientException(message)
+            
+            if type(arg[1]) is not str:
+                message = "end_time must be a string."
+                raise ClientException(message)
+            
+            if arg[2] is not None and type(arg[2]) is not str:
+                message = "start_date must either be a str or None."
+                raise ClientException(message)
+            
+            if arg[3] is not None and type(arg[3]) is not str:
+                message = "end_date must either be a str or None."
+                raise ClientException(message)
+            
+            if arg[4] is not None and type(arg[4]) is not list:
+                message = "days must either be a list or None."
+                raise ClientException(message)
+            
+            if arg[5] is not None and type(arg[5]) is not bool:
+                message = "loop_once must be a boolean (True or False)."
+                raise ClientException(message)
+            
+            schedule_items.append(self.generate_schedule_item(*arg))
+
+        return schedule_items
     
     def create(
         self, 
@@ -315,6 +389,28 @@ class PodcastHelper:
 
         return Podcast(**response, _station=self._station)
     
+    def generate_category(self, category):
+        """
+        Generates a single category for a station.
+
+        :param category: The string that will be used to search through
+        """
+        pass
+
+    def generate_category_list(self, *args):
+        categories = []
+
+        for arg in args:
+            if type(arg) is not str:
+                message = "Each argument must be a string."
+                raise ClientException(message)
+            
+            # Stuff happens here
+
+            categories.append("""more stuff happens here""")
+
+        return categories
+    
     # TODO: Art requires file upload
     def create(
         self, 
@@ -346,8 +442,17 @@ class PodcastHelper:
 
         language = language.lower()
         if len(language) > 2:
-            language = language.lower().replace(' ', '_')
+            language = language.replace(' ', '_')
             language = get_language_code(language)
+
+        elif len(language) == 2:
+            if is_language_code_valid(language) == False:
+                message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
+                raise ClientException(message)
+            
+        else:
+            message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
+            raise ClientException(message)
 
         body = {
             "title": title,
@@ -638,9 +743,29 @@ class StreamerHelper:
         end_time: str,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        days: List[str] = None
+        days: Optional[List[str]] = None
     ) -> Dict[str, Any]:
-        days = [get_day_number(day.strip().lower()) for day in days]
+        """
+        Generates a single schedule item for a streamer.
+
+        :param start_time:
+        :param end_time:
+        :param start_date:
+        :param end_date:
+        :param days:
+
+        Usage:
+        .. code-block:: python
+            generate_schedule_items(
+                start_time="12:32", 
+                end_time="23:10", 
+                start_date="2024-09-08", 
+                end_date="2025-07-08", 
+                days=["monday", "thursday"]
+            )
+        """
+        if days is not None:
+            days = [get_day_number(day.strip().lower()) for day in days]
 
         return {
             "start_time": int(start_time.replace(':', '')),
@@ -650,6 +775,54 @@ class StreamerHelper:
             "days": days if days else []
         }
     
+    def generate_schedule_items(self, *args):
+        """
+        Generates a list of schedule items for a streamer by using the :meth:`.generate_schedule_item` function on each argument.
+
+        :param args: Tuples in the format of ``(start_time, end_time, start_date, end_date, days)``. Any of the tuple's values can be ``None``.
+
+        Usage:
+        .. code-block:: python
+            generate_schedule_items(
+                ("12:32", "23:10", "2024-09-08", "2025-07-08", None),
+                ("12:32", "23:10", "2024-09-18", "2025-07-08", ["monday", "thursday"])
+            )
+        """
+        schedule_items = []
+
+        for arg in args:
+            if type(arg) is not tuple:
+                message = "Each argument must be a tuple of values."
+                raise ClientException(message)
+
+            if len(arg) != 5:
+                message = "Each tuple must have a value or None for start_time, end_time, start_date, end_date and days."
+                raise ClientException(message)
+            
+            if type(arg[0]) is not str:
+                message = "start_time must be a string."
+                raise ClientException(message)
+            
+            if type(arg[1]) is not str:
+                message = "end_time must be a string."
+                raise ClientException(message)
+            
+            if arg[2] is not None and type(arg[2]) is not str:
+                message = "start_date must either be a str or None."
+                raise ClientException(message)
+            
+            if arg[3] is not None and type(arg[3]) is not str:
+                message = "end_date must either be a str or None."
+                raise ClientException(message)
+            
+            if arg[4] is not None and type(arg[4]) is not list:
+                message = "days must either be a list or None."
+                raise ClientException(message)
+            
+            schedule_items.append(self.generate_schedule_item(*arg))
+            
+        return schedule_items
+
     def create(
         self, 
         streamer_username: str, 
@@ -842,4 +1015,4 @@ class QueueHelper:
                 raise ClientException("Requested resource not found.")
 
         # Else, return the entire queue.
-        return queue     
+        return queue

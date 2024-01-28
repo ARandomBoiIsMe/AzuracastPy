@@ -72,11 +72,11 @@ class AzuracastClient:
         if station_id is not None:
             # The entire now_playing list is returned when an invalid station ID is passed.
             if isinstance(response, list):
-                return [NowPlaying(**data) for data in response]
+                return [NowPlaying(**np) for np in response]
             
             return NowPlaying(**response)
         
-        return [NowPlaying(**data) for data in response]
+        return [NowPlaying(**np) for np in response]
 
     def stations(self) -> List[Station]:
         """
@@ -135,18 +135,6 @@ class AzuracastClient:
         :returns: The current time.
         """
         url = API_ENDPOINTS["time"].format(
-            radio_url=self._request_handler.radio_url
-        )
-
-        response = self._request_handler.get(url)
-
-        return response
-    
-    def cpu_stats(self):
-        """
-        :returns: The statistics of the system running the web radio.
-        """
-        url = API_ENDPOINTS["cpu_stats"].format(
             radio_url=self._request_handler.radio_url
         )
 

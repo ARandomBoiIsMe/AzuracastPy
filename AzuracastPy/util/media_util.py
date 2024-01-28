@@ -4,6 +4,7 @@ import os
 import requests
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.exceptions import UnexpectedErrorException
 
 def generate_file_upload_structure(path: str, file: str):
     if not os.path.isfile(file):
@@ -25,7 +26,7 @@ def get_resource_art(self) -> bytes:
     # It doesn't handle bytes. Not yet anyway.
     with requests.get(self.art) as response:
         if response.status_code != 200:
-            exit()
+            raise UnexpectedErrorException(f"Unexpected error occured while trying to retrieve this resource's art. \nError details: {response.text}")
 
         return response.content
     
@@ -38,6 +39,6 @@ def get_media_file_art(self) -> bytes:
 
     with requests.get(url) as response:
         if response.status_code != 200:
-            exit()
+            raise UnexpectedErrorException(f"Unexpected error occured while trying to retrieve this file's art. \nError details: {response.text}")
 
         return response.content

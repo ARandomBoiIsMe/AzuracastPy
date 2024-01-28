@@ -3,8 +3,10 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util.general_util import generate_repr_string, get_language_code
+from AzuracastPy.exceptions import ClientException
+from AzuracastPy.util.general_util import generate_repr_string, get_language_code, is_language_code_valid
 from AzuracastPy.util.media_util import get_resource_art
+
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 from .podcast_episode import PodcastEpisode
@@ -80,19 +82,30 @@ class Podcast:
         website: Optional[str] = None
     ):
         """
-        Edits the podcast's properties
+        Edits the podcast's properties.
         
-        :param title:
-        :param description:
-        :param language:
-        :param categories:
-        :param author:
-        :param email:
-        :param website:
+        :param title: (Optional) The new title of the podcast. Default: ``None``.
+        :param description: (Optional) The new description of the podcast. Default: ``None``.
+        :param language: (Optional) The new language of the podcast. Provide either the language name or the language code. Default: ``None``.
+        :param categories: 
+        :param author: (Optional) The new author of the podcast. Default: ``None``.
+        :param email: (Optional) The new email of the podcast. Default: ``None``.
+        :param website: (Optional) The new website url of the podcast. Default: ``None``.
         """
-        if language is not None and len(language) > 2:
-            language = language.lower().replace(' ', '_')
-            language = get_language_code(language)
+        if language is not None:
+            language = language.lower()
+            if len(language) > 2:
+                language = language.replace(' ', '_')
+                language = get_language_code(language)
+
+            elif len(language) == 2:
+                if is_language_code_valid(language) == False:
+                    message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
+                    raise ClientException(message)
+                
+            else:
+                message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
+                raise ClientException(message)
 
         return edit_station_resource(
             self, "station_podcast", title, description, language, author, email, website, categories
