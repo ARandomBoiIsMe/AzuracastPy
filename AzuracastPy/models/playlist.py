@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from AzuracastPy.constants import API_ENDPOINTS
 from AzuracastPy.util.general_util import generate_repr_string
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
@@ -180,6 +181,36 @@ class Playlist:
             is_jingle, play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
         )
     
+    def add_schedule_item(
+        self,
+        schedule_item: Dict[str, Any]
+    ):
+        """
+        Adds a new schedule item to the playlist of the station.
+
+        :param schedule_item: The new schedule item to be added.
+        """
+        url = API_ENDPOINTS["station_playlist"].format(
+            radio_url=self._station._request_handler.radio_url,
+            station_id=self._station.id,
+            id=self.id
+        )
+
+        # Adds the new schedule item.
+        schedule_items = [self._get_schedule_item_json(item) for item in self.schedule_items]
+        schedule_items.append(schedule_item)
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._station._request_handler.put(url, body)
+
+        # Updates the playlist's properties on the object.
+        # Inefficient, but can't think of a better way.
+        self.schedule_items = self._station.playlist(self.id).schedule_items
+
+        return response
+    
     def delete(self):
         """
         Deletes the playlist from the station.
@@ -279,3 +310,21 @@ class Playlist:
         self.total_length = None
         self.links = None
         self._station = None
+
+    # Reformats the schedule item of a playlist from a ScheduleItem to a valid schedule item json
+    # object to be sent in requests.
+    def _get_schedule_item_json(self, schedule_item):
+        if not schedule_item:
+            return {}
+
+        start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
+        end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
+
+        return {
+            "start_time": schedule_item.start_time,
+            "end_time": schedule_item.end_time,
+            "start_date": start_date_formatted,
+            "end_date": end_date_formatted,
+            "days": schedule_item.days,
+            "loop_once": schedule_item.loop_once
+        }
