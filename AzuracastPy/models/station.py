@@ -161,7 +161,6 @@ class Station:
 
         :returns: A :class:`StationStatus` object.
         """
-        # Had to make an exception here cuz it doesn't need an ID despite being a single instance
         response = self._request_multiple_instances_of("station_status")
 
         return StationStatus(**response)
@@ -234,22 +233,6 @@ class Station:
         response = self._request_multiple_instances_of("station_schedule")
 
         return [ScheduleTime(**st) for st in response]
-    
-    def update_fallback(
-        self, 
-        path: str, 
-        file: str
-    ):
-        url = API_ENDPOINTS["station_fallback"].format(
-            radio_url=self._request_handler.radio_url,
-            station_id=self.id
-        )
-
-        upload_body = generate_file_upload_structure(path, file)
-
-        response = self._request_handler.post(url, upload_body)
-
-        return response
 
     def fallback(self):
         # Request requires no ID, so I shall use this function

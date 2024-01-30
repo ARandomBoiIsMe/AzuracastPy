@@ -31,11 +31,8 @@ def _request_single_instance_of_station_resource(
     resource_name,
     resource_id
 ):
-    if type(resource_id) is not int:
-        raise TypeError("id param should be of type int.")
-        
-    if resource_id < 0:
-        raise ValueError("id must be a non-negative number.")
+    if type(resource_id) is not int or resource_id < 0:
+        raise TypeError("id param must be a non-negative integer.")
     
     url = API_ENDPOINTS[resource_name].format(
         radio_url=station._request_handler.radio_url,

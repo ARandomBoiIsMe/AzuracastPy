@@ -23,7 +23,7 @@ class AzuracastClient:
         :param radio_url: Your radio's URL, which was set upon its creation.
         :param x_api_key: An optional authorization key, which can be created from your Azuracast account's profile. Include this key to gain access to specific functionality.
         """
-        # TODO: Handle lack of url and x_api_key here. Soon.
+        # TODO: Handle absence of url and x_api_key here. Soon.
         self._request_handler = RequestHandler(radio_url=radio_url, x_api_key=x_api_key)
 
     def _build_now_playing_url(
@@ -35,11 +35,8 @@ class AzuracastClient:
                 radio_url=self._request_handler.radio_url
             )
 
-        if type(station_id) is not int:
-            raise TypeError("station_id must be an integer.")
-        
-        if station_id < 0:
-            raise ValueError("station_id must be a non-negative number.")
+        if type(station_id) is not int or station_id < 0:
+            raise TypeError("station_id must be an non-negative integer.")
         
         return API_ENDPOINTS["station_now_playing"].format(
             radio_url=self._request_handler.radio_url,
@@ -103,11 +100,8 @@ class AzuracastClient:
 
         :returns: A :class:`Station` object.
         """
-        if type(id) is not int:
-            raise TypeError("id param should be of type int.")
-        
-        if id < 0:
-            raise ValueError("id must be a non-negative number.")
+        if type(id) is not int or id < 0:
+            raise TypeError("id param must be a non-negative integer.")
 
         url = API_ENDPOINTS["station"].format(
             radio_url=self._request_handler.radio_url,

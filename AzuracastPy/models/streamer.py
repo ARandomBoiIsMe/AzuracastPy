@@ -215,7 +215,7 @@ class Streamer:
     # Reformats the schedule item of a streamer from a ScheduleItem to a valid schedule item json
     # object to be sent in requests.
     def _get_schedule_item_json(self, schedule_item):
-        if schedule_item is None:
+        if not schedule_item:
             return {}
 
         start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None

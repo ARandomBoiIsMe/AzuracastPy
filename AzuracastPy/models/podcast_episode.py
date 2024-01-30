@@ -76,15 +76,8 @@ class PodcastEpisode:
         self, 
         title: Optional[str] = None, 
         description: Optional[str] = None, 
-        explicit: Optional[bool] = None,
-        publish_date: Optional[str] = None, 
-        publish_time: Optional[str] = None
+        explicit: Optional[bool] = None
     ):
-        publish_at = None
-        if publish_date is not None and publish_time is not None:
-            # Generate UTC based off of station timezone
-            pass
-
         url = API_ENDPOINTS["podcast_episode"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
             station_id=self._podcast._station.id,
@@ -92,12 +85,12 @@ class PodcastEpisode:
             id=self.id
         )
 
-        body = self._build_update_body(title, description, explicit, publish_at)
+        body = self._build_update_body(title, description, explicit)
 
         response = self._podcast._station._request_handler.put(url, body)
 
         if response['success'] is True:
-            self._update_properties(title, description, explicit, publish_at)
+            self._update_properties(title, description, explicit)
 
         return response
 
@@ -120,27 +113,23 @@ class PodcastEpisode:
         self, 
         title, 
         description, 
-        explicit, 
-        publish_at
+        explicit
     ):
         return {
             "title": title if title else self.title,
             "description": description if description else self.description,
-            "explicit": explicit if explicit else self.explicit,
-            "publish_at": publish_at if publish_at else self.publish_at
+            "explicit": explicit if explicit else self.explicit
         }
     
     def _update_properties(
         self, 
         title, 
         description, 
-        explicit, 
-        publish_at
+        explicit
     ):
         self.title = title if title else self.title
         self.description = description if description else self.description
         self.explicit = explicit if explicit else self.explicit
-        self.publish_at = publish_at if publish_at else self.publish_at
 
     def _clear_properties(self):
         self.id = None
@@ -158,6 +147,3 @@ class PodcastEpisode:
 
     def get_art(self) -> bytes:
         return get_resource_art(self)
-    
-    def delete_art(self):
-        return
