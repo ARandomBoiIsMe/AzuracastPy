@@ -1,4 +1,4 @@
-from AzuracastPy.constants import FORMATS, BITRATES
+from AzuracastPy.enums import Formats, Bitrates
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
 
@@ -41,8 +41,8 @@ class HLSStream:
     def edit(
         self,
         name: Optional[str] = None,
-        format: Optional[str] = None,
-        bitrate: Optional[int] = None
+        format: Optional[Formats] = None,
+        bitrate: Optional[Bitrates] = None
     ):
         """
         Edits the HTTP Live Streaming (HLS) stream's properties.
@@ -51,16 +51,20 @@ class HLSStream:
         :param format:
         :param bitrate:
         """
-        if format is not None:
-            if format not in FORMATS:
-                message = f"format param must be one of: {', '.join(FORMATS)}"
-                raise ClientException(message)
-        
-        if bitrate is not None:
-            if bitrate not in BITRATES:
-                message = f"bitrate param must be one of: {', '.join(BITRATES)}"
+        if format:
+            if not isinstance(format, Formats):
+                message = f"format param must be one of: {', '.join(Formats.__members__)}"
                 raise ClientException(message)
             
+            format = format.value
+        
+        if bitrate:
+            if not isinstance(bitrate, Bitrates):
+                message = f"bitrate param must be one of: {', '.join(Bitrates.__members__)}"
+                raise ClientException(message)
+            
+            bitrate = bitrate.value            
+
         return edit_station_resource(self, "hls_stream", name, format, bitrate)
     
     def delete(self):

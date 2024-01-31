@@ -62,7 +62,7 @@ class WebhookTriggers(Enum):
     LISTENER_LOST = "listener_lost"
     LISTENER_GAINED = "listener_gained"
 
-class WebhookConfigTemplates(Enum):
+class WebhookConfigTypes(Enum):
     GENERIC = "generic"
     EMAIL = "email"
     DISCORD = "discord"
@@ -115,6 +115,11 @@ class BackendTypes(Enum):
 
 class FrontendTypes(Enum):
     ICECAST = "icecast"
+
+class RemoteTypes(Enum):
+    ICECAST = "icecast"
+    SHOUTCAST1 = "shoutcast1"
+    SHOUTCAST2 = "shoutcast2"
 
 class AutoAssignValues(Enum):
     ALBUM = 'album'

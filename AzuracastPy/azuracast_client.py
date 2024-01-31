@@ -23,8 +23,13 @@ class AzuracastClient:
         :param radio_url: Your radio's URL, which was set upon its creation.
         :param x_api_key: An optional authorization key, which can be created from your Azuracast account's profile. Include this key to gain access to specific functionality.
         """
-        # TODO: Handle absence of url and x_api_key here. Soon.
-        self._request_handler = RequestHandler(radio_url=radio_url, x_api_key=x_api_key)
+        if "http://" not in radio_url and "https://" not in radio_url:
+            raise AttributeError('radio_url must start with `http://` or `https://`')
+
+        self._request_handler = RequestHandler(
+            radio_url=radio_url.rstrip('/'),
+            x_api_key=x_api_key
+        )
 
     def _build_now_playing_url(
         self,

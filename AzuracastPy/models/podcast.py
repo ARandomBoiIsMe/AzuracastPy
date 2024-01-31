@@ -1,10 +1,9 @@
-from datetime import datetime, timedelta
-
 from typing import List, Dict, Any, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.enums import Languages
 from AzuracastPy.exceptions import ClientException
-from AzuracastPy.util.general_util import generate_repr_string, get_language_code, is_language_code_valid
+from AzuracastPy.util.general_util import generate_repr_string
 from AzuracastPy.util.media_util import get_resource_art
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
@@ -75,7 +74,7 @@ class Podcast:
         self, 
         title: Optional[str] = None, 
         description: Optional[str] = None, 
-        language: Optional[str] = None,
+        language: Optional[Languages] = None,
         categories: Optional[List[str]] = None, 
         author: Optional[str] = None, 
         email: Optional[str] = None,
@@ -92,20 +91,12 @@ class Podcast:
         :param email: (Optional) The new email of the podcast. Default: ``None``.
         :param website: (Optional) The new website url of the podcast. Default: ``None``.
         """
-        if language is not None:
-            language = language.lower()
-            if len(language) > 2:
-                language = language.replace(' ', '_')
-                language = get_language_code(language)
-
-            elif len(language) == 2:
-                if is_language_code_valid(language) == False:
-                    message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
-                    raise ClientException(message)
-                
-            else:
-                message = f"'{language}' is not a valid language code. Check your spelling or provide the full language name to automatically generate the code."
+        if language:
+            if not isinstance(language, Languages):
+                message = f"language param has to be one of: {', '.join(Languages.__members__)}"
                 raise ClientException(message)
+
+            language = language.value
 
         return edit_station_resource(
             self, "station_podcast", title, description, language, author, email, website, categories

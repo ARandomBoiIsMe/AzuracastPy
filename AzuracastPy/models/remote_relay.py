@@ -1,7 +1,7 @@
 from typing import Optional
 
 from AzuracastPy.util.general_util import generate_repr_string
-from AzuracastPy.constants import BITRATES, FORMATS
+from AzuracastPy.enums import RemoteTypes, Bitrates, Formats
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.models.util.station_resource_operations import delete_station_resource, edit_station_resource
 
@@ -68,14 +68,14 @@ class RemoteRelay:
     def edit(
         self, 
         station_listening_url: Optional[str] = None, 
-        remote_type: Optional[str] = None,
+        remote_type: Optional[RemoteTypes] = None,
         display_name: Optional[str] = None, 
         station_listening_mount_point: Optional[str] = None,
         station_admin_password: Optional[str] = None, 
         show_on_public_pages: Optional[bool] = None,
         enable_autodj: Optional[bool] = None, 
-        autodj_format: Optional[str] = None,
-        autodj_bitrate: Optional[int] = None, 
+        autodj_format: Optional[Formats] = None,
+        autodj_bitrate: Optional[Bitrates] = None, 
         station_source_port: Optional[int] = None,
         station_source_mount_point: Optional[str] = None, 
         station_source_username: Optional[str] = None,
@@ -100,21 +100,27 @@ class RemoteRelay:
         :param station_source_password:
         :param is_public:
         """
-        if remote_type is not None:
-            if remote_type not in ["icecast", "shoutcast1", "shoutcast2"]:
-                message = "remote_type param has to be one of: icecast, shoutcast1, shoutcast2"
-                raise ClientException(message)
-        
-        if autodj_format is not None:
-            if autodj_format not in FORMATS:
-                message = f"autodj_format param must be one of: {', '.join(FORMATS)}"
-                raise ClientException(message)
-        
-        if autodj_bitrate is not None:
-            if autodj_bitrate not in BITRATES:
-                message = f"autodj_bitrate param must be one of: {', '.join(BITRATES)}"
+        if remote_type:
+            if not isinstance(remote_type, RemoteTypes):
+                message = f"remote_type param has to be one of: {', '.join(RemoteTypes.__members__)}"
                 raise ClientException(message)
             
+            remote_type = remote_type.value
+        
+        if autodj_format:
+            if not isinstance(autodj_format, Formats):
+                message = f"autodj_format param must be one of: {', '.join(Formats.__members__)}"
+                raise ClientException(message)
+            
+            autodj_format = autodj_format.value
+        
+        if autodj_bitrate:
+            if not isinstance(autodj_bitrate, Bitrates):
+                message = f"autodj_bitrate param must be one of: {', '.join(Bitrates.__members__)}"
+                raise ClientException(message)
+            
+            autodj_bitrate = autodj_bitrate.value
+        
         return edit_station_resource(
             self, "station_remote_relay_item",
             station_listening_url, remote_type, display_name, station_listening_mount_point, station_admin_password,

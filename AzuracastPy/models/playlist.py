@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional
 
 from AzuracastPy.constants import API_ENDPOINTS
+from AzuracastPy.enums import PlaylistTypes, PlaylistSources, PlaylistOrders, PlaylistRemoteTypes
 from AzuracastPy.util.general_util import generate_repr_string
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
@@ -146,11 +147,11 @@ class Playlist:
     def edit(
         self, 
         name: Optional[str] = None, 
-        type: Optional[str] = None, 
-        source: Optional[str] = None,
-        order: Optional[str] = None, 
+        type: Optional[PlaylistTypes] = None, 
+        source: Optional[PlaylistSources] = None,
+        order: Optional[PlaylistOrders] = None, 
         remote_url: Optional[str] = None, 
-        remote_type: Optional[str] = None,
+        remote_type: Optional[PlaylistRemoteTypes] = None,
         remote_buffer: Optional[int] = None, 
         play_per_value: Optional[int] = None, 
         weight: Optional[int] = None,
@@ -176,6 +177,30 @@ class Playlist:
         :param avoid_duplicates:
         :param is_jingle:
         """
+        if type:
+            if not isinstance(type, PlaylistTypes):
+                pass
+
+            type = type.value
+
+        if source:
+            if not isinstance(source, PlaylistSources):
+                pass
+            
+            source = source.value
+
+        if order:
+            if not isinstance(order, PlaylistOrders):
+                pass
+
+            order = order.value
+
+        if remote_type:
+            if not isinstance(remote_type, PlaylistRemoteTypes):
+                pass
+
+            remote_type = remote_type.value
+        
         return edit_station_resource(
             self, "station_playlist", name, type, source, order, remote_url, remote_type, remote_buffer,
             is_jingle, play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates

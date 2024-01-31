@@ -1,4 +1,5 @@
 from AzuracastPy.util.general_util import generate_repr_string
+from AzuracastPy.enums import Formats, Bitrates
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
@@ -77,8 +78,8 @@ class MountPoint:
         max_listener_duration: Optional[int] = None, 
         fallback_mount: Optional[str] = None,
         enable_autodj: Optional[bool] = None, 
-        autodj_format: Optional[str] = None,
-        autodj_bitrate: Optional[int] = None, 
+        autodj_format: Optional[Formats] = None,
+        autodj_bitrate: Optional[Bitrates] = None, 
         custom_url: Optional[str] = None,
         custom_frontend_config: Optional[Union[Dict[str, Any], str]] = None
     ):
@@ -99,6 +100,18 @@ class MountPoint:
         :param custom_url:
         :param custom_frontend_config:
         """
+        if autodj_format:
+            if not isinstance(autodj_format, Formats):
+                pass
+
+            autodj_format = autodj_format.value
+
+        if autodj_bitrate:
+            if not isinstance(autodj_bitrate, Bitrates):
+                pass
+
+            autodj_bitrate = autodj_bitrate.value
+        
         return edit_station_resource(
             self, "station_mount_point", mount_point_url, display_name, show_on_public_pages, is_default,
             is_public, relay_stream_url, max_listener_duration, fallback_mount, enable_autodj, autodj_format,

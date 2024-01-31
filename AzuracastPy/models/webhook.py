@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Optional
 
-from AzuracastPy.constants import WEBHOOK_CONFIG_TEMPLATES, WEBHOOK_TRIGGERS
+from AzuracastPy.enums import WebhookTriggers
+from AzuracastPy.constants import WEBHOOK_CONFIG_TEMPLATES
 from AzuracastPy.exceptions import ClientException
 from AzuracastPy.util.general_util import generate_repr_string
 
@@ -48,7 +49,7 @@ class Webhook:
         self, 
         name: Optional[str] = None,
         webhook_config: Optional[Dict[str, Any]] = None,
-        triggers: Optional[List[str]] = None
+        triggers: Optional[List[WebhookTriggers]] = None
     ):
         """
         Edits the webhook's properties.
@@ -57,15 +58,16 @@ class Webhook:
         :param webhook_config:
         :param triggers:
         """
-        if triggers is not None:
-            if not all(trigger in WEBHOOK_TRIGGERS for trigger in triggers):
-                message = f"Invalid trigger found in triggers list. Elements in trigger list must be one of: {', '.join(WEBHOOK_TRIGGERS)}."
+        if triggers:
+            if not all(isinstance(trigger, WebhookTriggers) for trigger in triggers):
+                message = f"triggers param must be an attribute from the WebhookTriggers enum class."
                 raise ClientException(message)
             
-        if webhook_config is not None:
-            if not all(key in webhook_config for key in WEBHOOK_CONFIG_TEMPLATES[self.type]):
-                message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{self.type}' webhook. The '{self.type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[self.type])}. Refer to the documentation for the config structure of each webhook type."
-                raise ClientException(message)
+            triggers = [trigger.value for trigger in triggers]
+        
+        if webhook_config and not all(key in webhook_config for key in WEBHOOK_CONFIG_TEMPLATES[self.type]):
+            message = f"The provided 'webhook_config' is either incomplete or contains unneeded keys for the '{self.type}' webhook. The '{self.type}' webhook's config must only contain: {', '.join(WEBHOOK_CONFIG_TEMPLATES[self.type])}. Refer to the documentation for the config structure of each webhook type."
+            raise ClientException(message)
 
         return edit_station_resource(self, "station_webhook", name, webhook_config, triggers)
     
