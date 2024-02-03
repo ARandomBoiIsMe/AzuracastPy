@@ -39,11 +39,11 @@ class TestStation(TestCase):
         with self.assertRaises(ValueError):
             self.station._request_single_instance_of('', -2)
     # ---------------------------
-            
+
     def test_file_returns_file(self):
         id = 1
         self.station._request_handler.get.return_value = fake_data_generator.return_fake_file_json(id)
-        
+
         result = self.station.file(id)
 
         self.assertIsInstance(result, StationFile)
@@ -54,7 +54,7 @@ class TestStation(TestCase):
             fake_data_generator.return_fake_file_json(2),
             fake_data_generator.return_fake_file_json(19)
         ]
-        
+
         result = self.station.files()
 
         self.assertIsInstance(result, list)
@@ -64,7 +64,7 @@ class TestStation(TestCase):
     def test_mount_point_returns_mount_point(self):
         id = 1
         self.station._request_handler.get.return_value = fake_data_generator.return_fake_mount_point_json(id)
-        
+
         result = self.station.mount_point(id)
 
         self.assertIsInstance(result, MountPoint)
@@ -75,7 +75,7 @@ class TestStation(TestCase):
             fake_data_generator.return_fake_mount_point_json(2),
             fake_data_generator.return_fake_mount_point_json(19)
         ]
-        
+
         result = self.station.mount_points()
 
         self.assertIsInstance(result, list)
@@ -172,7 +172,7 @@ class TestStation(TestCase):
     def test_podcast_returns_podcast(self):
         id = 'string-id'
         self.station._request_handler.get.return_value = fake_data_generator.return_fake_podcast_json()
-        
+
         result = self.station.podcast(id)
 
         self.assertIsInstance(result, Podcast)
@@ -183,7 +183,7 @@ class TestStation(TestCase):
             fake_data_generator.return_fake_podcast_json(),
             fake_data_generator.return_fake_podcast_json()
         ]
-        
+
         result = self.station.podcasts()
 
         self.assertIsInstance(result, list)
@@ -310,7 +310,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_frontend_action()
 
-        self.assertEqual(result, "Service restarted")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service restarted")
 
     def test_perform_frontend_action_start(self):
         response = Response()
@@ -320,7 +321,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_frontend_action('start')
 
-        self.assertEqual(result, "Service started")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service started")
 
     def test_perform_frontend_action_stop(self):
         response = Response()
@@ -330,7 +332,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_frontend_action('stop')
 
-        self.assertEqual(result, "Service stopped")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service stopped")
 
     def test_perform_backend_action_restart(self):
         response = Response()
@@ -340,7 +343,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_backend_action()
 
-        self.assertEqual(result, "Service restarted")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service restarted")
 
     def test_perform_backend_action_start(self):
         response = Response()
@@ -350,7 +354,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_backend_action('start')
 
-        self.assertEqual(result, "Service started")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service started")
 
     def test_perform_frontend_action_stop(self):
         response = Response()
@@ -360,7 +365,8 @@ class TestStation(TestCase):
 
         result = self.station.perform_backend_action('stop')
 
-        self.assertEqual(result, "Service stopped")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Service stopped")
 
     def test_station_restart(self):
         response = Response()
@@ -370,7 +376,8 @@ class TestStation(TestCase):
 
         result = self.station.restart()
 
-        self.assertEqual(result, "Station restarted")
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result['message'], "Station restarted")
 
 if __name__ == '__main__':
     unittest.main()

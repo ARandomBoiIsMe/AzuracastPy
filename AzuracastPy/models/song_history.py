@@ -1,19 +1,21 @@
-from .song import Song
+"""Class for songs that have been previously played on a station."""
 
-from AzuracastPy.util.general_util import generate_repr_string
+from ..util.general_util import generate_repr_string
+
+from .song import Song
 
 class SongHistory:
     def __init__(
-        self, 
-        sh_id: int, 
-        played_at: int, 
-        duration: int, 
-        playlist: str, 
+        self,
+        sh_id: int,
+        played_at: int,
+        duration: int,
+        playlist: str,
         streamer: str,
-        is_request: bool, 
-        song: Song, 
-        listeners_start: int, 
-        listeners_end: int, 
+        is_request: bool,
+        song: Song,
+        listeners_start: int,
+        listeners_end: int,
         delta_total: int,
         is_visible: bool
     ):

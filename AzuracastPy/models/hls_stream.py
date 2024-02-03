@@ -1,14 +1,16 @@
-from AzuracastPy.enums import Formats, Bitrates
-from AzuracastPy.exceptions import ClientException
-from AzuracastPy.util.general_util import generate_repr_string
-
-from .util.station_resource_operations import edit_station_resource, delete_station_resource
+"""Class for a station HLS Stream"""
 
 from typing import Optional
 
+from ..enums import Formats, Bitrates
+from ..exceptions import ClientException
+from ..util.general_util import generate_repr_string, generate_enum_error_text
+
+from .util.station_resource_operations import edit_station_resource, delete_station_resource
+
 class Links:
     def __init__(
-        self_, 
+        self_,
         self: str
     ):
         self_.self = self
@@ -37,7 +39,7 @@ class HLSStream:
 
     def __repr__(self):
         return generate_repr_string(self)
-    
+
     def edit(
         self,
         name: Optional[str] = None,
@@ -47,32 +49,50 @@ class HLSStream:
         """
         Edits the HTTP Live Streaming (HLS) stream's properties.
 
-        :param name:
-        :param format:
-        :param bitrate:
+        Updates all edited attributes of the current :class:`HLSStream` object.
+
+        :param name: (Optional) The new name of the hls stream. Default: ``None``.
+        :param format: (Optional) The new format of the hls stream. Default: ``None``.
+        :param bitrate: (Optional) The new bitrate of the hls stream. Default: ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            from AzuracastPy.enums import Formats, Bitrates
+
+            station.hls_stream(1).edit(
+                name="New name",
+                format=Formats.OPUS,
+                bitrate=Bitrates.BITRATE_128
+            )
         """
         if format:
             if not isinstance(format, Formats):
-                message = f"format param must be one of: {', '.join(Formats.__members__)}"
-                raise ClientException(message)
-            
+                raise ClientException(generate_enum_error_text("format", Formats))
+
             format = format.value
-        
+
         if bitrate:
             if not isinstance(bitrate, Bitrates):
-                message = f"bitrate param must be one of: {', '.join(Bitrates.__members__)}"
-                raise ClientException(message)
-            
-            bitrate = bitrate.value            
+                raise ClientException(generate_enum_error_text("bitrate", Bitrates))
+
+            bitrate = bitrate.value
 
         return edit_station_resource(self, "hls_stream", name, format, bitrate)
-    
+
     def delete(self):
         """
         Deletes the HTTP Live Streaming (HLS) stream from the station.
+
+        Sets all attributes of the current :class:`HLSStream` object to ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.hls_stream(1).delete()
         """
         return delete_station_resource(self, "hls_stream")
-    
+
     def _build_update_body(
         self,
         name,
@@ -80,21 +100,21 @@ class HLSStream:
         bitrate
     ):
         return {
-            "name": name if name else self.name,
-            "format": format if format else self.format,
-            "bitrate": bitrate if bitrate else self.bitrate
+            "name": name or self.name,
+            "format": format or self.format,
+            "bitrate": bitrate or self.bitrate
         }
-    
+
     def _update_properties(
         self,
         name,
         format,
         bitrate
     ):
-        self.name = name if name else self.name
-        self.format = format if format else self.format
-        self.bitrate = bitrate if bitrate else self.bitrate
-    
+        self.name = name or self.name
+        self.format = format or self.format
+        self.bitrate = bitrate or self.bitrate
+
     def _clear_properties(self):
         self.name = None
         self.format = None

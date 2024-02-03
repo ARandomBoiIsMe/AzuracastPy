@@ -1,10 +1,12 @@
-from AzuracastPy.util.general_util import generate_repr_string
+"""Class for encapsulating listener count across objects."""
+
+from ..util.general_util import generate_repr_string
 
 class Listeners:
     def __init__(
-        self, 
-        total, 
-        unique, 
+        self,
+        total,
+        unique,
         current
     ):
         self.total = total

@@ -1,17 +1,19 @@
+"""Class for a station streamer."""
+
 from typing import List, Optional, Dict, Any
 
 from datetime import datetime
 
-from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util.general_util import generate_repr_string
-from AzuracastPy.util.media_util import get_resource_art
+from ..constants import API_ENDPOINTS
+from ..util.general_util import generate_repr_string
+from ..util.media_util import get_resource_art
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
     def __init__(
-        self_, 
-        self: str, 
+        self_,
+        self: str,
         broadcasts: str, art: str
     ):
         self_.self = self
@@ -23,13 +25,13 @@ class Links:
 
 class ScheduleItem:
     def __init__(
-        self, 
-        start_time: int, 
-        end_time: int, 
-        start_date: str, 
-        end_date: str, 
+        self,
+        start_time: int,
+        end_time: int,
+        start_date: str,
+        end_date: str,
         days: List[int],
-        loop_once: bool, 
+        loop_once: bool,
         id: int
     ):
         self.start_time = start_time
@@ -45,20 +47,20 @@ class ScheduleItem:
 
 class Streamer:
     def __init__(
-        self, 
-        streamer_username: str, 
-        streamer_password: str, 
-        display_name: str, 
+        self,
+        streamer_username: str,
+        streamer_password: str,
+        display_name: str,
         comments: str,
-        is_active: bool, 
-        enforce_schedule: bool, 
-        reactivate_at: int, 
+        is_active: bool,
+        enforce_schedule: bool,
+        reactivate_at: int,
         art_updated_at: int,
-        schedule_items: List[ScheduleItem], 
-        id: int, 
-        links: Links, 
+        schedule_items: List[ScheduleItem],
+        id: int,
+        links: Links,
         has_custom_art: bool,
-        art: str, 
+        art: str,
         _station
     ):
         self.streamer_username = streamer_username
@@ -78,12 +80,12 @@ class Streamer:
 
     def __repr__(self):
         return generate_repr_string(self)
-    
+
     def edit(
-        self, 
-        streamer_username: Optional[str] = None, 
+        self,
+        username: Optional[str] = None,
         display_name: Optional[str] = None,
-        comments: Optional[str] = None, 
+        comments: Optional[str] = None,
         is_active: Optional[bool] = None,
         enforce_schedule: Optional[bool] = None,
         schedule: Optional[List[Dict[str, Any]]] = None
@@ -91,18 +93,33 @@ class Streamer:
         """
         Edits the streamer's properties.
 
-        :param streamer_username:
-        :param display_name:
-        :param comments:
-        :param is_active:
-        :param enforce_schedule:
-        :param schedule:
+        Updates all edited attributes of the current :class:`Streamer` object.
+
+        :param username: (Optional) The streamer's new username.
+        :param display_name: (Optional) The streamer's new display_name. Default: ``None``.
+        :param comments: (Optional) Updated internal notes or comments about the streamer.
+            Default: ``None``.
+        :param is_active: (Optional) Determines whether this streamer can log in and stream.
+            Default: ``None``.
+        :param enforce_schedule: (Optional) Determines whether this streamer will only be able to
+            connect during their scheduled broadcast times. Default: ``None``.
+        :param schedule: (Optional) The new structure representing the schedule list of the
+            streamer. This can be generated using the :meth:`.generate_schedule_items` function.
+            Default: ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.streamer(1).edit(
+                username="New username",
+                display_name="The name which is displayed"
+            )
         """
         return edit_station_resource(
-            self, "station_streamer", streamer_username, display_name, comments, is_active,
+            self, "station_streamer", username, display_name, comments, is_active,
             enforce_schedule, schedule
         )
-    
+
     def add_schedule_item(
         self,
         schedule_item: Dict[str, Any]
@@ -127,20 +144,28 @@ class Streamer:
 
         response = self._station._request_handler.put(url, body)
 
-        # Updates the streamer's properties on the object.
-        # Inefficient, but can't think of a better way.
-        self.schedule_items = self._station.streamer(self.id).schedule_items
+        if response['success']:
+            # Updates the streamer's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self.schedule_items = self._station.streamer(self.id).schedule_items
 
         return response
 
     def update_password(
-        self, 
+        self,
         password: str
     ):
         """
         Updates the streamer's password.
 
         :param password: The streamer's new password.
+
+        Usage:
+        .. code-block:: python
+
+            station.streamer(1).update_password(
+                password="new password"
+            )
         """
         url = API_ENDPOINTS["station_streamer"].format(
             radio_url=self._station._request_handler.radio_url,
@@ -155,46 +180,53 @@ class Streamer:
         response = self._station._request_handler.put(url, body)
 
         return response
-    
+
     def delete(self):
         """
         Deletes the streamer from the station.
+
+        Sets all attributes of the current :class:`Streamer` object to ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.streamer(1).delete()
         """
         return delete_station_resource(self, "station_streamer")
-    
+
     def _build_update_body(
-        self, 
-        streamer_username, 
-        display_name, 
-        comments, 
+        self,
+        username,
+        display_name,
+        comments,
         is_active,
         enforce_schedule,
         schedule
     ):
         return {
-            "streamer_username": streamer_username if streamer_username else self.streamer_username,
-            "display_name": display_name if display_name else self.display_name,
-            "comments": comments if comments else self.comments,
+            "streamer_username": username or self.streamer_username,
+            "display_name": display_name or self.display_name,
+            "comments": comments or self.comments,
             "is_active": is_active if is_active is not None else self.is_active,
             "enforce_schedule": enforce_schedule if enforce_schedule is not None else self.enforce_schedule,
-            "schedule_items": schedule if schedule else [self._get_schedule_item_json(item) for item in self.schedule_items]
+            "schedule_items": schedule or [self._get_schedule_item_json(item) for item in self.schedule_items]
         }
-    
+
     def _update_properties(
-        self, 
-        streamer_username, 
-        display_name, 
-        comments, 
+        self,
+        username,
+        display_name,
+        comments,
         is_active,
         enforce_schedule,
         schedule
     ):
-        self.streamer_username = streamer_username if streamer_username else self.streamer_username
-        self.display_name = display_name if display_name else self.display_name
-        self.comments = comments if comments else self.comments
+        self.streamer_username = username or self.streamer_username
+        self.display_name = display_name or self.display_name
+        self.comments = comments or self.comments
         self.is_active = is_active if is_active is not None else self.is_active
         self.enforce_schedule = enforce_schedule if enforce_schedule is not None else self.enforce_schedule
-        self.schedule_items = self.schedule_items if schedule is None else self._station.streamer(self.id).schedule_items # I'm sorry.
+        self.schedule_items = self.schedule_items if not schedule else self._station.streamer(self.id).schedule_items # I'm sorry.
 
     def _clear_properties(self):
         self.streamer_username = None

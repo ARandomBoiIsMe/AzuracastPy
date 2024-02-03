@@ -1,13 +1,15 @@
+"""Class for a station remote relay."""
+
 from typing import Optional
 
-from AzuracastPy.util.general_util import generate_repr_string
-from AzuracastPy.enums import RemoteTypes, Bitrates, Formats
-from AzuracastPy.exceptions import ClientException
-from AzuracastPy.models.util.station_resource_operations import delete_station_resource, edit_station_resource
+from ..util.general_util import generate_repr_string, generate_enum_error_text
+from ..enums import RemoteTypes, Bitrates, Formats
+from ..exceptions import ClientException
+from ..models.util.station_resource_operations import delete_station_resource, edit_station_resource
 
 class Links:
     def __init__(
-        self_, 
+        self_,
         self
     ):
         self_.self = self
@@ -17,27 +19,27 @@ class Links:
 
 class RemoteRelay:
     def __init__(
-        self, 
-        id: int, 
-        display_name: str, 
-        is_visible_on_public_pages: bool, 
-        type: str, 
+        self,
+        id: int,
+        display_name: str,
+        is_visible_on_public_pages: bool,
+        type: str,
         is_editable: bool,
-        enable_autodj: bool, 
-        autodj_format: str, 
-        autodj_bitrate: int, 
-        custom_listen_url: str, 
-        url: str, 
+        enable_autodj: bool,
+        autodj_format: str,
+        autodj_bitrate: int,
+        custom_listen_url: str,
+        url: str,
         mount: str,
-        admin_password: str, 
-        source_port: int, 
-        source_mount: str, 
-        source_username: str, 
+        admin_password: str,
+        source_port: int,
+        source_mount: str,
+        source_username: str,
         source_password: str,
-        is_public: bool, 
-        listeners_unique: int, 
-        listeners_total: int, 
-        links: Links, 
+        is_public: bool,
+        listeners_unique: int,
+        listeners_total: int,
+        links: Links,
         _station
     ):
         self.id = id
@@ -64,140 +66,164 @@ class RemoteRelay:
 
     def __repr__(self):
         return generate_repr_string(self)
-    
+
     def edit(
-        self, 
-        station_listening_url: Optional[str] = None, 
+        self,
+        station_listening_url: Optional[str] = None,
         remote_type: Optional[RemoteTypes] = None,
-        display_name: Optional[str] = None, 
+        display_name: Optional[str] = None,
         station_listening_mount_point: Optional[str] = None,
-        station_admin_password: Optional[str] = None, 
+        station_admin_password: Optional[str] = None,
         show_on_public_pages: Optional[bool] = None,
-        enable_autodj: Optional[bool] = None, 
+        enable_autodj: Optional[bool] = None,
         autodj_format: Optional[Formats] = None,
-        autodj_bitrate: Optional[Bitrates] = None, 
+        autodj_bitrate: Optional[Bitrates] = None,
         station_source_port: Optional[int] = None,
-        station_source_mount_point: Optional[str] = None, 
+        station_source_mount_point: Optional[str] = None,
         station_source_username: Optional[str] = None,
-        station_source_password: Optional[str] = None, 
+        station_source_password: Optional[str] = None,
         is_public: Optional[bool] = None
     ):
         """
         Edits the remote relay's properties.
 
-        :param station_listening_url:
-        :param remote_type:
-        :param display_name:
-        :param station_listening_mount_point:
-        :param station_admin_password:
-        :param show_on_public_pages:
-        :param enable_autodj:
-        :param autodj_format:
-        :param autodj_bitrate:
-        :param station_source_port:
-        :param station_source_mount_point:
-        :param station_source_username:
-        :param station_source_password:
-        :param is_public:
+        Updates all edited attributes of the current :class:`RemoteRelay` object.
+
+        :param station_listening_url: (Optional) The new URL of the listening station.
+            Default: ``None``.
+        :param remote_type: (Optional) The new type of the remote station. Default: ``None``.
+        :param display_name: (Optional) The new display name of this relay when viewing it on
+            administrative or public pages. Default: ``None``.
+        :param station_listening_mount_point: (Optional)
+        :param station_admin_password: (Optional) The new admin password. Default: ``None``.
+        :param show_on_public_pages: (Optional) Determines whether listeners can select this
+            relay on this station's public pages. Default: ``None``.
+        :param enable_autodj: (Optional) Determines whether the AutoDJ on this installation will
+            automatically play music to this mount point. Default: ``None``.
+        :param autodj_format: (Optional) The format of the music played by AutoDJ.
+            Default: ``None``.
+        :param autodj_bitrate: (Optional) The bitrate of the music played by AutoDJ.
+            Default: ``None``.
+        :param station_source_port: (Optional)
+        :param station_source_mount_point: (Optional)
+        :param station_source_username: (Optional) If you are broadcasting using AutoDJ, enter the
+            source username here. This may be blank. Default: ``None``.
+        :param station_source_password: (Optional) If you are broadcasting using AutoDJ, enter the
+            source password here. Default: ``None``.
+        :param is_public: (Optional) Determines whether this relay will be advertised on
+            "Yellow Pages" public radio directories. Default: ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.remote_relay(1).edit(
+                display_name="New display name",
+                enable_autodj=False
+            )
         """
         if remote_type:
             if not isinstance(remote_type, RemoteTypes):
-                message = f"remote_type param has to be one of: {', '.join(RemoteTypes.__members__)}"
-                raise ClientException(message)
-            
+                raise ClientException(generate_enum_error_text("remote_type", RemoteTypes))
+
             remote_type = remote_type.value
-        
+
         if autodj_format:
             if not isinstance(autodj_format, Formats):
-                message = f"autodj_format param must be one of: {', '.join(Formats.__members__)}"
-                raise ClientException(message)
-            
+                raise ClientException(generate_enum_error_text("autodj_format", Formats))
+
             autodj_format = autodj_format.value
-        
+
         if autodj_bitrate:
             if not isinstance(autodj_bitrate, Bitrates):
-                message = f"autodj_bitrate param must be one of: {', '.join(Bitrates.__members__)}"
-                raise ClientException(message)
-            
+                raise ClientException(generate_enum_error_text("autodj_bitrate", Bitrates))
+
             autodj_bitrate = autodj_bitrate.value
-        
+
         return edit_station_resource(
             self, "station_remote_relay_item",
-            station_listening_url, remote_type, display_name, station_listening_mount_point, station_admin_password,
-            show_on_public_pages, enable_autodj, autodj_format, autodj_bitrate, station_source_port,
-            station_source_mount_point, station_source_username, station_source_password, is_public
+            station_listening_url, remote_type, display_name, station_listening_mount_point,
+            station_admin_password, show_on_public_pages, enable_autodj, autodj_format,
+            autodj_bitrate, station_source_port, station_source_mount_point,
+            station_source_username, station_source_password, is_public
         )
-    
+
     def delete(self):
         """
         Deletes the remote relay from the station.
+
+        Sets all attributes of the current :class:`RemoteRelay` object to ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.remote_relay(1).delete()
         """
         return delete_station_resource(self, "station_remote_relay_item")
-    
+
     def _build_update_body(
-        self, 
-        station_listening_url, 
-        remote_type, 
-        display_name, 
-        station_listening_mount_point, 
+        self,
+        station_listening_url,
+        remote_type,
+        display_name,
+        station_listening_mount_point,
         station_admin_password,
-        show_on_public_pages, 
-        enable_autodj, 
-        autodj_format, 
-        autodj_bitrate, 
+        show_on_public_pages,
+        enable_autodj,
+        autodj_format,
+        autodj_bitrate,
         station_source_port,
-        station_source_mount_point, 
-        station_source_username, 
-        station_source_password, 
+        station_source_mount_point,
+        station_source_username,
+        station_source_password,
         is_public
     ):
         return {
-            "display_name": display_name if display_name else self.display_name,
+            "display_name": display_name or self.display_name,
             "is_visible_on_public_pages": show_on_public_pages if show_on_public_pages is not None else self.is_visible_on_public_pages,
-            "type": remote_type if remote_type else self.type,
+            "type": remote_type or self.type,
             "enable_autodj": enable_autodj if enable_autodj is not None else self.enable_autodj,
-            "autodj_format": autodj_format if autodj_format else self.autodj_format,
-            "autodj_bitrate": autodj_bitrate if autodj_bitrate else self.autodj_bitrate,
-            "url": station_listening_url if station_listening_url else self.url,
-            "mount": station_listening_mount_point if station_listening_mount_point else self.mount,
-            "admin_password": station_admin_password if station_admin_password else self.admin_password,
-            "source_port": station_source_port if station_source_port else self.source_port,
-            "source_mount": station_source_mount_point if station_source_mount_point else self.source_mount,
-            "source_username": station_source_username if station_source_username else self.source_username,
-            "source_password": station_source_password if station_source_password else self.source_password,
+            "autodj_format": autodj_format or self.autodj_format,
+            "autodj_bitrate": autodj_bitrate or self.autodj_bitrate,
+            "url": station_listening_url or self.url,
+            "mount": station_listening_mount_point or self.mount,
+            "admin_password": station_admin_password or self.admin_password,
+            "source_port": station_source_port or self.source_port,
+            "source_mount": station_source_mount_point or self.source_mount,
+            "source_username": station_source_username or self.source_username,
+            "source_password": station_source_password or self.source_password,
             "is_public": is_public if is_public is not None else self.is_public
         }
-    
+
     def _update_properties(
-        self, 
-        station_listening_url, 
-        remote_type, 
-        display_name, 
-        station_listening_mount_point, 
+        self,
+        station_listening_url,
+        remote_type,
+        display_name,
+        station_listening_mount_point,
         station_admin_password,
-        show_on_public_pages, 
-        enable_autodj, 
-        autodj_format, 
-        autodj_bitrate, 
+        show_on_public_pages,
+        enable_autodj,
+        autodj_format,
+        autodj_bitrate,
         station_source_port,
-        station_source_mount_point, 
-        station_source_username, 
-        station_source_password, 
+        station_source_mount_point,
+        station_source_username,
+        station_source_password,
         is_public
     ):
-        self.display_name = display_name if display_name else self.display_name
+        self.display_name = display_name or self.display_name
         self.is_visible_on_public_pages = show_on_public_pages if show_on_public_pages is not None else self.is_visible_on_public_pages
-        self.type = remote_type if remote_type else self.type
+        self.type = remote_type or self.type
         self.enable_autodj = enable_autodj if enable_autodj is not None else self.enable_autodj
-        self.autodj_format = autodj_format if autodj_format else self.autodj_format
-        self.autodj_bitrate = autodj_bitrate if autodj_bitrate else self.autodj_bitrate
-        self.url = station_listening_url if station_listening_url else self.url
-        self.mount = station_listening_mount_point if station_listening_mount_point else self.mount
-        self.admin_password = station_admin_password if station_admin_password else self.admin_password
-        self.source_port = station_source_port if station_source_port else self.source_port
-        self.source_mount = station_source_mount_point if station_source_mount_point else self.source_mount
-        self.source_username = station_source_username if station_source_username else self.source_username
-        self.source_password = station_source_password if station_source_password else self.source_password
+        self.autodj_format = autodj_format or self.autodj_format
+        self.autodj_bitrate = autodj_bitrate or self.autodj_bitrate
+        self.url = station_listening_url or self.url
+        self.mount = station_listening_mount_point or self.mount
+        self.admin_password = station_admin_password or self.admin_password
+        self.source_port = station_source_port or self.source_port
+        self.source_mount = station_source_mount_point or self.source_mount
+        self.source_username = station_source_username or self.source_username
+        self.source_password = station_source_password or self.source_password
         self.is_public = is_public if is_public is not None else self.is_public
 
     def _clear_properties(self):

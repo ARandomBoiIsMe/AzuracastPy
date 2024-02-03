@@ -1,17 +1,19 @@
+"""Class for a station's nowplaying data."""
+
+from typing import List
+
+from ..util.general_util import generate_repr_string
+
 from .listeners import Listeners
 from .song import Song
 from .station import Station
 from .song_history import SongHistory
 
-from typing import List
-
-from AzuracastPy.util.general_util import generate_repr_string
-
 class Live:
     def __init__(
-        self, 
-        is_live: bool, 
-        streamer_name: str, 
+        self,
+        is_live: bool,
+        streamer_name: str,
         broadcast_start, art: str
     ):
         self.is_live = is_live
@@ -24,15 +26,15 @@ class Live:
 
 class CurrentSong:
     def __init__(
-        self, 
-        sh_id: int, 
-        played_at: int, 
-        duration: int, 
-        playlist: str, 
-        streamer: str, 
+        self,
+        sh_id: int,
+        played_at: int,
+        duration: int,
+        playlist: str,
+        streamer: str,
         is_request: bool,
-        song: Song, 
-        elapsed: int, 
+        song: Song,
+        elapsed: int,
         remaining: int
     ):
         self.sh_id = sh_id
@@ -50,12 +52,12 @@ class CurrentSong:
 
 class PlayingNext:
     def __init__(
-        self, 
+        self,
         cued_at: int,
-        played_at: int, 
-        duration: int, 
-        playlist: str, 
-        is_request: bool, 
+        played_at: int,
+        duration: int,
+        playlist: str,
+        is_request: bool,
         song: Song
     ):
         self.cued_at = cued_at
@@ -70,14 +72,14 @@ class PlayingNext:
 
 class NowPlaying:
     def __init__(
-        self, 
-        station: Station, 
-        listeners: Listeners, 
-        live: Live, 
+        self,
+        station: Station,
+        listeners: Listeners,
+        live: Live,
         now_playing: CurrentSong,
         playing_next: PlayingNext,
-        song_history: List[SongHistory], 
-        is_online: bool, 
+        song_history: List[SongHistory],
+        is_online: bool,
         cache: str
     ):
         self.station = station

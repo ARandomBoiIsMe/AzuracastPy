@@ -1,16 +1,18 @@
+""""Class for a podcast episode."""
+
 from typing import Optional
 
-from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util.media_util import get_resource_art
-from AzuracastPy.util.general_util import generate_repr_string
+from ..constants import API_ENDPOINTS
+from ..util.media_util import get_resource_art
+from ..util.general_util import generate_repr_string
 
 class Links:
     def __init__(
-        self_, 
-        self: str, 
-        public: str, 
-        download: str, 
-        art: str, 
+        self_,
+        self: str,
+        public: str,
+        download: str,
+        art: str,
         media: str
     ):
         self_.self = self
@@ -24,11 +26,11 @@ class Links:
 
 class Media:
     def __init__(
-        self, 
-        id: str, 
-        original_name: str, 
-        length: int, 
-        length_text: str, 
+        self,
+        id: str,
+        original_name: str,
+        length: int,
+        length_text: str,
         path: str
     ):
         self.id = id
@@ -42,17 +44,17 @@ class Media:
 
 class PodcastEpisode:
     def __init__(
-        self, 
-        id: str, 
-        title: str, 
-        description: str, 
-        explicit: bool, 
-        publish_at: int, 
+        self,
+        id: str,
+        title: str,
+        description: str,
+        explicit: bool,
+        publish_at: int,
         has_media: bool,
-        media: Media, 
-        has_custom_art: bool, 
-        art: str, 
-        art_updated_at: int, 
+        media: Media,
+        has_custom_art: bool,
+        art: str,
+        art_updated_at: int,
         links: Links,
         _podcast
     ):
@@ -71,11 +73,11 @@ class PodcastEpisode:
 
     def __repr__(self):
         return generate_repr_string(self)
-    
+
     def edit(
-        self, 
-        title: Optional[str] = None, 
-        description: Optional[str] = None, 
+        self,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
         explicit: Optional[bool] = None
     ):
         url = API_ENDPOINTS["podcast_episode"].format(
@@ -104,32 +106,32 @@ class PodcastEpisode:
 
         response = self._podcast._station._request_handler.delete(url)
 
-        if response['success'] is True:
+        if response['success']:
             self._clear_properties()
 
         return response
 
     def _build_update_body(
-        self, 
-        title, 
-        description, 
+        self,
+        title,
+        description,
         explicit
     ):
         return {
-            "title": title if title else self.title,
-            "description": description if description else self.description,
-            "explicit": explicit if explicit else self.explicit
+            "title": title or self.title,
+            "description": description or self.description,
+            "explicit": explicit if explicit is not None else self.explicit
         }
-    
+
     def _update_properties(
-        self, 
-        title, 
-        description, 
+        self,
+        title,
+        description,
         explicit
     ):
-        self.title = title if title else self.title
-        self.description = description if description else self.description
-        self.explicit = explicit if explicit else self.explicit
+        self.title = title or self.title
+        self.description = description or self.description
+        self.explicit = explicit if explicit is not None else self.explicit
 
     def _clear_properties(self):
         self.id = None

@@ -1,12 +1,14 @@
-from AzuracastPy.util.general_util import generate_repr_string
+"""Class for a listener of a station."""
+
+from ..util.general_util import generate_repr_string
 
 class Device:
     def __init__(
         self,
-        client: str, 
-        is_browser: bool, 
-        is_mobile: bool, 
-        is_bot: bool, 
+        client: str,
+        is_browser: bool,
+        is_mobile: bool,
+        is_bot: bool,
         browser_family: str,
         os_family: str
     ):
@@ -22,12 +24,12 @@ class Device:
 
 class Location:
     def __init__(
-        self, 
-        description: str, 
-        region: str, 
-        city: str, 
-        country: str, 
-        lat, 
+        self,
+        description: str,
+        region: str,
+        city: str,
+        country: str,
+        lat,
         lon
     ):
         self.description = description
@@ -42,16 +44,16 @@ class Location:
 
 class Listener:
     def __init__(
-        self, 
-        ip: str, 
-        user_agent: str, 
-        hash: str, 
-        mount_is_local: bool, 
+        self,
+        ip: str,
+        user_agent: str,
+        hash: str,
+        mount_is_local: bool,
         mount_name: str,
-        connected_on: int, 
-        connected_until: int, 
+        connected_on: int,
+        connected_until: int,
         connected_time: int,
-        device: Device, 
+        device: Device,
         location: Location
     ):
         self.ip = ip

@@ -1,19 +1,21 @@
+"""Class for a song on a station."""
+
 from typing import List
 
-from AzuracastPy.util.general_util import generate_repr_string
+from ..util.general_util import generate_repr_string
 
 class Song:
     def __init__(
-        self, 
-        id: str, 
-        text: str, 
-        artist: str, 
-        title: str, 
-        album: str, 
-        genre: str, 
+        self,
+        id: str,
+        text: str,
+        artist: str,
+        title: str,
+        album: str,
+        genre: str,
         isrc: str,
-        lyrics: str, 
-        art: str, 
+        lyrics: str,
+        art: str,
         custom_fields: List[str]
     ):
         self.id = id

@@ -1,4 +1,11 @@
+"""Enum classes to be utilized when using the library."""
+
 from enum import Enum
+
+class ServiceActions(Enum):
+    RESTART = "restart"
+    STOP = "stop"
+    START = "start"
 
 class GlobalPermissions(Enum):
     ADMINISTER_ALL = "administer all"
@@ -657,3 +664,145 @@ class Countries(Enum):
     YEMEN = "YE"
     ZAMBIA = "ZM"
     ZIMBABWE = "ZW"
+
+# I know these aren't enums, leave me alone.
+class _Arts:
+    BOOKS = 'Arts|Books'
+    DESIGN = 'Arts|Design'
+    FASHION_BEAUTY = 'Arts|Fashion & Beauty'
+    FOOD = 'Arts|Food'
+    PERFORMING_ARTS = 'Arts|Performing Arts'
+    VISUAL_ARTS = 'Arts|Visual Arts'
+
+class _Business:
+    CAREERS = 'Business|Careers'
+    ENTREPRENEURSHIP = 'Business|Entrepreneurship'
+    INVESTING = 'Business|Investing'
+    MANAGEMENT = 'Business|Management'
+    MARKETING = 'Business|Marketing'
+    NON_PROFIT = 'Business|Non-Profit'
+
+class _Comedy:
+    COMEDY_INTERVIEWS = 'Comedy|Comedy Interviews'
+    IMPROV = 'Comedy|Improv'
+    STAND_UP = 'Comedy|Stand-Up'
+
+class _Education:
+    COURSES = 'Education|Courses'
+    HOW_TO = 'Education|How To'
+    LANGUAGE_LEARNING = 'Education|Language Learning'
+    SELF_IMPROVEMENT = 'Education|Self-Improvement'
+
+class _Fiction:
+    COMEDY_FICTION = 'Fiction|Comedy Fiction'
+    DRAMA = 'Fiction|Drama'
+    SCIENCE_FICTION = 'Fiction|Science Fiction'
+
+class _HealthFitness:
+    ALTERNATIVE_HEALTH = 'Health & Fitness|Alternative Health'
+    FITNESS = 'Health & Fitness|Fitness'
+    MEDICINE = 'Health & Fitness|Medicine'
+    MENTAL_HEALTH = 'Health & Fitness|Mental Health'
+    NUTRITION = 'Health & Fitness|Nutrition'
+    SEXUALITY = 'Health & Fitness|Sexuality'
+
+class _KidsFamily:
+    PARENTING = 'Kids & Family|Parenting'
+    PETS_ANIMALS = 'Kids & Family|Pets & Animals'
+    STORIES_FOR_KIDS = 'Kids & Family|Stories for Kids'
+
+class _Leisure:
+    ANIMATION_MANGA = 'Leisure|Animation & Manga'
+    AUTOMOTIVE = 'Leisure|Automotive'
+    AVIATION = 'Leisure|Aviation'
+    CRAFTS = 'Leisure|Crafts'
+    GAMES = 'Leisure|Games'
+    HOBBIES = 'Leisure|Hobbies'
+    HOME_GARDEN = 'Leisure|Home & Garden'
+    VIDEO_GAMES = 'Leisure|Video Games'
+
+class _Music:
+    MUSIC_COMMENTARY = 'Music|Music Commentary'
+    MUSIC_HISTORY = 'Music|Music History'
+    MUSIC_INTERVIEWS = 'Music|Music Interviews'
+
+class _News:
+    BUSINESS_NEWS = 'News|Business News'
+    DAILY_NEWS = 'News|Daily News'
+    ENTERTAINMENT_NEWS = 'News|Entertainment News'
+    NEWS_COMMENTARY = 'News|News Commentary'
+    POLITICS = 'News|Politics'
+    SPORTS_NEWS = 'News|Sports News'
+    TECH_NEWS = 'News|Tech News'
+
+class _ReligionSpirituality:
+    BUDDHISM = 'Religion & Spirituality|Buddhism'
+    CHRISTIANITY = 'Religion & Spirituality|Christianity'
+    HINDUISM = 'Religion & Spirituality|Hinduism'
+    ISLAM = 'Religion & Spirituality|Islam'
+    JUDAISM = 'Religion & Spirituality|Judaism'
+    RELIGION = 'Religion & Spirituality|Religion'
+    SPIRITUALITY = 'Religion & Spirituality|Spirituality'
+
+class _Science:
+    ASTRONOMY = 'Science|Astronomy'
+    CHEMISTRY = 'Science|Chemistry'
+    EARTH_SCIENCES = 'Science|Earth Sciences'
+    LIFE_SCIENCES = 'Science|Life Sciences'
+    MATHEMATICS = 'Science|Mathematics'
+    NATURAL_SCIENCES = 'Science|Natural Sciences'
+    NATURE = 'Science|Nature'
+    PHYSICS = 'Science|Physics'
+    SOCIAL_SCIENCES = 'Science|Social Sciences'
+
+class _SocietyCulture:
+    DOCUMENTARY = 'Society & Culture|Documentary'
+    PERSONAL_JOURNALS = 'Society & Culture|Personal Journals'
+    PHILOSOPHY = 'Society & Culture|Philosophy'
+    PLACES_TRAVEL = 'Society & Culture|Places & Travel'
+    RELATIONSHIPS = 'Society & Culture|Relationships'
+
+class _Sports:
+    BASEBALL = 'Sports|Baseball'
+    BASKETBALL = 'Sports|Basketball'
+    CRICKET = 'Sports|Cricket'
+    FANTASY_SPORTS = 'Sports|Fantasy Sports'
+    FOOTBALL = 'Sports|Football'
+    GOLF = 'Sports|Golf'
+    HOCKEY = 'Sports|Hockey'
+    RUGBY = 'Sports|Rugby'
+    RUNNING = 'Sports|Running'
+    SOCCER = 'Sports|Soccer'
+    SWIMMING = 'Sports|Swimming'
+    TENNIS = 'Sports|Tennis'
+    VOLLEYBALL = 'Sports|Volleyball'
+    WILDERNESS = 'Sports|Wilderness'
+    WRESTLING = 'Sports|Wrestling'
+
+class _TVFilm:
+    AFTER_SHOWS = 'TV & Film|After Shows'
+    FILM_HISTORY = 'TV & Film|Film History'
+    FILM_INTERVIEWS = 'TV & Film|Film Interviews'
+    FILM_REVIEWS = 'TV & Film|Film Reviews'
+    TV_REVIEWS = 'TV & Film|TV Reviews'
+
+class PodcastCategories:
+    Arts = _Arts
+    Business = _Business
+    Comedy = _Comedy
+    Education = _Education
+    Fiction = _Fiction
+    GOVERNMENT = 'Government'
+    HISTORY = 'History'
+    HealthFitness = _HealthFitness
+    KidsFamily = _KidsFamily
+    Leisure = _Leisure
+    Music = _Music
+    News = _News
+    ReligionSpirituality = _ReligionSpirituality
+    Science = _Science
+    SocietyCulture = _SocietyCulture
+    Sports = _Sports
+    TECHNOLOGY = 'Technology'
+    TRUE_CRIME = 'True Crime'
+    TVFilm = _TVFilm

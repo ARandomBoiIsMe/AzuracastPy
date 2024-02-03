@@ -1,3 +1,5 @@
+"""Custom exceptions used in the library."""
+
 class AzuracastException(Exception):
     """The base Azuracast Exception class that all other exceptions will extend"""
 

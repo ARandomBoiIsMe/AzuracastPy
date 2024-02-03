@@ -1,16 +1,19 @@
+"""Class for a station playlist."""
+
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.enums import PlaylistTypes, PlaylistSources, PlaylistOrders, PlaylistRemoteTypes
-from AzuracastPy.util.general_util import generate_repr_string
+from ..constants import API_ENDPOINTS
+from ..exceptions import ClientException
+from ..enums import PlaylistTypes, PlaylistSources, PlaylistOrders, PlaylistRemoteTypes
+from ..util.general_util import generate_repr_string, generate_enum_error_text
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Export:
     def __init__(
-        self, 
-        pls: str, 
+        self,
+        pls: str,
         m3u: str
     ):
         self.pls = pls
@@ -21,15 +24,15 @@ class Export:
 
 class Links:
     def __init__(
-        self, 
-        _self: str, 
-        toggle: str, 
-        clone: str, 
-        queue: str, 
-        _import: str, 
+        self,
+        _self: str,
+        toggle: str,
+        clone: str,
+        queue: str,
+        _import: str,
         reshuffle: str,
-        applyto: str, 
-        empty: str, 
+        applyto: str,
+        empty: str,
         export: Export
     ):
         self._self = _self
@@ -47,7 +50,7 @@ class Links:
 
     @classmethod
     def from_dict(
-        cls, 
+        cls,
         links_dict: Dict[str, Any]
     ):
         return cls(
@@ -66,11 +69,11 @@ class ScheduleItem:
     def __init__(
         self,
         start_time: int,
-        end_time: int, 
-        start_date: str, 
-        end_date: str, 
+        end_time: int,
+        start_date: str,
+        end_date: str,
         days: List[int],
-        loop_once: bool, 
+        loop_once: bool,
         id: int
     ):
         self.start_time = start_time
@@ -86,32 +89,32 @@ class ScheduleItem:
 
 class Playlist:
     def __init__(
-        self, 
-        name: str, 
-        type: str, 
-        source: str, 
-        order: str, 
-        remote_url: str, 
+        self,
+        name: str,
+        type: str,
+        source: str,
+        order: str,
+        remote_url: str,
         remote_type: str,
-        remote_buffer: int, 
-        is_enabled: bool, 
-        is_jingle: bool, 
-        play_per_songs: int, 
+        remote_buffer: int,
+        is_enabled: bool,
+        is_jingle: bool,
+        play_per_songs: int,
         play_per_minutes: int,
-        play_per_hour_minute: int, 
-        weight: int, 
-        include_in_requests: bool, 
+        play_per_hour_minute: int,
+        weight: int,
+        include_in_requests: bool,
         include_in_on_demand: bool,
-        backend_options: List[str], 
-        avoid_duplicates: bool, 
-        played_at: int, 
+        backend_options: List[str],
+        avoid_duplicates: bool,
+        played_at: int,
         queue_reset_at: int,
-        schedule_items: List[ScheduleItem], 
-        id: int, 
-        short_name: str, 
-        num_songs: int, 
+        schedule_items: List[ScheduleItem],
+        id: int,
+        short_name: str,
+        num_songs: int,
         total_length: int,
-        links: Dict[str, Any], 
+        links: Dict[str, Any],
         _station
     ):
         self.name = name
@@ -143,69 +146,111 @@ class Playlist:
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
-    
+
     def edit(
-        self, 
-        name: Optional[str] = None, 
-        type: Optional[PlaylistTypes] = None, 
+        self,
+        name: Optional[str] = None,
         source: Optional[PlaylistSources] = None,
-        order: Optional[PlaylistOrders] = None, 
-        remote_url: Optional[str] = None, 
-        remote_type: Optional[PlaylistRemoteTypes] = None,
-        remote_buffer: Optional[int] = None, 
-        play_per_value: Optional[int] = None, 
+        type: Optional[PlaylistTypes] = None,
+        order: Optional[PlaylistOrders] = None,
+        avoid_duplicates: Optional[bool] = None,
+        allow_requests: Optional[bool] = None,
+        play_per_value: Optional[int] = None,
         weight: Optional[int] = None,
-        include_in_requests: Optional[bool] = None, 
         include_in_on_demand: Optional[bool] = None,
-        avoid_duplicates: Optional[bool] = None, 
-        is_jingle: Optional[bool] = None
+        is_jingle: Optional[bool] = None,
+        remote_url: Optional[str] = None,
+        remote_type: Optional[PlaylistRemoteTypes] = None,
+        remote_buffer: Optional[int] = None,
+        schedule: Optional[List[Dict[str, Any]]] = None
     ):
         """
         Edits the playlist's properties.
 
-        :param name:
-        :param type:
-        :param source:
-        :param order:
-        :param remote_url:
-        :param remote_type:
-        :param remote_buffer:
-        :param play_per_value:
-        :param weight:
-        :param include_in_requests:
-        :param include_in_on_demand:
-        :param avoid_duplicates:
-        :param is_jingle:
+        Updates all edited attributes of the current :class:`Playlist` object.
+
+        :param name: (Optional) The new name of the playlist. Default: ``None``.
+        :param source: (Optional) Specify where the playlist gets its contents from.
+            Default: ``None``.
+        :param type: (Optional) The internal play-type of the playlist. Not needed if playlist's
+            source is set to ``PlaylistSources.REMOTE_URL``. Default: ``None``.
+        :param order: (Optional) Determines the playback order of the songs in the playlist.
+            Not needed if playlist's source is set to ``PlaylistSources.REMOTE_URL``.
+            Default: ``None``.
+        :param avoid_duplicates: (Optional) Determines whether duplicate artists and track titles
+            will be avoided when playing media from this playlist. Not needed if playlist's source
+            is set to ``PlaylistSources.REMOTE_URL``. Default: ``None``.
+        :param allow_requests: (Optional) Determines whether users will be able to request media
+            that is on this playlist. Not needed if playlist's source is set to
+            ``PlaylistSources.REMOTE_URL``. Default: ``None``.
+        :param play_per_value: (Optional) The new value for the
+            ``ONCE_PER_X_SONGS``, ``ONCE_PER_X_HOURS`` and ``ONCE_PER_X_MINUTES`` playlist types.
+            Not needed if playlist's source is set to ``PlaylistSources.REMOTE_URL``.
+            Default: ``None``.
+        :param weight: (Optional) The new frequency of the playlist to be played when compared to
+            other playlists. This is the value for the ``DEFAULT`` playlist type.
+            Not needed if playlist's source is set to ``PlaylistSources.REMOTE_URL``.
+            Default: ``None``.
+        :param include_in_on_demand: (Optional) Determines whether only songs that are in playlists
+            with this setting enabled will be visible. Not needed if playlist's source is set to
+            ``PlaylistSources.REMOTE_URL``. Default: ``None``.
+        :param is_jingle: (Optional) Determines if metadata will be sent to the AutoDJ for
+            files in this playlist.
+            Not needed if playlist's source is set to ``PlaylistSources.REMOTE_URL``.
+            Default: ``None``.
+        :param remote_url: (Optional) The new source URL for the playlist's contents. Not needed if
+            playlist's source is set to ``PlaylistSources.SONGS``. Default: ``None``.
+        :param remote_type: (Optional) Specify the type of the ``remote_url``. Not needed if
+            playlist's source is set to ``PlaylistSources.SONGS``. Default: ``None``.
+        :param remote_buffer: (Optional) The new length of playback time that Liquidsoap should
+            buffer when playing this remote playlist. Not needed if playlist's source is set to
+            ``PlaylistSources.SONGS``. Default: ``None``.
+        :param schedule: (Optional) The new structure representing the schedule list of the
+            playlist. This can be generated using the :meth:`.generate_schedule_items` function.
+            Note: This will override the existing schedule of the playlist.
+                  Use the :meth:`.add_schedule_item` if you want to add a schedule item to
+                  the existing playlist schedule.
+            Default: ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.playlist(1).edit(
+                name="New name lol",
+                allow_requests=False,
+                avoid_duplicates=False
+            )
         """
         if type:
             if not isinstance(type, PlaylistTypes):
-                pass
+                raise ClientException(generate_enum_error_text("type", PlaylistTypes))
 
             type = type.value
 
         if source:
             if not isinstance(source, PlaylistSources):
-                pass
-            
+                raise ClientException(generate_enum_error_text("source", PlaylistSources))
+
             source = source.value
 
         if order:
             if not isinstance(order, PlaylistOrders):
-                pass
+                raise ClientException(generate_enum_error_text("order", PlaylistOrders))
 
             order = order.value
 
         if remote_type:
             if not isinstance(remote_type, PlaylistRemoteTypes):
-                pass
+                raise ClientException(generate_enum_error_text("remote_type", PlaylistRemoteTypes))
 
             remote_type = remote_type.value
-        
+
         return edit_station_resource(
-            self, "station_playlist", name, type, source, order, remote_url, remote_type, remote_buffer,
-            is_jingle, play_per_value, weight, include_in_requests, include_in_on_demand, avoid_duplicates
+            self, "station_playlist", name, source, type, order, avoid_duplicates, allow_requests,
+            play_per_value, weight, include_in_on_demand, is_jingle, remote_url, remote_type,
+            remote_buffer, schedule
         )
-    
+
     def add_schedule_item(
         self,
         schedule_item: Dict[str, Any]
@@ -213,7 +258,15 @@ class Playlist:
         """
         Adds a new schedule item to the playlist of the station.
 
-        :param schedule_item: The new schedule item to be added.
+        :param schedule_item: The schedule item to be added to the playlist's existing schedule.
+            This can be generated using the :meth:`.generate_schedule_item` function.
+
+        Usage:
+        .. code-block:: python
+
+            station.playlist(1).add_schedule_item(
+                schedule_item=generated_schedule_item
+            )
         """
         url = API_ENDPOINTS["station_playlist"].format(
             radio_url=self._station._request_handler.radio_url,
@@ -230,83 +283,95 @@ class Playlist:
 
         response = self._station._request_handler.put(url, body)
 
-        # Updates the playlist's properties on the object.
-        # Inefficient, but can't think of a better way.
-        self.schedule_items = self._station.playlist(self.id).schedule_items
+        if response['success']:
+            # Updates the playlist's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self.schedule_items = self._station.playlist(self.id).schedule_items
 
         return response
-    
+
     def delete(self):
         """
         Deletes the playlist from the station.
+
+        Sets all attributes of the current :class:`Playlist` object to ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            station.playlist(1).delete()
         """
         return delete_station_resource(self, "station_playlist")
-    
+
     def _build_update_body(
-        self, 
-        name, 
-        type, 
-        source, 
-        order, 
-        remote_url, 
-        remote_type, 
-        remote_buffer, 
+        self,
+        name,
+        source,
+        type,
+        order,
+        avoid_duplicates,
+        allow_requests,
+        play_per_value,
+        weight,
+        include_in_on_demand,
         is_jingle,
-        play_per_value, 
-        weight, 
-        include_in_requests, 
-        include_in_on_demand, 
-        avoid_duplicates
+        remote_url,
+        remote_type,
+        remote_buffer,
+        schedule
     ):
         return {
-            "name": name if name else self.name,
-            "type": type if type else self.type,
-            "source": source if source else self.source,
-            "order": order if order else self.order,
-            "remote_url": remote_url if remote_url else self.remote_url,
-            "remote_type": remote_type if remote_type else self.remote_type,
-            "remote_buffer": remote_buffer if remote_buffer else self.remote_buffer,
+            "name": name or self.name,
+            "type": type or self.type,
+            "source": source or self.source,
+            "order": order or self.order,
+            "remote_url": remote_url or self.remote_url,
+            "remote_type": remote_type or self.remote_type,
+            "remote_buffer": remote_buffer or self.remote_buffer,
             "is_jingle": is_jingle if is_jingle is not None else self.is_jingle,
             "play_per_songs": play_per_value if type == "once_per_x_songs" else self.play_per_songs,
             "play_per_minutes": play_per_value if type == "once_per_x_minutes" else self.play_per_minutes,
             "play_per_hour_minute": play_per_value if type == "once_per_hour" else self.play_per_hour_minute,
-            "weight": weight if weight is not None else self.weight,
-            "include_in_requests": include_in_requests if include_in_requests is not None else self.include_in_requests,
+            "weight": weight or self.weight,
+            "include_in_requests": allow_requests if allow_requests is not None else self.include_in_requests,
             "include_in_on_demand": include_in_on_demand if include_in_on_demand is not None else self.include_in_on_demand,
-            "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates
+            "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates,
+            "schedule_items": schedule or [self._get_schedule_item_json(item) for item in self.schedule_items]
         }
-    
+
     def _update_properties(
-        self, 
-        name, 
-        type, 
-        source, 
-        order, 
-        remote_url, 
-        remote_type, 
-        remote_buffer, 
+        self,
+        name,
+        source,
+        type,
+        order,
+        avoid_duplicates,
+        allow_requests,
+        play_per_value,
+        weight,
+        include_in_on_demand,
         is_jingle,
-        play_per_value, 
-        weight, 
-        include_in_requests, 
-        include_in_on_demand, 
-        avoid_duplicates
+        remote_url,
+        remote_type,
+        remote_buffer,
+        schedule
     ):
-        self.name = name if name else self.name
-        self.type = type if type else self.type
-        self.source = source if source else self.source
-        self.order = order if order else self.order
-        self.remote_url = remote_url if remote_url else self.remote_url
-        self.remote_type = remote_type if remote_type else self.remote_type
-        self.remote_buffer = remote_buffer if remote_buffer else self.remote_buffer
+        self.name = name or self.name
+        self.type = type or self.type
+        self.source = source or self.source
+        self.order = order or self.order
+        self.remote_url = remote_url or self.remote_url
+        self.remote_type = remote_type or self.remote_type
+        self.remote_buffer = remote_buffer or self.remote_buffer
         self.is_jingle = is_jingle if is_jingle is not None else self.is_jingle
         self.play_per_songs = play_per_value if type == "once_per_x_songs" else self.play_per_songs
         self.play_per_minutes = play_per_value if type == "once_per_x_minutes" else self.play_per_minutes
         self.play_per_hour_minute = play_per_value if type == "once_per_hour" else self.play_per_hour_minute
-        self.weight = weight if weight is not None else self.weight
-        self.include_in_requests = include_in_requests if include_in_requests is not None else self.include_in_requests
+        self.weight = weight or self.weight
+        self.include_in_requests = allow_requests if allow_requests is not None else self.include_in_requests
         self.include_in_on_demand = include_in_on_demand if include_in_on_demand is not None else self.include_in_on_demand
         self.avoid_duplicates = avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates
+        self.schedule_items = self.schedule_items if schedule is None else self._station.playlist(self.id).schedule_items # I'm sorry.
 
     def _clear_properties(self):
         self.name = None

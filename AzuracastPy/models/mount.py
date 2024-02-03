@@ -1,16 +1,18 @@
-from .listeners import Listeners
+"""Class for encapsulating basic mount point info across objects."""
 
-from AzuracastPy.util.general_util import generate_repr_string
+from ..util.general_util import generate_repr_string
+
+from .listeners import Listeners
 
 class Mount:
     def __init__(
-        self, 
-        id: int, 
-        name: str, 
-        url: str, 
-        bitrate: int, 
-        format: str, 
-        path: str, 
+        self,
+        id: int,
+        name: str,
+        url: str,
+        bitrate: int,
+        format: str,
+        path: str,
         is_default: bool,
         listeners: Listeners
     ):

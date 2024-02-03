@@ -1,13 +1,15 @@
+"""Class for an item in a station queue."""
+
 from .song import Song
 
 from typing import List
 
-from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.util.general_util import generate_repr_string
+from ..constants import API_ENDPOINTS
+from ..util.general_util import generate_repr_string
 
 class Links:
     def __init__(
-        self_, 
+        self_,
         self: str
     ):
         self_.self = self
@@ -17,18 +19,18 @@ class Links:
 
 class QueueItem:
     def __init__(
-        self, 
-        cued_at: int, 
-        played_at: int, 
-        duration: int, 
-        playlist: str, 
+        self,
+        cued_at: int,
+        played_at: int,
+        duration: int,
+        playlist: str,
         is_request: bool,
-        song: Song, 
-        sent_to_autodj: bool, 
-        is_played: bool, 
-        autodj_custom_uri: str, 
+        song: Song,
+        sent_to_autodj: bool,
+        is_played: bool,
+        autodj_custom_uri: str,
         log: List[str],
-        links: Links, 
+        links: Links,
         _station
     ):
         self.cued_at = cued_at
@@ -46,7 +48,7 @@ class QueueItem:
 
     def __repr__(self):
         return generate_repr_string(self)
-    
+
     # # Doesn't work lol
     # def delete(self):
     #     queue = self._station.queue()
@@ -72,7 +74,7 @@ class QueueItem:
     #         self._clear_properties()
 
     #     return response
-    
+
     # def _clear_properties(self):
     #     self.cued_at = None
     #     self.played_at = None

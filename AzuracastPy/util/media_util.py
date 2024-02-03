@@ -1,15 +1,14 @@
 import base64
 import os
-
 import requests
 
-from AzuracastPy.constants import API_ENDPOINTS
-from AzuracastPy.exceptions import UnexpectedErrorException
+from ..constants import API_ENDPOINTS
+from ..exceptions import UnexpectedErrorException
 
 def generate_file_upload_structure(path: str, file: str):
     if not os.path.isfile(file):
-        raise ValueError("File does not exist.")
-    
+        raise ValueError(f"File does not exist: {file}")
+
     contents = None
     with open(file, 'rb') as f:
         contents = f.read()
@@ -26,10 +25,13 @@ def get_resource_art(self) -> bytes:
     # It doesn't handle bytes. Not yet anyway.
     with requests.get(self.art) as response:
         if response.status_code != 200:
-            raise UnexpectedErrorException(f"Unexpected error occured while trying to retrieve this resource's art. \nError details: {response.text}")
+            raise UnexpectedErrorException(
+                "Unexpected error occured while trying to retrieve this resource's art. "
+               f"\nError details: {response.text}"
+            )
 
         return response.content
-    
+
 def get_media_file_art(self) -> bytes:
     url = API_ENDPOINTS["song_art"].format(
         radio_url=self._station._request_handler.radio_url,
@@ -39,6 +41,9 @@ def get_media_file_art(self) -> bytes:
 
     with requests.get(url) as response:
         if response.status_code != 200:
-            raise UnexpectedErrorException(f"Unexpected error occured while trying to retrieve this file's art. \nError details: {response.text}")
+            raise UnexpectedErrorException(
+                "Unexpected error occured while trying to retrieve this file's art. "
+               f"\nError details: {response.text}"
+            )
 
         return response.content

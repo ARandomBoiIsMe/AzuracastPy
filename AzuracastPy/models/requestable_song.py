@@ -1,12 +1,14 @@
-from .song import Song
+"""Class for data of requestable songs of a station."""
 
-from AzuracastPy.util.general_util import generate_repr_string
+from ..util.general_util import generate_repr_string
+
+from .song import Song
 
 class RequestableSong:
     def __init__(
-        self, 
-        request_id: str, 
-        request_url: str, 
+        self,
+        request_id: str,
+        request_url: str,
         song: Song
     ):
         self.request_id = request_id
