@@ -3,6 +3,7 @@
 from typing import Optional, List
 
 from ..constants import API_ENDPOINTS
+from ..exceptions import ClientException
 from ..util.general_util import generate_repr_string
 
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
@@ -16,6 +17,94 @@ class Links:
 
     def __repr__(self):
         return generate_repr_string(self)
+
+class PublicKeysHelper:
+    def __init__(
+        self,
+        _sftp_user
+    ):
+        self._sftp_user = _sftp_user
+
+    def add(
+        self,
+        public_key: str
+    ):
+        """
+        Assigns a new public key to the SFTP user.
+
+        :param public_key: The key to be added to the SFTP user.
+
+        Usage:
+        .. code-block:: python
+
+            station.sftp_user(1).key.add(
+                public_key="new_key"
+            )
+        """
+        if any(public_key == key for key in self._sftp_user.public_keys):
+            message = f"The '{public_key}' key is already in the user's current public key list."
+            raise ClientException(message)
+
+        public_keys = self._sftp_user.public_keys.copy()
+        public_keys.append(public_key)
+
+        url = API_ENDPOINTS["station_sftp_user"].format(
+            radio_url=self._sftp_user._station._request_handler.radio_url,
+            station_id=self._sftp_user._station.id,
+            id=self._sftp_user.id
+        )
+
+        body = {
+            "publicKeys": '\n'.join(public_keys)
+        }
+
+        response = self._sftp_user._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._sftp_user.public_keys = public_keys
+
+        return response
+
+    def remove(
+        self,
+        public_key: str
+    ):
+        """
+        Removes a public key from the SFTP user's current keys.
+
+        :param public_key: The key to be removed from the SFTP user.
+
+        Usage:
+        .. code-block:: python
+
+            station.sftp_user(1).key.remove(
+                public_key="key"
+            )
+        """
+        public_keys = self._sftp_user.public_keys.copy()
+
+        try:
+            public_keys.remove(public_key)
+        except ValueError:
+            message = f"The '{public_key}' key is not in the user's current public key list."
+            raise ClientException(message)
+
+        url = API_ENDPOINTS["station_sftp_user"].format(
+            radio_url=self._sftp_user._station._request_handler.radio_url,
+            station_id=self._sftp_user._station.id,
+            id=self._sftp_user.id
+        )
+
+        body = {
+            "publicKeys": '\n'.join(public_keys)
+        }
+
+        response = self._sftp_user._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._sftp_user.public_keys = public_keys
+
+        return response
 
 class SFTPUser:
     def __init__(
@@ -33,6 +122,8 @@ class SFTPUser:
         self.public_keys = publicKeys.split()
         self.links = links
         self._station = _station
+
+        self.key = PublicKeysHelper(_sftp_user=self)
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -91,42 +182,6 @@ class SFTPUser:
         }
 
         response = self._station._request_handler.put(url, body)
-
-        return response
-
-    def add_public_key(
-        self,
-        public_key: str
-    ):
-        """
-        Assigns a new public key to the SFTP user.
-
-        :param public_key: The key to be added to the SFTP user.
-
-        Usage:
-        .. code-block:: python
-
-            station.sftp_user(1).add_public_key(
-                public_key="new_key"
-            )
-        """
-        url = API_ENDPOINTS["station_sftp_user"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        public_keys = self.public_keys
-        public_keys.append(public_key)
-        body = {
-            "publicKeys": '\n'.join(public_keys)
-        }
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success']:
-            # Updates the SFTP user's properties on the object.
-            self.public_keys = public_keys
 
         return response
 

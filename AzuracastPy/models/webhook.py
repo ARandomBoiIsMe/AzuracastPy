@@ -23,6 +23,109 @@ class Links:
     def __repr__(self):
         return generate_repr_string(self)
 
+class TriggerHelper:
+    def __init__(
+        self,
+        _webhook
+    ):
+        self._webhook = _webhook
+
+    def add(
+        self,
+        trigger: WebhookTriggers
+    ):
+        """
+        Adds a trigger to the webhook.
+
+        :param trigger: The trigger to be added to the webhook.
+            It must be from the :class:`WebhookTriggers` enum.
+
+        Usage:
+        .. code-block:: python
+
+            from AzuracastPy.enums import WebhookTriggers
+
+            station(1).webhook(1).trigger.add(
+                trigger=WebhookTriggers.SONG_CHANGED
+            )
+        """
+        if not isinstance(trigger, WebhookTriggers):
+            raise ClientException(generate_enum_error_text('trigger', WebhookTriggers))
+
+        trigger = trigger.value
+
+        if any(trigger == existing_trigger for existing_trigger in self._webhook.triggers):
+            message = f"The '{trigger}' trigger is already in the webhook's current trigger list."
+            raise ClientException(message)
+
+        triggers = self._webhook.triggers.copy()
+        triggers.append(trigger)
+
+        url = API_ENDPOINTS["station_webhook"].format(
+            radio_url=self._webhook._station._request_handler.radio_url,
+            station_id=self._webhook._station.id,
+            id=self._webhook.id
+        )
+
+        body = {
+            "triggers": triggers
+        }
+
+        response = self._webhook._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._webhook.triggers = triggers
+
+        return response
+
+    def remove(
+        self,
+        trigger: WebhookTriggers
+    ):
+        """
+        Removes a trigger from the webhook's current trigger list.
+
+        :param trigger: The trigger to be removed from the webhook's trigger list.
+            It must be from the :class:`WebhookTriggers` enum.
+
+        Usage:
+        .. code-block:: python
+
+            from AzuracastPy.enums import WebhookTriggers
+
+            station(1).webhook(1).trigger.remove(
+                trigger=WebhookTriggers.SONG_CHANGED
+            )
+        """
+        if not isinstance(trigger, WebhookTriggers):
+            raise ClientException(generate_enum_error_text('trigger', WebhookTriggers))
+
+        trigger = trigger.value
+
+        triggers = self._webhook.triggers.copy()
+        try:
+            triggers.remove(trigger)
+        except ValueError:
+            message = f"The '{trigger}' trigger is not in the webhook's current trigger list."
+            raise ClientException(message)
+
+        url = API_ENDPOINTS["station_webhook"].format(
+            radio_url=self._webhook._station._request_handler.radio_url,
+            station_id=self._webhook._station.id,
+            id=self._webhook.id
+        )
+
+        body = {
+            "triggers": triggers
+        }
+
+        response = self._webhook._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._webhook.triggers = triggers
+
+        return response
+
 class Webhook:
     def __init__(
         self,
@@ -43,6 +146,8 @@ class Webhook:
         self.id = id
         self.links = links
         self._station = _station
+
+        self.trigger = TriggerHelper(_webhook=self)
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -135,7 +240,6 @@ class Webhook:
         response = self._station._request_handler.put(url, body)
 
         if response['success']:
-            # Updates the webhook's properties on the object.
             self.triggers = triggers
 
         return response

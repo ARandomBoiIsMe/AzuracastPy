@@ -87,6 +87,118 @@ class ScheduleItem:
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
+def _get_schedule_item_json(self, schedule_item):
+    if not schedule_item:
+        return {}
+
+    start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
+    end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
+
+    return {
+        "start_time": schedule_item.start_time,
+        "end_time": schedule_item.end_time,
+        "start_date": start_date_formatted,
+        "end_date": end_date_formatted,
+        "days": schedule_item.days,
+        "loop_once": schedule_item.loop_once
+    }
+
+class ScheduleHelper:
+    def __init__(
+        self,
+        _playlist
+    ):
+        self._playlist = _playlist
+
+    def add(
+        self,
+        schedule_item: Dict[str, Any]
+    ):
+        """
+        Adds a new schedule item to the playlist of the station.
+
+        :param schedule_item: The new schedule item to be added.
+
+        Usage:
+        .. code-block:: python
+
+            item = station(1).playlist(1).generate_schedule_item(
+                start_time="12:32",
+                end_time="23:10",
+                start_date="2024-09-08",
+                end_date="2025-07-08",
+                days=["monday", "thursday"]
+            )
+
+            playlist(1).schedule.add(
+                schedule_item=item
+            )
+        """
+        # Adds the new schedule item.
+        schedule_items = [_get_schedule_item_json(item) for item in self._playlist.schedule_items]
+        schedule_items.append(schedule_item)
+
+        url = API_ENDPOINTS["station_playlist"].format(
+            radio_url=self._playlist._station._request_handler.radio_url,
+            station_id=self._playlist._station.id,
+            id=self._playlist.id
+        )
+
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._playlist._station._request_handler.put(url, body)
+
+        if response['success']:
+            # Updates the playlist's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self._playlist.schedule_items = self._playlist._station.playlist(self._playlist.id).schedule_items
+
+        return response
+
+    def remove(
+        self,
+        id: int
+    ):
+        """
+        Removes a schedule item from the playlist's current schedule.
+
+        :param id: The ID of the schedule item to be removed.
+
+        Usage:
+        .. code-block:: python
+
+            playlist(1).schedule.remove(1)
+        """
+        item_exists_in_schedule = any(item.id == id for item in self._playlist.schedule_items)
+
+        if not item_exists_in_schedule:
+            message = f"No schedule item of id '{id}' exists in this playlist's current schedule."
+            raise ClientException(message)
+
+        schedule_items = [_get_schedule_item_json(item) for item in self._playlist.schedule_items if item.id != id]
+
+        # Now for the request.
+        url = API_ENDPOINTS["station_playlist"].format(
+            radio_url=self._playlist._station._request_handler.radio_url,
+            station_id=self._playlist._station.id,
+            id=self._playlist.id
+        )
+
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._playlist._station._request_handler.put(url, body)
+
+        if response['success']:
+            # Updates the playlist's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self._playlist.schedule_items = self._playlist._station.playlist(self._playlist.id).schedule_items
+
+        return response
+
 class Playlist:
     def __init__(
         self,
@@ -143,6 +255,8 @@ class Playlist:
         self.total_length = total_length
         self.links = Links.from_dict(links) if links else None
         self._station = _station
+
+        self.schedule = ScheduleHelper(_playlist=self)
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
@@ -215,7 +329,7 @@ class Playlist:
         Usage:
         .. code-block:: python
 
-            station.playlist(1).edit(
+            station(1).playlist(1).edit(
                 name="New name lol",
                 allow_requests=False,
                 avoid_duplicates=False
@@ -251,45 +365,6 @@ class Playlist:
             remote_buffer, schedule
         )
 
-    def add_schedule_item(
-        self,
-        schedule_item: Dict[str, Any]
-    ):
-        """
-        Adds a new schedule item to the playlist of the station.
-
-        :param schedule_item: The schedule item to be added to the playlist's existing schedule.
-            This can be generated using the :meth:`.generate_schedule_item` function.
-
-        Usage:
-        .. code-block:: python
-
-            station.playlist(1).add_schedule_item(
-                schedule_item=generated_schedule_item
-            )
-        """
-        url = API_ENDPOINTS["station_playlist"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        # Adds the new schedule item.
-        schedule_items = [self._get_schedule_item_json(item) for item in self.schedule_items]
-        schedule_items.append(schedule_item)
-        body = {
-            "schedule_items": schedule_items
-        }
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success']:
-            # Updates the playlist's properties on the object.
-            # Inefficient, but can't think of a better way.
-            self.schedule_items = self._station.playlist(self.id).schedule_items
-
-        return response
-
     def delete(self):
         """
         Deletes the playlist from the station.
@@ -299,7 +374,7 @@ class Playlist:
         Usage:
         .. code-block:: python
 
-            station.playlist(1).delete()
+            station(1).playlist(1).delete()
         """
         return delete_station_resource(self, "station_playlist")
 
@@ -336,7 +411,7 @@ class Playlist:
             "include_in_requests": allow_requests if allow_requests is not None else self.include_in_requests,
             "include_in_on_demand": include_in_on_demand if include_in_on_demand is not None else self.include_in_on_demand,
             "avoid_duplicates": avoid_duplicates if avoid_duplicates is not None else self.avoid_duplicates,
-            "schedule_items": schedule or [self._get_schedule_item_json(item) for item in self.schedule_items]
+            "schedule_items": schedule or [_get_schedule_item_json(item) for item in self.schedule_items]
         }
 
     def _update_properties(
@@ -400,21 +475,3 @@ class Playlist:
         self.total_length = None
         self.links = None
         self._station = None
-
-    # Reformats the schedule item of a playlist from a ScheduleItem to a valid schedule item json
-    # object to be sent in requests.
-    def _get_schedule_item_json(self, schedule_item):
-        if not schedule_item:
-            return {}
-
-        start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
-        end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
-
-        return {
-            "start_time": schedule_item.start_time,
-            "end_time": schedule_item.end_time,
-            "start_date": start_date_formatted,
-            "end_date": end_date_formatted,
-            "days": schedule_item.days,
-            "loop_once": schedule_item.loop_once
-        }

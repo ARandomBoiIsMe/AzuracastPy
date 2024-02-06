@@ -69,7 +69,7 @@ class MountPointHelper:
         Usage:
         .. code-block:: python
 
-            mount_point = station.mount_point(1)
+            mount_point = station(1).mount_point(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -134,7 +134,7 @@ class MountPointHelper:
 
             from AzuracastPy.enums import Formats
 
-            mount_point = station.mount_point.create(
+            mount_point = station(1).mount_point.create(
                 url="/autodj.mp3",
                 display_name="Hehehehe",
                 autodj_format=Formats.OPUS
@@ -197,7 +197,7 @@ class FileHelper:
         Usage:
         .. code-block:: python
 
-            file = station.file(1)
+            file = station(1).file(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -223,7 +223,7 @@ class FileHelper:
         Usage:
         .. code-block:: python
 
-            file = station.file.upload(
+            file = station(1).file.upload(
                 path="/song/on/station.mp3",
                 file="file/path/on/local/system.mp3"
             )
@@ -261,7 +261,7 @@ class PlaylistHelper:
         Usage:
         .. code-block:: python
 
-            playlist = station.playlist(1)
+            playlist = station(1).playlist(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -296,7 +296,7 @@ class PlaylistHelper:
         Usage:
         .. code-block:: python
 
-            item = station.playlist.generate_schedule_item(
+            item = station(1).playlist.generate_schedule_item(
                 start_time="12:32",
                 end_time="23:10",
                 start_date="2024-09-08",
@@ -330,7 +330,7 @@ class PlaylistHelper:
         Usage:
         .. code-block:: python
 
-            items = station.playlist.generate_schedule_items(
+            items = station(1).playlist.generate_schedule_items(
                 ("12:32", "23:10", "2024-09-08", "2025-07-08", None, False),
                 ("12:32", "23:10", "2024-09-18", "2025-07-08", ["monday", "thursday"], True)
             )
@@ -438,7 +438,7 @@ class PlaylistHelper:
 
             from AzuracastPy.enums import PlaylistTypes
 
-            playlist = station.playlist.create(
+            playlist = station(1).playlist.create(
                 name="New playlist",
                 type=PlaylistTypes.ONCE_PER_X_MINUTES,
                 play_per_value=5
@@ -521,7 +521,7 @@ class PodcastHelper:
         Usage:
         .. code-block:: python
 
-            podcast = station.podcast("string-id")
+            podcast = station(1).podcast("string-id")
         """
         if not isinstance(id, str):
             raise ValueError("id param should be of type string.")
@@ -569,7 +569,7 @@ class PodcastHelper:
 
             from AzuracastPy.enums import Languages, PodcastCategories
 
-            podcast = station.podcast.create(
+            podcast = station(1).podcast.create(
                 title="New podcast",
                 description="This is a random description",
                 language=Languages.ARABIC,
@@ -625,7 +625,7 @@ class HLSStreamHelper:
         Usage:
         .. code-block:: python
 
-            hls_stream = station.hls_stream(1)
+            hls_stream = station(1).hls_stream(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -659,7 +659,7 @@ class HLSStreamHelper:
 
             from AzuracastPy.enums import Formats, Bitrates
 
-            hls_stream = station.hls_stream.create(
+            hls_stream = station(1).hls_stream.create(
                 name="New HLS Stream",
                 format=Formats.MP3,
                 bitrate=Bitrates.BITRATE_32
@@ -712,7 +712,7 @@ class SFTPUserHelper:
         Usage:
         .. code-block:: python
 
-            sftp_user = station.sftp_user(1)
+            sftp_user = station(1).sftp_user(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -733,14 +733,15 @@ class SFTPUserHelper:
 
         :param username: The username of the user.
         :param password: The password of the user.
-        :param public_keys: A list of public keys to be assigned to the user. Default: ``None``.
+        :param public_keys: (Optional) A list of public keys to be assigned to the user.
+            Default: ``None``.
 
         :returns: A :class:`SFTPUser` object for the newly created SFTP user.
 
         Usage:
         .. code-block:: python
 
-            sftp_user = station.sftp_user.create(
+            sftp_user = station(1).sftp_user.create(
                 username="Username",
                 password="Password",
                 public_keys=['key1', 'key2']
@@ -783,7 +784,7 @@ class WebhookHelper:
         Usage:
         .. code-block:: python
 
-            webhook = station.webhook(1)
+            webhook = station(1).webhook(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -841,7 +842,7 @@ class WebhookHelper:
         Usage:
         .. code-block:: python
 
-            webhook_config = station.webhook.generate_webhook_config(
+            webhook_config = station(1).webhook.generate_webhook_config(
                 subject="subject",
                 message="message",
                 to="to"
@@ -878,13 +879,13 @@ class WebhookHelper:
 
             from AzuracastPy.enums import WebhookConfigTypes, WebhookTriggers
 
-            config = station.webhook.generate_webhook_config(
+            config = station(1).webhook.generate_webhook_config(
                 subject="subject",
                 message="message",
                 to="to"
             )
 
-            webhook = station.webhook.create(
+            webhook = station(1).webhook.create(
                 name="New email webhook",
                 type=WebhookConfigTypes.EMAIL,
                 webhook_config=config,
@@ -948,7 +949,7 @@ class StreamerHelper:
         Usage:
         .. code-block:: python
 
-            streamer = station.streamer(1)
+            streamer = station(1).streamer(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -980,7 +981,7 @@ class StreamerHelper:
         Usage:
         .. code-block:: python
 
-            item = station.streamer.generate_schedule_item(
+            item = station(1).streamer.generate_schedule_item(
                 start_time="12:32",
                 end_time="23:10",
                 start_date="2024-09-08",
@@ -1011,7 +1012,7 @@ class StreamerHelper:
         Usage:
         .. code-block:: python
 
-            items = station.streamer.generate_schedule_items(
+            items = station(1).streamer.generate_schedule_items(
                 ("12:32", "23:10", "2024-09-08", "2025-07-08", None),
                 ("12:32", "23:10", "2024-09-18", "2025-07-08", ["monday", "thursday"])
             )
@@ -1083,7 +1084,7 @@ class StreamerHelper:
         Usage:
         .. code-block:: python
 
-        streamer = station.streamer.create(
+        streamer = station(1).streamer.create(
             username="Username",
             password="Password",
             comments="Never gonna give you up."
@@ -1133,7 +1134,7 @@ class RemoteRelayHelper:
         Usage:
         .. code-block:: python
 
-            remote_relay = station.remote_relay(1)
+            remote_relay = station(1).remote_relay(1)
         """
         response = _request_single_instance_of_station_resource(
             station=self._station,
@@ -1192,7 +1193,7 @@ class RemoteRelayHelper:
         Usage:
         .. code-block:: python
 
-            remote_relay = station.remote_relay(1).create(
+            remote_relay = station(1).remote_relay(1).create(
                 station_listening_url="http://station.example.com:8000",
                 display_name="Display name"
             )
@@ -1260,8 +1261,8 @@ class QueueHelper:
         Usage:
         .. code-block:: python
 
-            queue = station.queue()
-            queue_item = station.queue(1)
+            queue = station(1).queue()
+            queue_item = station(1).queue(1)
         """
         url = API_ENDPOINTS["station_queue"].format(
             radio_url=self._station._request_handler.radio_url,

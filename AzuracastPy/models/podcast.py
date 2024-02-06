@@ -1,6 +1,6 @@
 """Class for a station podcast."""
 
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 
 from ..constants import API_ENDPOINTS
 from ..enums import Languages, PodcastCategories
@@ -33,6 +33,183 @@ class Links:
 
     def __repr__(self):
         return generate_repr_string(self)
+
+class PodcastEpisodeHelper:
+    def __init__(
+        self,
+        _podcast
+    ):
+        self._podcast = _podcast
+
+    def __call__(
+        self,
+        id: str
+    ) -> PodcastEpisode:
+        """
+        Retrieves a specific episode from the podcast.
+
+        :param id: The ID of the episode to be retrieved.
+
+        :returns: A :class:`PodcastEpisode` object.
+        """
+        if not isinstance(id, str):
+            raise ValueError("id param should be of type string.")
+
+        url = API_ENDPOINTS["podcast_episode"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            podcast_id=self._podcast.id,
+            id=id
+        )
+
+        response = self._podcast._station._request_handler.get(url)
+
+        return PodcastEpisode(**response, _podcast=self._podcast)
+
+    # TODO: Media and art require file uploads
+    # TODO: Schedule episode release
+    def create(
+        self,
+        title: str,
+        description: str,
+        explicit: bool = False
+    ) -> PodcastEpisode:
+        """
+        Adds an episode to the podcast.
+
+        :param title: The title of the episode.
+        :param description: A description of the episode.
+        :param explicit: Is the episode explicit? Swearing? Sexual content?
+
+        :returns: A :class:`PodcastEpisode` object for the newly created episode.
+        """
+        url = url = API_ENDPOINTS["podcast_episodes"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            podcast_id=self._podcast.id
+        )
+
+        body = {
+            "title": title,
+            "description": description,
+            "explicit": explicit
+        }
+
+        response = self._podcast._station._request_handler.post(url, body)
+
+        self._podcast.episodes.append(response['id'])
+
+        return PodcastEpisode(**response, _podcast=self._podcast)
+
+    def all(self) -> List[PodcastEpisode]:
+        """
+        Retrieves the episodes of the podcast.
+
+        :returns: A list of :class:`PodcastEpisode` objects.
+        """
+        url = API_ENDPOINTS["podcast_episodes"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            podcast_id=self._podcast.id
+        )
+
+        response = self._podcast._station._request_handler.get(url)
+
+        return [PodcastEpisode(**pe, _podcast=self._podcast) for pe in response]
+
+class PodcastCategoryHelper:
+    def __init__(
+        self,
+        _podcast
+    ):
+        self._podcast = _podcast
+
+    def add(
+        self,
+        category: PodcastCategories
+    ):
+        """
+        Adds a category to the podcast.
+
+        :param category: The category to be added to the podcast.
+            It must be from the :class:`PodcastCategories` enum.
+
+        Usage:
+        .. code-block:: python
+
+            from AzuracastPy.enums import PodcastCategories
+
+            station(1).podcast(1).category.add(
+                category=PodcastCategories.SONG_CHANGED
+            )
+        """
+        if any(category == existing_category for existing_category in self._podcast.categories):
+            message = f"The '{category}' category is already in the podcast's current category list."
+            raise ClientException(message)
+
+        categories = self._podcast.categories.copy()
+        categories.append(category)
+
+        url = API_ENDPOINTS["station_podcast"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            id=self._podcast.id
+        )
+
+        body = {
+            "categories": categories
+        }
+
+        response = self._podcast._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._podcast.categories = categories
+
+        return response
+
+    def remove(
+        self,
+        category: PodcastCategories
+    ):
+        """
+        Removes a category from the podcast's current category list.
+
+        :param category: The category to be removed from the podcast's category list.
+            It must be from the :class:`PodcastCategories` enum.
+
+        Usage:
+        .. code-block:: python
+
+            from AzuracastPy.enums import PodcastCategories
+
+            station(1).podcast(1).category.remove(
+                category=PodcastCategories.GOVERNMENT
+            )
+        """
+        categories = self._podcast.categories.copy()
+
+        try:
+            categories.remove(category)
+        except ValueError:
+            message = f"The '{category}' category is not in the podcast's current category list."
+            raise ClientException(message)
+
+        url = API_ENDPOINTS["station_podcast"].format(
+            radio_url=self._podcast._station._request_handler.radio_url,
+            station_id=self._podcast._station.id,
+            id=self._podcast.id
+        )
+
+        body = {
+            "categories": categories
+        }
+
+        response = self._podcast._station._request_handler.put(url, body)
+
+        if response['success']:
+            self._podcast.categories = categories
+
+        return response
 
 class Podcast:
     def __init__(
@@ -68,6 +245,9 @@ class Podcast:
         self.episodes = episodes
         self.links = links
         self._station = _station
+
+        self.episode = PodcastEpisodeHelper(_podcast=self)
+        self.category = PodcastCategoryHelper(_podcast=self)
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -192,77 +372,3 @@ class Podcast:
 
     def get_art(self) -> bytes:
         return get_resource_art(self)
-
-    # TODO: Media and art require file uploads
-    # TODO: Schedule episode release
-    def add_episode(
-        self,
-        title: str,
-        description: str,
-        explicit: bool = False
-    ):
-        """
-        Adds an episode to the podcast.
-
-        :param title:
-        :param description: (Optional) Default: ``None``
-        :param explicit:
-
-        :returns: A :class:`PodcastEpisode` object for the newly created episode.
-        """
-        url = url = API_ENDPOINTS["podcast_episodes"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            podcast_id=self.id
-        )
-
-        body = {
-            "title": title,
-            "description": description,
-            "explicit": explicit
-        }
-
-        response = self._station._request_handler.post(url, body)
-
-        return PodcastEpisode(**response, _podcast=self)
-
-    def get_episodes(self) -> List[PodcastEpisode]:
-        """
-        Retrieves the episodes of the podcast.
-
-        :returns: A list of :class:`PodcastEpisode` objects.
-        """
-        url = API_ENDPOINTS["podcast_episodes"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            podcast_id=self.id
-        )
-
-        response = self._station._request_handler.get(url)
-
-        return [PodcastEpisode(**pe, _podcast=self) for pe in response]
-
-    def get_episode(
-        self,
-        id: str
-    ) -> PodcastEpisode:
-        """
-        Retrieves a specific episode from the podcast.
-
-        :param id: The ID of the episode to be retrieved.
-
-        :returns: A :class:`PodcastEpisode` object.
-        """
-        if not isinstance(id, str):
-            raise ValueError("id param should be of type string.")
-
-        url = API_ENDPOINTS["podcast_episode"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            podcast_id=self.id,
-            id=id
-        )
-
-        response = self._station._request_handler.get(url)
-
-        return PodcastEpisode(**response, _podcast=self)

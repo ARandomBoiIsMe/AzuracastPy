@@ -5,6 +5,7 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 from ..constants import API_ENDPOINTS
+from ..exceptions import ClientException
 from ..util.general_util import generate_repr_string
 from ..util.media_util import get_resource_art
 
@@ -45,6 +46,116 @@ class ScheduleItem:
     def __repr__(self):
         return generate_repr_string(self)
 
+def _get_schedule_item_json(schedule_item):
+    if not schedule_item:
+        return {}
+
+    start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
+    end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
+
+    return {
+        "start_time": schedule_item.start_time,
+        "end_time": schedule_item.end_time,
+        "start_date": start_date_formatted,
+        "end_date": end_date_formatted,
+        "days": schedule_item.days
+    }
+
+class ScheduleHelper:
+    def __init__(
+        self,
+        _streamer
+    ):
+        self._streamer = _streamer
+
+    def add(
+        self,
+        schedule_item: Dict[str, Any]
+    ):
+        """
+        Adds a new schedule item to the streamer of the station.
+
+        :param schedule_item: The new schedule item to be added.
+
+        Usage:
+        .. code-block:: python
+
+            item = station(1).streamer.generate_schedule_item(
+                start_time="12:32",
+                end_time="23:10",
+                start_date="2024-09-08",
+                end_date="2025-07-08",
+                days=["monday", "thursday"]
+            )
+
+            streamer(1).schedule.add(
+                schedule_item=item
+            )
+        """
+        # Adds the new schedule item.
+        schedule_items = [_get_schedule_item_json(item) for item in self._streamer.schedule_items]
+        schedule_items.append(schedule_item)
+
+        url = API_ENDPOINTS["station_streamer"].format(
+            radio_url=self._streamer._station._request_handler.radio_url,
+            station_id=self._streamer._station.id,
+            id=self._streamer.id
+        )
+
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._streamer._station._request_handler.put(url, body)
+
+        if response['success']:
+            # Updates the streamer's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self._streamer.schedule_items = self._streamer._station.streamer(self._streamer.id).schedule_items
+
+        return response
+
+    def remove(
+        self,
+        id: int
+    ):
+        """
+        Removes a schedule item from the streamer's current schedule.
+
+        :param id: The ID of the schedule item to be removed.
+
+        Usage:
+        .. code-block:: python
+
+            streamer(1).schedule.remove(1)
+        """
+        item_exists_in_schedule = any(item.id == id for item in self._streamer.schedule_items)
+
+        if not item_exists_in_schedule:
+            message = f"No schedule item of id '{id}' exists in this streamer's current schedule."
+            raise ClientException(message)
+
+        schedule_items = [_get_schedule_item_json(item) for item in self._streamer.schedule_items if item.id != id]
+
+        url = API_ENDPOINTS["station_streamer"].format(
+            radio_url=self._streamer._station._request_handler.radio_url,
+            station_id=self._streamer._station.id,
+            id=self._streamer.id
+        )
+
+        body = {
+            "schedule_items": schedule_items
+        }
+
+        response = self._streamer._station._request_handler.put(url, body)
+
+        if response['success']:
+            # Updates the streamer's properties on the object.
+            # Inefficient, but can't think of a better way.
+            self._streamer.schedule_items = self._streamer._station.streamer(self._streamer.id).schedule_items
+
+        return response
+
 class Streamer:
     def __init__(
         self,
@@ -78,6 +189,8 @@ class Streamer:
         self.art = art
         self._station = _station
 
+        self.schedule = ScheduleHelper(_streamer=self)
+
     def __repr__(self):
         return generate_repr_string(self)
 
@@ -110,7 +223,7 @@ class Streamer:
         Usage:
         .. code-block:: python
 
-            station.streamer(1).edit(
+            station(1).streamer(1).edit(
                 username="New username",
                 display_name="The name which is displayed"
             )
@@ -119,37 +232,6 @@ class Streamer:
             self, "station_streamer", username, display_name, comments, is_active,
             enforce_schedule, schedule
         )
-
-    def add_schedule_item(
-        self,
-        schedule_item: Dict[str, Any]
-    ):
-        """
-        Adds a new schedule item to the streamer of the station.
-
-        :param schedule_item: The new schedule item to be added.
-        """
-        url = API_ENDPOINTS["station_streamer"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        # Adds the new schedule item.
-        schedule_items = [self._get_schedule_item_json(item) for item in self.schedule_items]
-        schedule_items.append(schedule_item)
-        body = {
-            "schedule_items": schedule_items
-        }
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success']:
-            # Updates the streamer's properties on the object.
-            # Inefficient, but can't think of a better way.
-            self.schedule_items = self._station.streamer(self.id).schedule_items
-
-        return response
 
     def update_password(
         self,
@@ -163,14 +245,14 @@ class Streamer:
         Usage:
         .. code-block:: python
 
-            station.streamer(1).update_password(
+            station(1).streamer(1).update_password(
                 password="new password"
             )
         """
         url = API_ENDPOINTS["station_streamer"].format(
             radio_url=self._station._request_handler.radio_url,
             station_id=self._station.id,
-            id=self.id
+            id=self._station.id
         )
 
         body = {
@@ -190,7 +272,7 @@ class Streamer:
         Usage:
         .. code-block:: python
 
-            station.streamer(1).delete()
+            station(1).streamer(1).delete()
         """
         return delete_station_resource(self, "station_streamer")
 
@@ -209,7 +291,7 @@ class Streamer:
             "comments": comments or self.comments,
             "is_active": is_active if is_active is not None else self.is_active,
             "enforce_schedule": enforce_schedule if enforce_schedule is not None else self.enforce_schedule,
-            "schedule_items": schedule or [self._get_schedule_item_json(item) for item in self.schedule_items]
+            "schedule_items": schedule or [_get_schedule_item_json(item) for item in self.schedule_items]
         }
 
     def _update_properties(
@@ -243,23 +325,6 @@ class Streamer:
         self.has_custom_art = None
         self.art = None
         self._station = None
-
-    # Reformats the schedule item of a streamer from a ScheduleItem to a valid schedule item json
-    # object to be sent in requests.
-    def _get_schedule_item_json(self, schedule_item):
-        if not schedule_item:
-            return {}
-
-        start_date_formatted = schedule_item.start_date.strftime("%Y-%m-%d") if schedule_item.start_date else None
-        end_date_formatted = schedule_item.end_date.strftime("%Y-%m-%d") if schedule_item.end_date else None
-
-        return {
-            "start_time": schedule_item.start_time,
-            "end_time": schedule_item.end_time,
-            "start_date": start_date_formatted,
-            "end_date": end_date_formatted,
-            "days": schedule_item.days
-        }
 
     def get_art(self) -> bytes:
         return get_resource_art(self)
