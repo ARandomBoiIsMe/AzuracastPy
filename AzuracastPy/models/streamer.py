@@ -70,17 +70,17 @@ class ScheduleHelper:
 
     def add(
         self,
-        schedule_item: Dict[str, Any]
+        *args: Dict[str, Any]
     ):
         """
-        Adds a new schedule item to the streamer of the station.
+        Adds one or more new schedule items to the streamer of the station.
 
-        :param schedule_item: The new schedule item to be added.
+        :param args: The new schedule item(s) to be added to the station.
 
         Usage:
         .. code-block:: python
 
-            item = station(1).streamer.generate_schedule_item(
+            item = station.streamer.generate_schedule_item(
                 start_time="12:32",
                 end_time="23:10",
                 start_date="2024-09-08",
@@ -88,13 +88,12 @@ class ScheduleHelper:
                 days=["monday", "thursday"]
             )
 
-            streamer(1).schedule.add(
-                schedule_item=item
-            )
+            streamer.schedule.add(item)
         """
-        # Adds the new schedule item.
-        schedule_items = [_get_schedule_item_json(item) for item in self._streamer.schedule_items]
-        schedule_items.append(schedule_item)
+        schedule_items = [_get_schedule_item_json(item) for item in self._playlist.schedule_items]
+
+        for arg in args:
+            schedule_items.append(arg)
 
         url = API_ENDPOINTS["station_streamer"].format(
             radio_url=self._streamer._station._request_handler.radio_url,
@@ -190,6 +189,31 @@ class Streamer:
         self._station = _station
 
         self.schedule = ScheduleHelper(_streamer=self)
+        """
+        An instance of :class:`.ScheduleHelper`.
+
+        Provides the interface for working with this streamer's schedule.
+
+        For example, to add an item to the schedule:
+
+        .. code-block:: python
+
+            item = station.streamer.generate_schedule_item(
+                start_time="12:32",
+                end_time="23:10",
+                start_date="2024-09-08",
+                end_date="2025-07-08",
+                days=["monday", "thursday"]
+            )
+
+            streamer.schedule.add(item)
+
+        To remove an item whose id is ``1`` from the schedule:
+
+        .. code-block:: python
+
+            streamer.schedule.remove(1)
+        """
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -218,12 +242,15 @@ class Streamer:
             connect during their scheduled broadcast times. Default: ``None``.
         :param schedule: (Optional) The new structure representing the schedule list of the
             streamer. This can be generated using the :meth:`.generate_schedule_items` function.
+            Note: This will overwrite the streamer's existing schedule.
+                  Use the :meth:`.schedule.add` and :meth:`.schedule.remove` methods to
+                  interact with the streamer's existing schedule.
             Default: ``None``.
 
         Usage:
         .. code-block:: python
 
-            station(1).streamer(1).edit(
+            streamer.edit(
                 username="New username",
                 display_name="The name which is displayed"
             )
@@ -245,7 +272,7 @@ class Streamer:
         Usage:
         .. code-block:: python
 
-            station(1).streamer(1).update_password(
+            streamer.update_password(
                 password="new password"
             )
         """
@@ -272,7 +299,7 @@ class Streamer:
         Usage:
         .. code-block:: python
 
-            station(1).streamer(1).delete()
+            streamer.delete()
         """
         return delete_station_resource(self, "station_streamer")
 

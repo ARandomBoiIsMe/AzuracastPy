@@ -28,10 +28,14 @@ class AzuracastClient:
         :param x_api_key: (Optional) Your account's API key,
             which can be generated from your profile. Default: ``None``.
         """
-        if not radio_url and not x_api_key and not config_file_path:
-            raise ClientException("I need at least one value bro, damn...")
+        if not radio_url and not config_file_path:
+            message = "Either the 'config_file_path' param or the 'radio_url' param "\
+                      "must be provided."
+            raise ClientException(message)
 
         if config_file_path:
+            # Set radio_url and x_api_key here.
+
             pass
 
         if "http://" not in radio_url and "https://" not in radio_url:

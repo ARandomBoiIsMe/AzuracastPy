@@ -1,6 +1,6 @@
 """Class for a station podcast."""
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from ..constants import API_ENDPOINTS
 from ..enums import Languages, PodcastCategories
@@ -51,6 +51,11 @@ class PodcastEpisodeHelper:
         :param id: The ID of the episode to be retrieved.
 
         :returns: A :class:`PodcastEpisode` object.
+
+        Usage:
+        .. code-block:: python
+
+            episode = podcast.episode("episode-id")
         """
         if not isinstance(id, str):
             raise ValueError("id param should be of type string.")
@@ -79,9 +84,18 @@ class PodcastEpisodeHelper:
 
         :param title: The title of the episode.
         :param description: A description of the episode.
-        :param explicit: Is the episode explicit? Swearing? Sexual content?
+        :param explicit: Is the episode explicit? Swearing? Sexual content?. Default: ``False``.
 
         :returns: A :class:`PodcastEpisode` object for the newly created episode.
+
+        Usage:
+        .. code-block:: python
+
+            episode = podcast.episode.create(
+                title="Tis a podcast",
+                description="I'm not sure, but this might be a podcast",
+                explicit=True
+            )
         """
         url = url = API_ENDPOINTS["podcast_episodes"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
@@ -97,15 +111,26 @@ class PodcastEpisodeHelper:
 
         response = self._podcast._station._request_handler.post(url, body)
 
+        # Making a 'redundant' variable here to ensure that any "response does
+        # not match PodcastEpisode" errors are raised **before** the ID is added
+        # to the podcast's episode list.
+        podcast = PodcastEpisode(**response, _podcast=self._podcast)
+
         self._podcast.episodes.append(response['id'])
 
-        return PodcastEpisode(**response, _podcast=self._podcast)
+        return podcast
 
     def all(self) -> List[PodcastEpisode]:
         """
         Retrieves the episodes of the podcast.
 
         :returns: A list of :class:`PodcastEpisode` objects.
+
+        Usage:
+
+        .. code-block:: python
+
+            episodes = podcast.episode.all()
         """
         url = API_ENDPOINTS["podcast_episodes"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
@@ -126,29 +151,39 @@ class PodcastCategoryHelper:
 
     def add(
         self,
-        category: PodcastCategories
+        *args: PodcastCategories
     ):
         """
-        Adds a category to the podcast.
+        Adds one or more categories to the podcast.
 
-        :param category: The category to be added to the podcast.
-            It must be from the :class:`PodcastCategories` enum.
+        :param args: The category|categories to be added to the podcast.
+            All arguments must be from the :class:`PodcastCategories` enum.
 
         Usage:
         .. code-block:: python
 
             from AzuracastPy.enums import PodcastCategories
 
-            station(1).podcast(1).category.add(
-                category=PodcastCategories.SONG_CHANGED
+            podcast.category.add(PodcastCategories.GOVERNMENT)
+
+            podcast.category.add(
+                PodcastCategories.Arts.BOOKS,
+                PodcastCategories.HISTORY
             )
         """
-        if any(category == existing_category for existing_category in self._podcast.categories):
-            message = f"The '{category}' category is already in the podcast's current category list."
-            raise ClientException(message)
-
         categories = self._podcast.categories.copy()
-        categories.append(category)
+
+        for arg in args:
+            if not isinstance(arg, str):
+                message = "Each argument must be an attribute from the "\
+                         f"'PodcastCategories' class."
+                raise ClientException(message)
+
+            if arg in categories:
+                message = f"'{arg}' is already in the podcast's categories."
+                raise ClientException(message)
+
+            categories.append(arg)
 
         url = API_ENDPOINTS["station_podcast"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
@@ -169,30 +204,39 @@ class PodcastCategoryHelper:
 
     def remove(
         self,
-        category: PodcastCategories
+        *args: PodcastCategories
     ):
         """
-        Removes a category from the podcast's current category list.
+        Removes one or more categories from the podcast.
 
-        :param category: The category to be removed from the podcast's category list.
-            It must be from the :class:`PodcastCategories` enum.
+        :param args: The category|categories to be removed from the podcast.
+            All arguments must be from the :class:`PodcastCategories` enum.
 
         Usage:
         .. code-block:: python
 
             from AzuracastPy.enums import PodcastCategories
 
-            station(1).podcast(1).category.remove(
-                category=PodcastCategories.GOVERNMENT
+            podcast.category.remove(PodcastCategories.GOVERNMENT)
+
+            podcast.category.remove(
+                PodcastCategories.Arts.BOOKS,
+                PodcastCategories.HISTORY
             )
         """
         categories = self._podcast.categories.copy()
 
-        try:
-            categories.remove(category)
-        except ValueError:
-            message = f"The '{category}' category is not in the podcast's current category list."
-            raise ClientException(message)
+        for arg in args:
+            if not isinstance(arg, str):
+                message = "Each argument must be an attribute from the "\
+                         f"'PodcastCategories' class."
+                raise ClientException(message)
+
+            if arg not in categories:
+                message = f"'{arg}' is not in the podcast's categories."
+                raise ClientException(message)
+
+            categories.remove(arg)
 
         url = API_ENDPOINTS["station_podcast"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
@@ -247,7 +291,66 @@ class Podcast:
         self._station = _station
 
         self.episode = PodcastEpisodeHelper(_podcast=self)
+        """
+        An instance of :class:`.PodcastEpisodeHelper`.
+
+        Provides the interface for working with this podcast's episodes.
+
+        For example, to get all the episodes in this podcast:
+
+        .. code-block:: python
+
+            episodes = podcast.episode.all()
+
+        To get an episode with an ID of ``"episode-id"``:
+
+        .. code-block:: python
+
+            episode = podcast.episode("episode-id")
+
+        To create a new podcast episode:
+
+        .. code-block:: python
+
+            episode = podcast.episode.create(
+                title="Tis a podcast",
+                description="I'm not sure, but this might be a podcast",
+                explicit=True
+            )
+        """
+
         self.category = PodcastCategoryHelper(_podcast=self)
+        """
+        An instance of :class:`.PodcastCategoryHelper`.
+
+        Provides the interface for working with this podcast's categories.
+
+        For example, to add one or more categories to this podcast:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import PodcastCategories
+
+            podcast.category.add(PodcastCategories.GOVERNMENT)
+
+            podcast.category.add(
+                PodcastCategories.Arts.BOOKS,
+                PodcastCategories.HISTORY
+            )
+
+        To remove one or more categories from this podcast:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import PodcastCategories
+
+            podcast.category.remove(PodcastCategories.GOVERNMENT)
+
+            podcast.category.remove(
+                PodcastCategories.Arts.BOOKS,
+                PodcastCategories.HISTORY
+            )
+        """
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -272,6 +375,9 @@ class Podcast:
         :param language: (Optional) The new language of the podcast. Default: ``None``.
         :param categories: (Optional) A list of the categories that the podcast falls under.
             Each element of the list must be from the ``PodcastCategories`` class.
+            Note: This will overwrite the podcast's existing categories.
+                  Use the :meth:`.category.add` and :meth:`.category.remove` methods to
+                  interact with the podcast's existing categories.
             Default: ``None``.
         :param author: (Optional) The new author of the podcast. Default: ``None``.
         :param email: (Optional) The new email of the podcast. Default: ``None``.
@@ -282,7 +388,7 @@ class Podcast:
 
             from AzuracastPy.enums import Languages, PodcastCategories
 
-            station.podcast(1).edit(
+            podcast.edit(
                 title="New title",
                 language=Languages.BULGARIAN,
                 categories=[
@@ -311,7 +417,7 @@ class Podcast:
         Usage:
         .. code-block:: python
 
-            station.podcast(1).delete()
+            podcast.delete()
         """
         return delete_station_resource(self, "station_podcast")
 

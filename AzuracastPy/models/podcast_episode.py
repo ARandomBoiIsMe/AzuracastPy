@@ -107,6 +107,7 @@ class PodcastEpisode:
         response = self._podcast._station._request_handler.delete(url)
 
         if response['success']:
+            self._podcast.episodes.remove(self.id)
             self._clear_properties()
 
         return response

@@ -87,15 +87,261 @@ class Station:
         self._request_handler = _request_handler
 
         self.mount_point = MountPointHelper(_station=self)
+        """
+        An instance of :class:`.MountPointHelper`.
+
+        Provides the interface for working with :class:`.MountPoint` instances.
+
+        For example, to get a mount point with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            mount_point = station.mount_point(1)
+
+        To create a mount point on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import Formats
+
+            mount_point = station(1).mount_point.create(
+                url="/autodj.mp3",
+                display_name="Hehehehe",
+                autodj_format=Formats.OPUS
+            )
+        """
+
         self.file = FileHelper(_station=self)
+        """
+        An instance of :class:`.FileHelper`.
+
+        Provides the interface for working with :class:`.StationFile` instances.
+
+        For example, to get an uploaded media file with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            file = station.file(1)
+
+        To upload a file to this station:
+
+        .. code-block:: python
+
+            file = station.file.upload(
+                path="song/on/station.mp3",
+                file="file/path/on/local/system.mp3"
+            )
+        """
+
         self.playlist = PlaylistHelper(_station=self)
+        """
+        An instance of :class:`.PlaylistHelper`.
+
+        Provides the interface for working with :class:`.Playlist` instances.
+
+        For example, to get a playlist with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            playlist = station.playlist(1)
+
+        To create a playlist on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import PlaylistTypes
+
+            playlist = station.playlist.create(
+                name="New",
+                type=PlaylistTypes.ONCE_PER_X_MINUTES,
+                play_per_value=5
+            )
+        """
+
         self.podcast = PodcastHelper(_station=self)
+        """
+        An instance of :class:`.PodcastHelper`.
+
+        Provides the interface for working with :class:`.Podcast` instances.
+
+        For example, to get a podcast with an id of ``"podcast-id"`` from this station:
+
+        .. code-block:: python
+
+            podcast = station.podcast("podcast-id")
+
+        To create a podcast on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import Languages, PodcastCategories
+
+            podcast = station.podcast.create(
+                title="New podcast",
+                description="This is a random description",
+                language=Languages.ARABIC,
+                categories=[
+                    PodcastCategories.Arts.DESIGN,
+                    PodcastCategories.Comedy.COMEDY_INTERVIEWS
+                ]
+            )
+        """
+
         self.streamer = StreamerHelper(_station=self)
+        """
+        An instance of :class:`.StreamerHelper`.
+
+        Provides the interface for working with :class:`.Streamer` instances.
+
+        For example, to get a streamer with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            streamer = station.streamer(1)
+
+        To create a streamer on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import Languages, PodcastCategories
+
+            podcast = station.podcast.create(
+                title="New podcast",
+                description="This is a random description",
+                language=Languages.ARABIC,
+                categories=[
+                    PodcastCategories.Arts.DESIGN,
+                    PodcastCategories.Comedy.COMEDY_INTERVIEWS
+                ]
+            )
+        """
+
         self.webhook = WebhookHelper(_station=self)
+        """
+        An instance of :class:`.WebhookHelper`.
+
+        Provides the interface for working with :class:`.Webhook` instances.
+
+        For example, to get a webhook with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            webhook = station.webhook(1)
+
+        To create a webhook on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import WebhookConfigTypes, WebhookTriggers
+
+            config = station.webhook.generate_webhook_config(
+                subject="subject",
+                message="message",
+                to="to"
+            )
+
+            webhook = station.webhook.create(
+                name="New email webhook",
+                type=WebhookConfigTypes.EMAIL,
+                webhook_config=config,
+                triggers=[
+                    WebhookTriggers.STATION_ONLINE,
+                    WebhookTriggers.LIVE_CONNECT
+                ]
+            )
+        """
+
         self.remote_relay = RemoteRelayHelper(_station=self)
+        """
+        An instance of :class:`.RemoteRelayHelper`.
+
+        Provides the interface for working with :class:`.RemoteRelay` instances.
+
+        For example, to get a remote with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            remote_relay = station.remote_relay(1)
+
+        To create a remote on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import Formats
+
+            remote_relay = station.remote_relay.create(
+                station_listening_url="http://station.example.com:8000",
+                display_name="Display name",
+                autodj_format=Formats.MP3
+            )
+        """
+
         self.sftp_user = SFTPUserHelper(_station=self)
+        """
+        An instance of :class:`.SFTPUserHelper`.
+
+        Provides the interface for working with :class:`.SFTPUser` instances.
+
+        For example, to get an SFTP user with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            sftp_user = station.sftp_user(1)
+
+        To create a remote on this station:
+
+        .. code-block:: python
+
+            sftp_user = station.sftp_user.create(
+                username="Username",
+                password="Password",
+                public_keys=['key1', 'key2']
+            )
+        """
+
         self.hls_stream = HLSStreamHelper(_station=self)
+        """
+        An instance of :class:`.HLSStreamHelper`.
+
+        Provides the interface for working with :class:`.HLSStream` instances.
+
+        For example, to get an HLS Stream with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            hls_stream = station.hls_stream(1)
+
+        To create a remote on this station:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import Formats, Bitrates
+
+            hls_stream = station.hls_stream.create(
+                name="New HLS Stream",
+                format=Formats.MP3,
+                bitrate=Bitrates.BITRATE_32
+            )
+        """
+
         self.queue = QueueHelper(_station=self)
+        """
+        An instance of :class:`.QueueHelper`.
+
+        Provides the interface for working with :class:`.QueueItem` instances.
+
+        For example, to get a queue item with an id of ``1`` from this station:
+
+        .. code-block:: python
+
+            queue_item = station.queue(1)
+
+        To get all items in the queue on this station:
+
+        .. code-block:: python
+
+            queue = station.queue()
+        """
 
     def __repr__(self):
         return generate_repr_string(self)

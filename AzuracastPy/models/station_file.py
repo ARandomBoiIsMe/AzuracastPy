@@ -2,6 +2,8 @@
 
 from typing import List, Optional
 
+from ..exceptions import ClientException
+from ..constants import API_ENDPOINTS
 from ..util.general_util import generate_repr_string
 from ..util.media_util import get_media_file_art
 
@@ -30,6 +32,148 @@ class Playlist:
 
     def __repr__(self):
         return generate_repr_string(self)
+
+def _get_playlist_json(playlist):
+    return {
+        "id": playlist.id,
+        "name": playlist.name,
+        "weight": playlist.weight
+    }
+
+class PlaylistHelper:
+    def __init__(
+        self,
+        _file
+    ):
+        self._file = _file
+
+    def add(
+        self,
+        *args: str
+    ):
+        """
+        Adds the file to one or more playlists.
+
+        :param args: The name(s) of the playlist(s) that the file will be added to.
+            All arguments must be strings.
+
+        Usage:
+        .. code-block:: python
+
+            file.playlist.add("playlist")
+
+            file.playlist.add("playlist1", "playlist2")
+        """
+        valid_playlists = [(playlist.id, playlist.name, playlist.weight) for playlist in self._file._station.playlists()]
+
+        playlists = [_get_playlist_json(playlist) for playlist in self._file.playlists]
+
+        for arg in args:
+            if not isinstance(arg, str):
+                message = "Each argument must be a string."
+                raise ClientException(message)
+
+            if not any(arg == playlist[1] for playlist in valid_playlists):
+                names = [playlist[1] for playlist in valid_playlists]
+                message = f"'{arg}' is not a playlist on this radio station. Valid playlists: "\
+                          f"{', '.join(names)}"
+                raise ClientException(message)
+
+            if any(arg == playlist['name'] for playlist in playlists):
+                message = f"This file is already in the '{arg}' playlist."
+                raise ClientException(message)
+
+            # Generates structure for new playlist addition.
+            for playlist in valid_playlists:
+                if playlist[1] == arg:
+                    obj = {
+                        "id": playlist[0],
+                        "name": playlist[1],
+                        "weight": playlist[2]
+                    }
+
+            playlists.append(obj)
+
+        url = API_ENDPOINTS["station_file"].format(
+            radio_url=self._file._station._request_handler.radio_url,
+            station_id=self._file._station.id,
+            id=self._file.id
+        )
+
+        body = {
+            "playlists": playlists
+        }
+
+        response = self._file._station._request_handler.put(url, body)
+
+        if response['success']:
+            # I hate this.
+            self._file.playlists = self._file._station.file(self._file.id).playlists
+
+        return response
+
+    def remove(
+        self,
+        *args: str
+    ):
+        """
+        Removes the file from one or more playlists.
+
+        :param args: The name(s) of the playlist(s) that the file will be removed from.
+            All arguments must be strings.
+
+        Usage:
+        .. code-block:: python
+
+            file.playlist.remove("playlist")
+
+            file.playlist.remove("playlist1", "playlist2")
+        """
+        valid_playlists = [(playlist.id, playlist.name, playlist.weight) for playlist in self._file._station.playlists()]
+
+        playlists = [_get_playlist_json(playlist) for playlist in self._file.playlists]
+
+        for arg in args:
+            if not isinstance(arg, str):
+                message = "Each argument must be a string."
+                raise ClientException(message)
+
+            if not any(arg == playlist[1] for playlist in valid_playlists):
+                names = [playlist[1] for playlist in valid_playlists]
+                message = f"'{arg}' is not a playlist on this radio station. Valid playlists: "\
+                          f"{', '.join(names)}"
+                raise ClientException(message)
+
+            if not any(arg == playlist['name'] for playlist in playlists):
+                message = f"This file is not in the '{arg}' playlist."
+                raise ClientException(message)
+
+            # Deletes playlist. Yes, I hate this too.
+            i = 0
+            for playlist in playlists:
+                if playlist['name'] == arg:
+                    del playlists[i]
+                    break
+
+                i = i + 1
+
+        url = API_ENDPOINTS["station_file"].format(
+            radio_url=self._file._station._request_handler.radio_url,
+            station_id=self._file._station.id,
+            id=self._file.id
+        )
+
+        body = {
+            "playlists": playlists
+        }
+
+        response = self._file._station._request_handler.put(url, body)
+
+        if response['success']:
+            # I hate this.
+            self._file.playlists = self._file._station.file(self._file.id).playlists
+
+        return response
 
 class StationFile:
     def __init__(
@@ -86,6 +230,29 @@ class StationFile:
         self.links = links
         self._station = _station
 
+        self.playlist = PlaylistHelper(_file=self)
+        """
+        An instance of :class:`.PlaylistHelper`.
+
+        Provides the interface for working with the playlists that this file is in.
+
+        For example, to add the file to one or more playlists:
+
+        .. code-block:: python
+
+            file.playlist.add("playlist")
+
+            file.playlist.add("playlist1", "playlist2")
+
+        To remove the file from one or more playlists:
+
+        .. code-block:: python
+
+            file.playlist.remove("playlist")
+
+            file.playlist.remove("playlist1", "playlist2")
+        """
+
     def __repr__(self):
         return generate_repr_string(self)
 
@@ -121,6 +288,9 @@ class StationFile:
         :param isrc: (Optional) The new International Standard Recording Code of the song.
             Default: ``None``.
         :param playlists: (Optional) The new list of playlists that the song has been added to.
+            Note: This will overwrite the file's existing playlists.
+                  Use the :meth:`.playlist.add` and :meth:`.playlist.remove` methods to
+                  interact with the file's existing playlists.
             Default: ``None``.
         :param amplify: (Optional) The volume in decibels to amplify the track with.
             Leave as ``None`` to use the system default. Default: ``None``.
@@ -141,12 +311,39 @@ class StationFile:
             station.file.edit(
                 title="Never gonna give you up",
                 artist="Lil Wayne",
-                lyrics="I'm so tired"
+                lyrics="I'm so tired",
+                playlists=["playlist1", "playlist2"]
             )
         """
+        valid_playlists = [(playlist.id, playlist.name, playlist.weight) for playlist in self._station.playlists()]
+
+        playlists_json = []
+
+        for playlist in playlists:
+            if not isinstance(playlist, str):
+                message = "Each playlist name must be a string."
+                raise ClientException(message)
+
+            if not any(playlist == playlist_tuple[1] for playlist_tuple in valid_playlists):
+                names = [playlist_tuple[1] for playlist_tuple in valid_playlists]
+                message = f"'{playlist}' is not a playlist on this radio station. "\
+                          f"Valid playlists: {', '.join(names)}"
+                raise ClientException(message)
+
+            # Generates structure for new playlist addition.
+            for playlist_tuple in valid_playlists:
+                if playlist_tuple[1] == playlist:
+                    playlists_json.append(
+                        {
+                            "id": playlist_tuple[0],
+                            "name": playlist_tuple[1],
+                            "weight": playlist_tuple[2]
+                        }
+                    )
+
         return edit_station_resource(
             self, "station_file", title, artist, path, genre, album, lyrics, isrc,
-            playlists, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
+            playlists_json, amplify, fade_overlap, fade_in, fade_out, cue_in, cue_out
         )
 
     def delete(self):
@@ -171,7 +368,7 @@ class StationFile:
         album,
         lyrics,
         isrc,
-        playlists,
+        playlists_json,
         amplify,
         fade_overlap,
         fade_in,
@@ -193,7 +390,7 @@ class StationFile:
             "fade_out": fade_out or self.fade_out,
             "cue_in": cue_in or self.cue_in,
             "cue_out": cue_out or self.cue_out,
-            "playlists": playlists or self.playlists
+            "playlists": playlists_json or [_get_playlist_json(playlist) for playlist in self.playlists]
         }
 
     def _update_properties(
@@ -205,7 +402,7 @@ class StationFile:
         album,
         lyrics,
         isrc,
-        playlists,
+        playlists_json,
         amplify,
         fade_overlap,
         fade_in,
@@ -224,7 +421,7 @@ class StationFile:
         self.fade_out = fade_out or self.fade_out
         self.cue_in = cue_in or self.cue_in
         self.cue_out = cue_out or self.cue_out
-        self.playlists = playlists or self.playlists
+        self.playlists = self.playlists if playlists_json is None else self._station.file(self.id).playlists # I'm sorry.
         self.artist = artist or self.artist
         self.title = title or self.title
 

@@ -112,6 +112,11 @@ class AnalyticsTypes(Enum):
     LIMITED = "no_ip"
     NONE = "none"
 
+class PublicThemes(Enum):
+    DARK = "dark"
+    LIGHT = "light"
+    SYSTEM_DEFAULT = "browser"
+
 class IPAddressSources(Enum):
     LOCAL = "local"
     CLOUDFARE = "cloudfare"

@@ -1,6 +1,6 @@
 """Class for a station webhook."""
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 
 from ..enums import WebhookTriggers
 from ..constants import WEBHOOK_CONFIG_TEMPLATES, API_ENDPOINTS
@@ -32,34 +32,41 @@ class TriggerHelper:
 
     def add(
         self,
-        trigger: WebhookTriggers
+        *args: WebhookTriggers
     ):
         """
-        Adds a trigger to the webhook.
+        Adds one or more triggers to the webhook.
 
-        :param trigger: The trigger to be added to the webhook.
-            It must be from the :class:`WebhookTriggers` enum.
+        :param args: The trigger(s) to be added to the webhook.
+            All arguments must be from the :class:`WebhookTriggers` enum.
 
         Usage:
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookTriggers
 
-            station(1).webhook(1).trigger.add(
-                trigger=WebhookTriggers.SONG_CHANGED
+            webhook.trigger.add(WebhookTriggers.SONG_CHANGED)
+
+            webhook.trigger.add(
+                WebhookTriggers.SONG_CHANGED,
+                WebhookTriggers.LIVE_CONNECT
             )
         """
-        if not isinstance(trigger, WebhookTriggers):
-            raise ClientException(generate_enum_error_text('trigger', WebhookTriggers))
-
-        trigger = trigger.value
-
-        if any(trigger == existing_trigger for existing_trigger in self._webhook.triggers):
-            message = f"The '{trigger}' trigger is already in the webhook's current trigger list."
-            raise ClientException(message)
-
         triggers = self._webhook.triggers.copy()
-        triggers.append(trigger)
+
+        for arg in args:
+            if not isinstance(arg, WebhookTriggers):
+                message = "Each argument must be an attribute from the "\
+                         f"'WebhookTriggers' class."
+                raise ClientException(message)
+
+            arg = arg.value
+
+            if arg in triggers:
+                message = f"'{arg}' is already in the webhook's triggers."
+                raise ClientException(message)
+
+            triggers.append(arg)
 
         url = API_ENDPOINTS["station_webhook"].format(
             radio_url=self._webhook._station._request_handler.radio_url,
@@ -80,34 +87,41 @@ class TriggerHelper:
 
     def remove(
         self,
-        trigger: WebhookTriggers
+        *args: WebhookTriggers
     ):
         """
-        Removes a trigger from the webhook's current trigger list.
+        Removes one or more triggers from the webhook.
 
-        :param trigger: The trigger to be removed from the webhook's trigger list.
-            It must be from the :class:`WebhookTriggers` enum.
+        :param args: The trigger(s) to be removed from the webhook.
+            All arguments must be from the :class:`WebhookTriggers` enum.
 
         Usage:
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookTriggers
 
-            station(1).webhook(1).trigger.remove(
-                trigger=WebhookTriggers.SONG_CHANGED
+            webhook.trigger.remove(WebhookTriggers.SONG_CHANGED)
+
+            webhook.trigger.remove(
+                WebhookTriggers.SONG_CHANGED,
+                WebhookTriggers.LIVE_CONNECT
             )
         """
-        if not isinstance(trigger, WebhookTriggers):
-            raise ClientException(generate_enum_error_text('trigger', WebhookTriggers))
-
-        trigger = trigger.value
-
         triggers = self._webhook.triggers.copy()
-        try:
-            triggers.remove(trigger)
-        except ValueError:
-            message = f"The '{trigger}' trigger is not in the webhook's current trigger list."
-            raise ClientException(message)
+
+        for arg in args:
+            if not isinstance(arg, WebhookTriggers):
+                message = "Each argument must be an attribute from the "\
+                         f"'WebhookTriggers' class."
+                raise ClientException(message)
+
+            arg = arg.value
+
+            if arg not in self._webhook.triggers:
+                message = f"'{arg}' is not in the webhook's triggers."
+                raise ClientException(message)
+
+            triggers.remove(arg)
 
         url = API_ENDPOINTS["station_webhook"].format(
             radio_url=self._webhook._station._request_handler.radio_url,
@@ -148,6 +162,37 @@ class Webhook:
         self._station = _station
 
         self.trigger = TriggerHelper(_webhook=self)
+        """
+        An instance of :class:`.TriggerHelper`.
+
+        Provides the interface for working with this webhook's triggers.
+
+        For example, to add one or more triggers to the webhook:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import WebhookTriggers
+
+            webhook.trigger.add(WebhookTriggers.SONG_CHANGED)
+
+            webhook.trigger.add(
+                WebhookTriggers.SONG_CHANGED,
+                WebhookTriggers.LIVE_CONNECT
+            )
+
+        To remove one or more triggers from the webhook:
+
+        .. code-block:: python
+
+            from AzuracastPy.enums import WebhookTriggers
+
+            webhook.trigger.remove(WebhookTriggers.SONG_CHANGED)
+
+            webhook.trigger.remove(
+                WebhookTriggers.SONG_CHANGED,
+                WebhookTriggers.LIVE_CONNECT
+            )
+        """
 
     def __repr__(self):
         return generate_repr_string(self)
@@ -169,9 +214,9 @@ class Webhook:
             Default: ``None``.
         :param triggers: (Optional) The new list of triggers for the webhook.
             Each element of the list must be from the :class:`WebhookTriggers` enum.
-            Note: This will override the webhook's existing triggers.
-                  Use the :meth:`.add_trigger` function if you want to add a trigger to
-                  the existing triggers.
+            Note: This will overwrite the webhook's existing triggers.
+                  Use the :meth:`.trigger.add` and :meth:`.trigger.remove` methods to
+                  interact with the webhook's existing triggers.
             Default: ``None``.
 
         Usage:
@@ -179,9 +224,11 @@ class Webhook:
 
             from AzuracastPy.enums import WebhookTriggers
 
-            station.webhook(1).edit(
+            webhook.edit(
                 name="New name lol",
-                triggers=[WebhookTriggers.LIVE_DISCONNECT]
+                triggers=[
+                    WebhookTriggers.LIVE_DISCONNECT
+                ]
             )
         """
         if triggers:
@@ -201,49 +248,6 @@ class Webhook:
 
         return edit_station_resource(self, "station_webhook", name, webhook_config, triggers)
 
-    def add_trigger(
-        self,
-        trigger: WebhookTriggers
-    ):
-        """
-        Adds a trigger to the webhook.
-
-        :param trigger: The trigger to be added to the webhook.
-            It must be from the :class:`WebhookTriggers` enum.
-
-        Usage:
-        .. code-block:: python
-
-            from AzuracastPy.enums import WebhookTriggers
-
-            station.webhook(1).add_trigger(
-                trigger=WebhookTriggers.SONG_CHANGED
-            )
-        """
-        if not isinstance(trigger, WebhookTriggers):
-            raise ClientException(generate_enum_error_text('trigger', WebhookTriggers))
-
-        trigger = trigger.value
-
-        url = API_ENDPOINTS["station_webhook"].format(
-            radio_url=self._station._request_handler.radio_url,
-            station_id=self._station.id,
-            id=self.id
-        )
-
-        triggers = self.triggers
-        triggers.append(trigger)
-        body = {
-            "triggers": triggers
-        }
-
-        response = self._station._request_handler.put(url, body)
-
-        if response['success']:
-            self.triggers = triggers
-
-        return response
-
     def delete(self):
         """
         Deletes the webhook from the station.
@@ -253,7 +257,7 @@ class Webhook:
         Usage:
         .. code-block:: python
 
-            station.webhook(1).delete()
+            webhook.delete()
         """
         return delete_station_resource(self, "station_webhook")
 

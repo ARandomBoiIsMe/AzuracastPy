@@ -112,17 +112,17 @@ class ScheduleHelper:
 
     def add(
         self,
-        schedule_item: Dict[str, Any]
+        *args: Dict[str, Any]
     ):
         """
-        Adds a new schedule item to the playlist of the station.
+        Adds one or more new schedule items to the playlist of the station.
 
-        :param schedule_item: The new schedule item to be added.
+        :param args: The new schedule item(s) to be added to the playlist.
 
         Usage:
         .. code-block:: python
 
-            item = station(1).playlist(1).generate_schedule_item(
+            item = station.playlist.generate_schedule_item(
                 start_time="12:32",
                 end_time="23:10",
                 start_date="2024-09-08",
@@ -130,13 +130,12 @@ class ScheduleHelper:
                 days=["monday", "thursday"]
             )
 
-            playlist(1).schedule.add(
-                schedule_item=item
-            )
+            playlist.schedule.add(item)
         """
-        # Adds the new schedule item.
         schedule_items = [_get_schedule_item_json(item) for item in self._playlist.schedule_items]
-        schedule_items.append(schedule_item)
+
+        for arg in args:
+            schedule_items.append(arg)
 
         url = API_ENDPOINTS["station_playlist"].format(
             radio_url=self._playlist._station._request_handler.radio_url,
@@ -169,7 +168,7 @@ class ScheduleHelper:
         Usage:
         .. code-block:: python
 
-            playlist(1).schedule.remove(1)
+            playlist.schedule.remove(1)
         """
         item_exists_in_schedule = any(item.id == id for item in self._playlist.schedule_items)
 
@@ -257,6 +256,31 @@ class Playlist:
         self._station = _station
 
         self.schedule = ScheduleHelper(_playlist=self)
+        """
+        An instance of :class:`.ScheduleHelper`.
+
+        Provides the interface for working with this playlist's schedule.
+
+        For example, to add an item to the schedule:
+
+        .. code-block:: python
+
+            item = station.playlist.generate_schedule_item(
+                start_time="12:32",
+                end_time="23:10",
+                start_date="2024-09-08",
+                end_date="2025-07-08",
+                days=["monday", "thursday"]
+            )
+
+            playlist.schedule.add(item)
+
+        To remove an item whose id is ``1`` from the schedule:
+
+        .. code-block:: python
+
+            playlist.schedule.remove(1)
+        """
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
@@ -321,15 +345,15 @@ class Playlist:
             ``PlaylistSources.SONGS``. Default: ``None``.
         :param schedule: (Optional) The new structure representing the schedule list of the
             playlist. This can be generated using the :meth:`.generate_schedule_items` function.
-            Note: This will override the existing schedule of the playlist.
-                  Use the :meth:`.add_schedule_item` if you want to add a schedule item to
-                  the existing playlist schedule.
+            Note: This will overwrite the playlist's existing schedule.
+                  Use the :meth:`.schedule.add` and :meth:`.schedule.remove` methods to
+                  interact with the playlist's existing schedule.
             Default: ``None``.
 
         Usage:
         .. code-block:: python
 
-            station(1).playlist(1).edit(
+            playlist.edit(
                 name="New name lol",
                 allow_requests=False,
                 avoid_duplicates=False
@@ -374,7 +398,7 @@ class Playlist:
         Usage:
         .. code-block:: python
 
-            station(1).playlist(1).delete()
+            playlist.delete()
         """
         return delete_station_resource(self, "station_playlist")
 
