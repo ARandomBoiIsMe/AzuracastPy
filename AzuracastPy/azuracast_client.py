@@ -158,6 +158,18 @@ class AzuracastClient:
 
         :returns: A list of :class:`NowPlaying` objects, or a single :class:`NowPlaying` object,
             depending on whether or not a ``station_id`` was provided.
+
+        To get the now-playing details of a single station whose id is ``1``:
+
+        .. code-block:: python
+
+            station_now_playing = client.now_playing(1)
+
+        To get the now-playing details of all stations on the radio:
+
+        .. code-block:: python
+
+            all_now_playing = client.now_playing()
         """
         url = self._build_now_playing_url(station_id)
 
@@ -177,6 +189,10 @@ class AzuracastClient:
         Retrieves list of stations on the radio.
 
         :returns: A list of :class:`Station` objects.
+
+        .. code-block:: python
+
+            stations = client.stations()
         """
         url = API_ENDPOINTS["stations"].format(
             radio_url=self._request_handler.radio_url
@@ -196,6 +212,10 @@ class AzuracastClient:
         :param id: The numerical ID of the station to be retrieved.
 
         :returns: A :class:`Station` object.
+
+        .. code-block:: python
+
+            station = client.station(1)
         """
         if type(id) is not int or id < 0:
             raise ValueError("id param must be a non-negative integer.")
@@ -212,6 +232,12 @@ class AzuracastClient:
     def status(self):
         """
         :returns: The status of the radio's API.
+
+        Usage:
+
+        .. code-block:: python
+
+            status = client.status()
         """
         url = API_ENDPOINTS["api_status"].format(
             radio_url=self._request_handler.radio_url
@@ -224,6 +250,12 @@ class AzuracastClient:
     def time(self):
         """
         :returns: The current time.
+
+        Usage:
+
+        .. code-block:: python
+
+            time = client.time()
         """
         url = API_ENDPOINTS["time"].format(
             radio_url=self._request_handler.radio_url
