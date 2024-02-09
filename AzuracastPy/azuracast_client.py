@@ -1,5 +1,7 @@
 """The client that provides access to the AzuraCast API."""
 
+import configparser
+import os
 from typing import Optional, List, Union
 
 from .models import Station, NowPlaying
@@ -14,29 +16,102 @@ class AzuracastClient:
     The Azuracast API client.
 
     This will be used to access the data and actions provided by an Azuracast web radio.
+
+    :param radio_url: (Optional) Your radio's URL, which was set upon its creation.
+        Provide this or the 'config' param value.
+        Default: ``None``.
+    :param x_api_key: (Optional) Your account's API key,
+        which can be generated from your profile.
+        Provide this or the 'config' param value.
+        Default: ``None``.
+    :param config: (Optional) Path to the config file with the needed details.
+        Provide this or the 'radio_url' and 'x_api_key' param values.
+        Default: ``None``.
+
+    If a 'config' param is provided, the values in the specified config file
+    will overwrite the values of the 'radio_url' and 'x_api_key' params.
+
+    This is how to obtain an instance of this class, with explicit parameters:
+
+    .. code-block:: python
+
+        client = AzuracastClient(
+            radio_url="Your radio's public URL. Must start with 'http://' or 'https://'",
+            x_api_key="Your account's API key. This can be created from your profile on the site."
+        )
+
+    To achieve the same thing, but with a config file:
+
+    .. code-block:: python
+
+        client = AzuracastClient(
+            config="The path to the configuration file containing the values.
+                See the format of the config file here: # bleh.
+                Must be a '.ini' file."
+        )
     """
     def __init__(
         self,
         radio_url: Optional[str] = None,
         x_api_key: Optional[str] = None,
-        config_file_path: Optional[str] = None
+        config: Optional[str] = None
     ):
         """
         Constructs an Azuracast API client.
 
-        :param radio_url: Your radio's URL, which was set upon its creation.
+        :param radio_url: (Optional) Your radio's URL, which was set upon its creation.
+            Provide this or the 'config' param value.
+            Default: ``None``.
         :param x_api_key: (Optional) Your account's API key,
-            which can be generated from your profile. Default: ``None``.
+            which can be generated from your profile.
+            Provide this or the 'config' param value.
+            Default: ``None``.
+        :param config: (Optional) Path to the config file with the needed details.
+            Provide this or the 'radio_url' and 'x_api_key' param values.
+            Default: ``None``.
+
+        If a 'config' param is provided, the values in the specified config file
+        will overwrite the values of the 'radio_url' and 'x_api_key' params.
+
+        This is how to obtain an instance of this class, with explicit parameters:
+
+    .. code-block:: python
+
+        client = AzuracastClient(
+            radio_url="Your radio's public URL. Must start with 'http://' or 'https://'",
+            x_api_key="Your account's API key. This can be created from your profile on the site."
+        )
+
+        To achieve the same thing, but with a config file instead:
+
+        .. code-block:: python
+
+            client = AzuracastClient(
+                config="The path to the configuration file containing the values.
+                    See the format of the config file here: # bleh.
+                    Must be a '.ini' file."
+            )
         """
-        if not radio_url and not config_file_path:
-            message = "Either the 'config_file_path' param or the 'radio_url' param "\
+        if not radio_url and not config:
+            message = "Either the 'config' param or the 'radio_url' param "\
                       "must be provided."
             raise ClientException(message)
 
-        if config_file_path:
-            # Set radio_url and x_api_key here.
+        if config:
+            if not os.path.isfile(config):
+                raise ValueError(f"File does not exist: {config}")
 
-            pass
+            if not config.endswith('.ini'):
+                raise ValueError(f"Config file must be a '.ini' file: {config}")
+
+            config_ = configparser.ConfigParser()
+            config_.read(config)
+
+            try:
+                radio_url = config_['PARAM']['RADIO_URL']
+                x_api_key = config_['PARAM']['X_API_KEY']
+            except KeyError:
+                raise ClientException("Please see the format for a valid config file here: # bleh")
 
         if "http://" not in radio_url and "https://" not in radio_url:
             raise ValueError("radio_url param must start with 'http://' or 'https://'")
