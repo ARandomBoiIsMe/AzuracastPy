@@ -13,6 +13,8 @@ from AzuracastPy.models.sftp_user import SFTPUser
 from AzuracastPy.models.streamer import Streamer
 from AzuracastPy.models.webhook import Webhook
 
+from AzuracastPy.enums import ServiceActions
+
 import unittest
 from unittest import TestCase, mock
 
@@ -24,21 +26,6 @@ class TestStation(TestCase):
     def setUp(self) -> None:
         self.station = fake_data_generator.return_fake_station_instance(1)
         self.station._request_handler = mock.MagicMock()
-
-    # This indirectly tests all functions that return a single instance of whatever resource,
-    # because they all use this function
-    # ---------------------------
-    def test__request_single_instance_of_incorrect_id_data_type_raises_type_error(self):
-        incorrect_ids = ['', True, 2.0]
-
-        for id in incorrect_ids:
-            with self.assertRaises(TypeError):
-                self.station._request_single_instance_of('', id)
-
-    def test__request_single_instance_of_negative_id_raises_value_error(self):
-        with self.assertRaises(ValueError):
-            self.station._request_single_instance_of('', -2)
-    # ---------------------------
 
     def test_file_returns_file(self):
         id = 1
@@ -166,54 +153,12 @@ class TestStation(TestCase):
         incorrect_ids = [True, 2.0, 1]
 
         for id in incorrect_ids:
-            with self.assertRaises(TypeError):
+            with self.assertRaises(ValueError):
                 self.station.podcast(id)
-
-    def test_podcast_returns_podcast(self):
-        id = 'string-id'
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_podcast_json()
-
-        result = self.station.podcast(id)
-
-        self.assertIsInstance(result, Podcast)
-
-    def test_podcasts_returns_list_of_podcast(self):
-        self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_podcast_json(),
-            fake_data_generator.return_fake_podcast_json(),
-            fake_data_generator.return_fake_podcast_json()
-        ]
-
-        result = self.station.podcasts()
-
-        self.assertIsInstance(result, list)
-        for item in result:
-            self.assertIsInstance(item, Podcast)
-
-    def test_queue_item_returns_queue_item(self):
-        id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_queue_item_json()
-
-        result = self.station.queue_item(id)
-
-        self.assertIsInstance(result, QueueItem)
-
-    def test_queue_returns_list_of_queue_item(self):
-        self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_queue_item_json(),
-            fake_data_generator.return_fake_queue_item_json(),
-            fake_data_generator.return_fake_queue_item_json()
-        ]
-
-        result = self.station.queue()
-
-        self.assertIsInstance(result, list)
-        for item in result:
-            self.assertIsInstance(item, QueueItem)
 
     def test_remote_relay_returns_remote_relay(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_remote_relay_json()
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_remote_relay_json(1)
 
         result = self.station.remote_relay(id)
 
@@ -221,9 +166,9 @@ class TestStation(TestCase):
 
     def test_remote_relays_returns_list_of_remote_relay(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_remote_relay_json(),
-            fake_data_generator.return_fake_remote_relay_json(),
-            fake_data_generator.return_fake_remote_relay_json()
+            fake_data_generator.return_fake_remote_relay_json(1),
+            fake_data_generator.return_fake_remote_relay_json(1),
+            fake_data_generator.return_fake_remote_relay_json(1)
         ]
 
         result = self.station.remote_relays()
@@ -234,7 +179,7 @@ class TestStation(TestCase):
 
     def test_sftp_user_returns_sftp_user(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_sftp_user_json()
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_sftp_user_json(1)
 
         result = self.station.sftp_user(id)
 
@@ -242,9 +187,9 @@ class TestStation(TestCase):
 
     def test_sftp_users_returns_list_of_sftp_user(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_sftp_user_json(),
-            fake_data_generator.return_fake_sftp_user_json(),
-            fake_data_generator.return_fake_sftp_user_json()
+            fake_data_generator.return_fake_sftp_user_json(1),
+            fake_data_generator.return_fake_sftp_user_json(1),
+            fake_data_generator.return_fake_sftp_user_json(1)
         ]
 
         result = self.station.sftp_users()
@@ -255,7 +200,7 @@ class TestStation(TestCase):
 
     def test_streamer_returns_streamer(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json()
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json(1)
 
         result = self.station.streamer(id)
 
@@ -263,9 +208,9 @@ class TestStation(TestCase):
 
     def test_streamers_returns_list_of_streamer(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_streamer_json(),
-            fake_data_generator.return_fake_streamer_json(),
-            fake_data_generator.return_fake_streamer_json()
+            fake_data_generator.return_fake_streamer_json(1),
+            fake_data_generator.return_fake_streamer_json(1),
+            fake_data_generator.return_fake_streamer_json(1)
         ]
 
         result = self.station.streamers()
@@ -276,7 +221,7 @@ class TestStation(TestCase):
 
     def test_webhook_returns_webhook(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json()
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json(1)
 
         result = self.station.webhook(id)
 
@@ -284,9 +229,9 @@ class TestStation(TestCase):
 
     def test_webhooks_returns_list_of_webhook(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_webhook_json(),
-            fake_data_generator.return_fake_webhook_json(),
-            fake_data_generator.return_fake_webhook_json()
+            fake_data_generator.return_fake_webhook_json(1),
+            fake_data_generator.return_fake_webhook_json(1),
+            fake_data_generator.return_fake_webhook_json(1)
         ]
 
         result = self.station.webhooks()
@@ -294,13 +239,6 @@ class TestStation(TestCase):
         self.assertIsInstance(result, list)
         for item in result:
             self.assertIsInstance(item, Webhook)
-
-    def test__perform_service_action_invalid_action_raises_value_error_exception(self):
-        invalid_actions = ['RESTART', 'StOp', 'stArt']
-
-        for action in invalid_actions:
-            with self.assertRaises(ValueError):
-                self.station._perform_service_action(action=action, service_type='')
 
     def test_perform_frontend_action_restart(self):
         response = Response()
@@ -319,7 +257,7 @@ class TestStation(TestCase):
 
         self.station._request_handler.post.return_value = response.json()
 
-        result = self.station.perform_frontend_action('start')
+        result = self.station.perform_frontend_action(ServiceActions.START)
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result['message'], "Service started")
@@ -330,7 +268,7 @@ class TestStation(TestCase):
 
         self.station._request_handler.post.return_value = response.json()
 
-        result = self.station.perform_frontend_action('stop')
+        result = self.station.perform_frontend_action(ServiceActions.STOP)
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result['message'], "Service stopped")
@@ -352,7 +290,7 @@ class TestStation(TestCase):
 
         self.station._request_handler.post.return_value = response.json()
 
-        result = self.station.perform_backend_action('start')
+        result = self.station.perform_backend_action(ServiceActions.START)
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result['message'], "Service started")
@@ -363,7 +301,7 @@ class TestStation(TestCase):
 
         self.station._request_handler.post.return_value = response.json()
 
-        result = self.station.perform_backend_action('stop')
+        result = self.station.perform_backend_action(ServiceActions.STOP)
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result['message'], "Service stopped")

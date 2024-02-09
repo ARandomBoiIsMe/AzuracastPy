@@ -17,20 +17,6 @@ class AzuracastClient:
 
     This will be used to access the data and actions provided by an Azuracast web radio.
 
-    :param radio_url: (Optional) Your radio's URL, which was set upon its creation.
-        Provide this or the 'config' param value.
-        Default: ``None``.
-    :param x_api_key: (Optional) Your account's API key,
-        which can be generated from your profile.
-        Provide this or the 'config' param value.
-        Default: ``None``.
-    :param config: (Optional) Path to the config file with the needed details.
-        Provide this or the 'radio_url' and 'x_api_key' param values.
-        Default: ``None``.
-
-    If a 'config' param is provided, the values in the specified config file
-    will overwrite the values of the 'radio_url' and 'x_api_key' params.
-
     This is how to obtain an instance of this class, with explicit parameters:
 
     .. code-block:: python
@@ -72,25 +58,6 @@ class AzuracastClient:
 
         If a 'config' param is provided, the values in the specified config file
         will overwrite the values of the 'radio_url' and 'x_api_key' params.
-
-        This is how to obtain an instance of this class, with explicit parameters:
-
-    .. code-block:: python
-
-        client = AzuracastClient(
-            radio_url="Your radio's public URL. Must start with 'http://' or 'https://'",
-            x_api_key="Your account's API key. This can be created from your profile on the site."
-        )
-
-        To achieve the same thing, but with a config file instead:
-
-        .. code-block:: python
-
-            client = AzuracastClient(
-                config="The path to the configuration file containing the values.
-                    See the format of the config file here: # bleh.
-                    Must be a '.ini' file."
-            )
         """
         if not radio_url and not config:
             message = "Either the 'config' param or the 'radio_url' param "\

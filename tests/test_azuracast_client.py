@@ -12,7 +12,7 @@ class TestAzuracastClient(TestCase):
         self.client = AzuracastClient('https://meh')
         self.client._request_handler = mock.MagicMock()
 
-    def test_station_incorrect_id_data_type_raises_type_error(self):
+    def test_station_incorrect_id_data_type_raises_value_error(self):
         incorrect_ids = ['', True, 2.0]
 
         for id in incorrect_ids:

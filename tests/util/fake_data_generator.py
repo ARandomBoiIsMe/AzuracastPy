@@ -1,4 +1,4 @@
-from AzuracastPy.models.station import Station
+from AzuracastPy.models import Station
 from AzuracastPy.models.station_file import StationFile
 from AzuracastPy.models.mount_point import MountPoint
 from AzuracastPy.models.playlist import Playlist
@@ -17,68 +17,138 @@ from AzuracastPy.models.webhook import Webhook
 
 def return_fake_station_json(id: int):
     return {
-        "id":id,
-        "name":"XXXX",
-        "shortcode":"XXXX",
-        "description":"XXXX",
-        "frontend":"XXXX",
-        "backend":"XXXX",
-        "listen_url":"XXXX",
-        "url":"XXXX",
-        "public_player_url":"XXXX",
-        "playlist_pls_url":"XXXX",
-        "playlist_m3u_url":"XXXX",
-        "is_public":True,
-        "mounts":[
+        "id": id,
+        "name": "Yet Another Radio",
+        "shortcode": "yet_another_radio",
+        "description": "",
+        "frontend": "icecast",
+        "backend": "liquidsoap",
+        "listen_url": "http://localhost:8000/kiki",
+        "url": "",
+        "public_player_url": "http://localhost/public/yet_another_radio",
+        "playlist_pls_url": "http://localhost/public/yet_another_radio/playlist.pls",
+        "playlist_m3u_url": "http://localhost/public/yet_another_radio/playlist.m3u",
+        "is_public": True,
+        "mounts": [
             {
-                "id":1,
-                "name":"XXXX",
-                "url":"XXXX",
-                "bitrate":128,
-                "format":"XXXX",
-                "listeners":{
-                    "total":0,
-                    "unique":0,
-                    "current":0
+                "id": 4,
+                "name": "/hi (128kbps MP3)",
+                "url": "http://localhost:8000/kiki",
+                "bitrate": 128,
+                "format": "mp3",
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
                 },
-                "path":"XXXX",
-                "is_default":True
+                "path": "/kiki",
+                "is_default": True
+            },
+            {
+                "id": 5,
+                "name": "hohoho",
+                "url": "https://z",
+                "bitrate": None,
+                "format": None,
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                },
+                "path": "/bleh",
+                "is_default": False
             }
         ],
-        "remotes":[],
-        "hls_enabled":False,
-        "hls_is_default":False,
-        "hls_url":None,
-        "hls_listeners":0
+        "remotes": [
+            {
+                "id": 7,
+                "name": "yohppppohpeo",
+                "url": "https://yuh",
+                "bitrate": None,
+                "format": None,
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                }
+            },
+            {
+                "id": 8,
+                "name": "another name who dis",
+                "url": "https://yuh",
+                "bitrate": 128,
+                "format": "ogg",
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                }
+            }
+        ],
+        "hls_enabled": True,
+        "hls_is_default": False,
+        "hls_url": "http://localhost/hls/yet_another_radio/live.m3u8",
+        "hls_listeners": 0
     }
 
 def return_fake_station_instance(id: int):
-    return Station(**return_fake_station_json(id))
+    return Station(**return_fake_station_json(id), _request_handler=None)
 
 def return_fake_file_json(id: int):
     return {
-        "unique_id":"XXXX","album":None,"genre":None,"lyrics":None,"isrc":None,
-        "length":408.22,"length_text":"XXXX","path":"XXXX",
-        "mtime":1703965645,"amplify":None,"fade_overlap":None,"fade_in":None,"fade_out":None,
-        "cue_in":None,"cue_out":None,"art_updated_at":1703965645,
-        "playlists":[{"id":1,"name":"XXXX","weight":4}],"id":id,
-        "song_id":"XXXX","text":"XXXX",
-        "artist":"XXXX","title":"XXXX","custom_fields":[],
-        "links":{"self":"XXXX"}
+        "unique_id": "53bff3de9429ad36ad9bd533",
+        "album": "THE INSPECTION",
+        "genre": None,
+        "lyrics": None,
+        "isrc": None,
+        "length": 127.37,
+        "length_text": "2:07",
+        "path": "songs/y2mate.com_-_cochise__megaman_official_audio.mp3",
+        "mtime": 1707328093,
+        "amplify": None,
+        "fade_overlap": None,
+        "fade_in": None,
+        "fade_out": None,
+        "cue_in": None,
+        "cue_out": None,
+        "art_updated_at": 1703965646,
+        "playlists": [
+            {
+                "id": 7,
+                "name": "IM HERE",
+                "weight": 2
+            }
+        ],
+        "id": id,
+        "song_id": "937b60a479ee80c96db217721afca1fb",
+        "text": "Cochise - MEGAMAN",
+        "artist": "Cochise",
+        "title": "MEGAMAN",
+        "custom_fields": {
+            "bro_thinks_hes_funny": None,
+            "new_name_who_dis": None,
+            "lol_if_i_dont_wanna_8_lel": None,
+            "lolpleasework": None,
+            "i thought this wouldn't work     sff s ';-;": None,
+            "whats_up": None
+        },
+        "links": {
+            "self": "http://localhost/api/station/1/file/4"
+        }
     }
 
 def return_fake_file_instance(id: int):
-    return StationFile(**return_fake_file_json(id))
+    return StationFile(**return_fake_file_json(id), _station=None)
 
 def return_fake_mount_point_json(id: int):
     return {
-        "name": "XXXX",
-        "display_name": "XXXX",
+        "name": "/hey",
+        "display_name": "/hey (128kbps MP3)",
         "is_visible_on_public_pages": True,
-        "is_default": True,
-        "is_public": False,
-        "fallback_mount": None,
-        "relay_url": None,
+        "is_default": False,
+        "is_public": True,
+        "fallback_mount": "/error.mp3",
+        "relay_url": "",
         "authhash": None,
         "max_listener_duration": 0,
         "enable_autodj": True,
@@ -91,23 +161,23 @@ def return_fake_mount_point_json(id: int):
         "listeners_total": 0,
         "id": id,
         "links": {
-            "self": "XXXX",
-            "intro": "XXXX",
-            "listen": "XXXX"
+            "self": "http://localhost/api/station/1/mount/6",
+            "intro": "http://localhost/api/station/1/mount/6/intro",
+            "listen": "http://localhost:8000/hey"
         }
     }
 
 def return_fake_mount_point_instance(id: int):
-    return MountPoint(**return_fake_mount_point_json(id))
+    return MountPoint(**return_fake_mount_point_json(id), _station=None)
 
 def return_fake_playlist_json(id: int):
     return {
-        "name": "XXXX",
-        "type": "XXXX",
-        "source": "XXXX",
-        "order": "XXXX",
+        "name": "Haha",
+        "type": "default",
+        "source": "songs",
+        "order": "shuffle",
         "remote_url": None,
-        "remote_type": "XXXX",
+        "remote_type": "stream",
         "remote_buffer": 0,
         "is_enabled": True,
         "is_jingle": False,
@@ -121,69 +191,54 @@ def return_fake_playlist_json(id: int):
             ""
         ],
         "avoid_duplicates": True,
-        "played_at": 1704407702,
-        "queue_reset_at": 1704406957,
-        "schedule_items": [
-            {
-                "start_time": 0,
-                "end_time": 2300,
-                "start_date": "2024-01-19",
-                "end_date": None,
-                "days": [],
-                "loop_once": False,
-                "id": 1
-            },
-            {
-                "start_time": 1400,
-                "end_time": 2045,
-                "start_date": None,
-                "end_date": None,
-                "days": [
-                    3,
-                    7
-                ],
-                "loop_once": False,
-                "id": 2
-            }
-        ],
+        "played_at": 1707329223,
+        "queue_reset_at": 1707327991,
+        "schedule_items": [],
         "id": id,
-        "short_name": "XXXX",
-        "num_songs": 8,
-        "total_length": 1774,
+        "short_name": "haha",
+        "num_songs": 0,
+        "total_length": 0,
         "links": {
-            "self": "XXXX",
-            "toggle": "XXXX",
-            "clone": "XXXX",
-            "queue": "XXXX",
-            "import": "XXXX",
-            "reshuffle": "XXXX",
-            "applyto": "XXXX",
-            "empty": "XXXX",
+            "self": "http://localhost/api/station/1/playlist/5",
+            "toggle": "http://localhost/api/station/1/playlist/5/toggle",
+            "clone": "http://localhost/api/station/1/playlist/5/clone",
+            "queue": "http://localhost/api/station/1/playlist/5/queue",
+            "import": "http://localhost/api/station/1/playlist/5/import",
+            "reshuffle": "http://localhost/api/station/1/playlist/5/reshuffle",
+            "applyto": "http://localhost/api/station/1/playlist/5/apply-to",
+            "empty": "http://localhost/api/station/1/playlist/5/empty",
             "export": {
-                "pls": "XXXX",
-                "m3u": "XXXX"
+                "pls": "http://localhost/api/station/1/playlist/5/export/pls",
+                "m3u": "http://localhost/api/station/1/playlist/5/export/m3u"
             }
         }
     }
 
 def return_fake_playlist_instance(id: int):
-    return Playlist(**return_fake_playlist_json(id))
+    return Playlist(**return_fake_playlist_json(id), _station=None)
 
 def return_fake_requestable_song_json():
     return {
-        "request_id": "XXXX",
-        "request_url": "XXXX",
+        "request_id": "36c1d6cda4e7d71b97b237bb",
+        "request_url": "/api/station/1/request/36c1d6cda4e7d71b97b237bb",
         "song": {
-            "id": "XXXX",
-            "text": "XXXX",
-            "artist": "XXXX",
-            "title": "XXXX",
-            "album": "XXXX",
-            "genre": "XXXX",
-            "isrc": "XXXX",
-            "lyrics": "XXXX",
-            "art": "XXXX",
-            "custom_fields": []
+            "id": "773d3766a9cacf261e6c8b9c542b36f9",
+            "text": "Cochise - GRIND",
+            "artist": "Cochise",
+            "title": "GRIND",
+            "album": "THE INSPECTION",
+            "genre": "",
+            "isrc": "",
+            "lyrics": "",
+            "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+            "custom_fields": {
+                "bro_thinks_hes_funny": None,
+                "i thought this wouldn't work     sff s ';-;": None,
+                "lol_if_i_dont_wanna_8_lel": None,
+                "lolpleasework": None,
+                "new_name_who_dis": None,
+                "whats_up": None
+            }
         }
     }
 
@@ -192,23 +247,30 @@ def return_fake_requestable_song_instance():
 
 def return_fake_song_history_json():
     return {
-        "sh_id": 536,
-        "played_at": 1704485288,
-        "duration": 356,
-        "playlist": "",
+        "sh_id": 1347,
+        "played_at": 1707520094,
+        "duration": 175,
+        "playlist": "IM HERE",
         "streamer": "",
         "is_request": False,
         "song": {
-            "id": "XXXX",
-            "text": "XXXX",
-            "artist": "XXXX",
-            "title": "XXXX",
-            "album": "",
+            "id": "773d3766a9cacf261e6c8b9c542b36f9",
+            "text": "Cochise - GRIND",
+            "artist": "Cochise",
+            "title": "GRIND",
+            "album": "THE INSPECTION",
             "genre": "",
             "isrc": "",
             "lyrics": "",
-            "art": "XXXX",
-            "custom_fields": []
+            "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+            "custom_fields": {
+                "bro_thinks_hes_funny": None,
+                "i thought this wouldn't work     sff s ';-;": None,
+                "lol_if_i_dont_wanna_8_lel": None,
+                "lolpleasework": None,
+                "new_name_who_dis": None,
+                "whats_up": None
+            }
         },
         "listeners_start": 0,
         "listeners_end": 0,
@@ -280,160 +342,197 @@ def return_fake_station_status_instance():
 
 def return_fake_podcast_json():
     return {
-        "id": "XXXX",
+        "id": "1eeb3f87-c013-6c90-b123-9ba650b804a0",
         "storage_location_id": 4,
-        "title": "XXXX",
-        "link": "XXXX",
-        "description": "XXXX",
-        "language": "XXXX",
-        "author": "XXXX",
-        "email": "XXXX",
-        "has_custom_art": True,
-        "art": "XXXX",
+        "title": "Title",
+        "link": "Website",
+        "description": "Description",
+        "language": "en",
+        "author": "Author",
+        "email": "Email@gmail.com",
+        "has_custom_art": False,
+        "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/art",
         "art_updated_at": 0,
-        "categories": [],
-        "episodes": [],
+        "categories": [
+            "Arts|Performing Arts",
+            "Business|Non-Profit",
+            "Arts|Fashion & Beauty"
+        ],
+        "episodes": [
+            "1eeb3f88-f3a4-6a22-b189-8d7240fd53e1",
+            "1eeb3f97-f14e-6d54-9d30-131fe97e1a45",
+            "1eec486c-7007-60aa-a71b-9d325f29a184"
+        ],
         "links": {
-            "self": "XXXX",
-            "episodes": "XXXX",
-            "public_episodes": "XXXX",
-            "public_feed": "XXXX",
-            "art": "XXXX",
-            "episode_new_art": "XXXX",
-            "episode_new_media": "XXXX"
+            "self": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0",
+            "episodes": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes",
+            "public_episodes": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes",
+            "public_feed": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/feed",
+            "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/art",
+            "episode_new_art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes/art",
+            "episode_new_media": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes/media"
         }
     }
 
 def return_fake_podcast_instance():
-    return Podcast(**return_fake_podcast_json())
+    return Podcast(**return_fake_podcast_json(), _station=None)
 
 def return_fake_podcast_episode_json():
     return {
-        "id": "XXXX",
-        "title": "XXXX",
-        "description": "XXXX",
+        "id": "1eec486c-7007-60aa-a71b-9d325f29a184",
+        "title": "lol hey",
+        "description": "fuck off",
         "explicit": False,
-        "publish_at": 1704491460,
-        "has_media": True,
+        "publish_at": None,
+        "has_media": False,
         "media": {
-            "id": "XXXX",
-            "original_name": "XXXX",
+            "id": None,
+            "original_name": None,
             "length": 0,
-            "length_text": "XXXX",
-            "path": "XXXX"
+            "length_text": None,
+            "path": None
         },
-        "has_custom_art": True,
-        "art": "XXXX",
-        "art_updated_at": 1704491337,
+        "has_custom_art": False,
+        "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/art",
+        "art_updated_at": 0,
         "links": {
-            "self": "XXXX",
-            "public": "XXXX",
-            "download": "XXXX",
-            "art": "XXXX",
-            "media": "XXXX"
+            "self": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184",
+            "public": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184",
+            "download": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/download",
+            "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/art",
+            "media": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/media"
         }
     }
 
 def return_fake_podcast_episode_instance():
-    return PodcastEpisode(**return_fake_podcast_episode_json())
+    return PodcastEpisode(**return_fake_podcast_episode_json(), _podcast=None)
 
 def return_fake_queue_item_json():
     return {
-        "cued_at": 1609480800,
-        "played_at": 1609480800,
-        "duration": 180,
-        "playlist": "XXXX",
-        "is_request": True,
+        "cued_at": 1707406815,
+        "played_at": 1707520368,
+        "duration": 127,
+        "playlist": "IM HERE",
+        "is_request": False,
         "song": {
-            "id": "XXXX",
-            "text": "XXXX",
-            "artist": "XXXX",
-            "title": "XXXX",
-            "album": "XXXX",
-            "genre": "XXXX",
-            "isrc": "XXXX",
+            "id": "937b60a479ee80c96db217721afca1fb",
+            "text": "Cochise - MEGAMAN",
+            "artist": "Cochise",
+            "title": "MEGAMAN",
+            "album": "THE INSPECTION",
+            "genre": "",
+            "isrc": "",
             "lyrics": "",
-            "art": "XXXX",
-            "custom_fields": []
+            "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+            "custom_fields": {
+                "bro_thinks_hes_funny": None,
+                "i thought this wouldn't work     sff s ';-;": None,
+                "lol_if_i_dont_wanna_8_lel": None,
+                "lolpleasework": None,
+                "new_name_who_dis": None,
+                "whats_up": None
+            }
         },
-        "links": [
-            "XXXX"
-        ],
         "sent_to_autodj": True,
-        "is_played": True,
-        "autodj_custom_uri": "",
-        "log": [
-            "XXXX"
-        ]
+        "is_played": False,
+        "autodj_custom_uri": None,
+        "log": None,
+        "links": {
+            "self": "http://localhost/api/station/1/queue/1308"
+        }
     }
 
 def return_fake_queue_item_instance():
-    return QueueItem(**return_fake_queue_item_json())
+    return QueueItem(**return_fake_queue_item_json(), _station=None)
 
-def return_fake_remote_relay_json():
+def return_fake_remote_relay_json(id: int):
     return {
-        "links": [],
-        "id": 0,
-        "display_name": "XXXX",
+        "id": id,
+        "display_name": "another name who dis",
         "is_visible_on_public_pages": True,
-        "type": "XXXX",
+        "type": "icecast",
         "is_editable": True,
-        "enable_autodj": False,
-        "autodj_format": "XXXX",
+        "enable_autodj": True,
+        "autodj_format": "ogg",
         "autodj_bitrate": 128,
-        "custom_listen_url": "XXXX",
-        "url": "XXXX",
-        "mount": "XXXX",
-        "admin_password": "XXXX",
-        "source_port": 8000,
-        "source_mount": "XXXX",
-        "source_username": "XXXX",
-        "source_password": "XXXX",
+        "custom_listen_url": None,
+        "url": "https://yuh",
+        "mount": "",
+        "admin_password": "",
+        "source_port": None,
+        "source_mount": "",
+        "source_username": "",
+        "source_password": "",
         "is_public": False,
         "listeners_unique": 0,
-        "listeners_total": 0
+        "listeners_total": 0,
+        "links": {
+            "self": "http://localhost/api/station/1/remote/8"
+        }
     }
 
 def return_fake_remote_relay_instance():
-    return RemoteRelay(**return_fake_remote_relay_json())
+    return RemoteRelay(**return_fake_remote_relay_json(), _station=None)
 
-def return_fake_sftp_user_json():
+def return_fake_sftp_user_json(id: int):
     return {
-        "id": 0,
-        "username": "XXXX",
-        "password": "XXXX",
-        "publicKeys": "XXXX"
+        "username": "lil_tee",
+        "password": "",
+        "publicKeys": "hi\nho\nhate",
+        "id": id,
+        "links": {
+            "self": "http://localhost/api/station/1/sftp-user/5"
+        }
     }
 
 def return_fake_sftp_user_instance():
-    return SFTPUser(**return_fake_sftp_user_json())
+    return SFTPUser(**return_fake_sftp_user_json(), _station=None)
 
-def return_fake_streamer_json():
+def return_fake_streamer_json(id: int):
     return {
-        "id": 0,
-        "streamer_username": "XXXX",
-        "streamer_password": "XXXX",
-        "display_name": "XXXX",
-        "comments": "XXXX",
+        "streamer_username": "hi",
+        "streamer_password": "",
+        "display_name": "ISSBROKIE",
+        "comments": "Im so fucking tired someone help me please I feel like I'm drowning-",
         "is_active": True,
-        "enforce_schedule": False,
-        "reactivate_at": 1609480800,
-        "schedule_items": []
+        "enforce_schedule": True,
+        "reactivate_at": None,
+        "art_updated_at": 0,
+        "schedule_items": [],
+        "id": id,
+        "links": {
+            "self": "http://localhost/api/station/1/streamer/4",
+            "broadcasts": "http://localhost/api/station/1/streamer/4/broadcasts",
+            "art": "http://localhost/api/station/1/streamer/4/art"
+        },
+        "has_custom_art": False,
+        "art": "http://localhost/api/station/1/streamer/4/art"
     }
 
 def return_fake_streamer_instance():
-    return Streamer(**return_fake_streamer_json())
+    return Streamer(**return_fake_streamer_json(), _station=None)
 
-def return_fake_webhook_json():
+def return_fake_webhook_json(id: int):
     return {
-        "id": 0,
-        "name": "XXXX",
-        "type": "XXXX",
+        "name": "from library",
+        "type": "email",
         "is_enabled": True,
-        "triggers": [],
-        "config": [],
-        "metadata": []
+        "triggers": [
+            "live_connect",
+            "song_changed"
+        ],
+        "config": [
+            "gabeyiscool43@gmail.com",
+            "BRO",
+            "THIS WORKS"
+        ],
+        "id": id,
+        "links": {
+            "self": "http://localhost/api/station/1/webhook/18",
+            "toggle": "http://localhost/api/station/1/webhook/18/toggle",
+            "test": "http://localhost/api/station/1/webhook/18/test"
+        }
     }
 
 def return_fake_webhook_instance():
-    return Webhook(**return_fake_webhook_json())
+    return Webhook(**return_fake_webhook_json(), _station=None)
