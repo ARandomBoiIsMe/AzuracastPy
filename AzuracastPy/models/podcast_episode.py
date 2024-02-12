@@ -7,6 +7,7 @@ from ..util.media_util import get_resource_art
 from ..util.general_util import generate_repr_string
 
 class Links:
+    """Represents the links associated with an episode of a podcast."""
     def __init__(
         self_,
         self: str,
@@ -15,6 +16,14 @@ class Links:
         art: str,
         media: str
     ):
+        """
+        Initializes a :class:`Links` object for an episode.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``episode.links``.
+        """
         self_.self = self
         self_.public = public
         self_.download = download
@@ -25,6 +34,7 @@ class Links:
         return generate_repr_string(self)
 
 class Media:
+    """Represents data concerning an episode's source file."""
     def __init__(
         self,
         id: str,
@@ -33,6 +43,14 @@ class Media:
         length_text: str,
         path: str
     ):
+        """
+        Initializes a :class:`Media` object for an episode.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``episode.media``.
+        """
         self.id = id
         self.original_name = original_name
         self.length = length
@@ -43,6 +61,7 @@ class Media:
         return generate_repr_string(self)
 
 class PodcastEpisode:
+    """Represents an episode of a podcast."""
     def __init__(
         self,
         id: str,
@@ -58,17 +77,26 @@ class PodcastEpisode:
         links: Links,
         _podcast
     ):
+        """
+        Initializes a :class:`PodcastEpisode` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``podcast.episode.create()``, ``podcast.episode(id)`` or
+            ``podcast.episode.all()``.
+        """
         self.id = id
         self.title = title
         self.description = description
         self.explicit = explicit
         self.publish_at = publish_at
         self.has_media = has_media
-        self.media = media
+        self.media = Media(**media)
         self.has_custom_art = has_custom_art
         self.art = art
         self.art_updated_at = art_updated_at
-        self.links = links
+        self.links = Links(**links)
         self._podcast = _podcast
 
     def __repr__(self):

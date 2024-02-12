@@ -8,20 +8,38 @@ from ...exceptions import ClientException
 from .permissions import Permissions
 
 class Links:
+    """Represents the links associated with a role."""
     def __init__(
         self_,
         self: str
     ):
+        """
+        Initializes a :class:`Link` object for a role.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``role.links``.
+        """
         self_.self = self
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
 class PermissionsHelper:
+    """Provides functions for interacting with a role's permissions."""
     def __init__(
         self,
         _role
     ):
+        """
+        Initializes a :class:`PermissionsHelper` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``role.permission``.
+        """
         self._role = _role
 
     def add_global(
@@ -139,6 +157,7 @@ class PermissionsHelper:
         return response
 
 class Role:
+    """Represents a radio's roles."""
     def __init__(
         self,
         id: int,
@@ -148,10 +167,18 @@ class Role:
         is_super_admin: bool,
         _admin
     ):
+        """
+        Initializes a :class:`Role` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.role.create()``, ``admin.role(id)`` or ``admin.roles()``.
+        """
         self.id = id
         self.name = name
         self.permissions = Permissions.from_dict(permissions)
-        self.links = links
+        self.links = Links(**links)
         self.is_super_admin = is_super_admin
         self._admin = _admin
 

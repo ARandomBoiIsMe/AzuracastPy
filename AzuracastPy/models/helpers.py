@@ -53,6 +53,14 @@ class MountPointHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`MountPointHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.mount_point``.
+        """
         self._station = _station
 
     def __call__(
@@ -181,6 +189,14 @@ class FileHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`FileHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.file``.
+        """
         self._station = _station
 
     def __call__(
@@ -215,7 +231,7 @@ class FileHelper:
         """
         Uploads a media file to the station.
 
-        :param path: the/relative/path/to/file.mp3. (Yes follow this format.)
+        :param path: the/relative/path/to/file.mp3.
         :param file: The system path of the file to be uploaded.
 
         :returns: A :class:`StationFile` object for the newly uploaded file.
@@ -245,6 +261,14 @@ class PlaylistHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`PlaylistHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.playlist``.
+        """
         self._station = _station
 
     def __call__(
@@ -505,6 +529,14 @@ class PodcastHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`PodcastHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.podcast``.
+        """
         self._station = _station
 
     def __call__(
@@ -609,6 +641,14 @@ class HLSStreamHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`HLSStreamHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.hls_stream``.
+        """
         self._station = _station
 
     def __call__(
@@ -696,6 +736,14 @@ class SFTPUserHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`SFTPUserHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.sftp_user``.
+        """
         self._station = _station
 
     def __call__(
@@ -768,6 +816,14 @@ class WebhookHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`WebhookHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.webhook``.
+        """
         self._station = _station
 
     def __call__(
@@ -933,6 +989,14 @@ class StreamerHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`StreamerHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.streamer``.
+        """
         self._station = _station
 
     def __call__(
@@ -1118,6 +1182,14 @@ class RemoteRelayHelper:
         self,
         _station
     ):
+        """
+        Initializes a :class:`RemoteRelayHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.remote_relay``.
+        """
         self._station = _station
 
     def __call__(
@@ -1243,10 +1315,19 @@ class RemoteRelayHelper:
         return RemoteRelay(**response, _station=self._station)
 
 class QueueHelper:
+    """Provides a set of functions to interact with remote relays."""
     def __init__(
         self,
         _station
     ):
+        """
+        Initializes a :class:`QueueHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.queue``.
+        """
         self._station = _station
 
     def __call__(

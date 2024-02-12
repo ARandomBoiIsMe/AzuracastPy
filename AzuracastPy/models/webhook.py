@@ -10,12 +10,21 @@ from ..util.general_util import generate_repr_string, generate_enum_error_text
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links associated with a webhook."""
     def __init__(
         self_,
         self: str,
         toggle: str,
         test: str
     ):
+        """
+        Initializes a :class:`Links` instance for a webhook.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``webhook.links``.
+        """
         self_.self = self
         self_.toggle = toggle
         self_.test = test
@@ -24,10 +33,19 @@ class Links:
         return generate_repr_string(self)
 
 class TriggerHelper:
+    """Provides functions for working with the triggers of a webhook."""
     def __init__(
         self,
         _webhook
     ):
+        """
+        Initializes a :class:`TriggerHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``webhook.trigger``.
+        """
         self._webhook = _webhook
 
     def add(
@@ -141,6 +159,7 @@ class TriggerHelper:
         return response
 
 class Webhook:
+    """Represents a webhook on a station."""
     def __init__(
         self,
         name: str,
@@ -152,13 +171,21 @@ class Webhook:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`Webhook` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.webhook.create()``, ``station.webhooks()`` or ``station.webhook(id)``.
+        """
         self.name = name
         self.type = type
         self.is_enabled = is_enabled
         self.triggers = triggers
         self.config = config
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
         self.trigger = TriggerHelper(_webhook=self)

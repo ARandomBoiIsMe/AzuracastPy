@@ -9,20 +9,38 @@ from ..util.general_util import generate_repr_string
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links associated with an SFTP user."""
     def __init__(
         self_,
         self
     ):
+        """
+        Initializes a :class:`Links` instance for an SFTP user.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``sftp_user.links``.
+        """
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class PublicKeysHelper:
+    """Provides functions for working with the public keys of an SFTP user."""
     def __init__(
         self,
         _sftp_user
     ):
+        """
+        Initializes a :class:`PublicKeysHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``sftp_user.key``.
+        """
         self._sftp_user = _sftp_user
 
     def add(
@@ -120,6 +138,7 @@ class PublicKeysHelper:
         return response
 
 class SFTPUser:
+    """Represents an SFTP User on a station."""
     def __init__(
         self,
         id: int,
@@ -129,11 +148,19 @@ class SFTPUser:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`SFTPUser` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.sftp_user(id)`` or ``station.sftp_users()``.
+        """
         self.id = id
         self.username = username
         self.password = password
         self.public_keys = publicKeys.split()
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
         self.key = PublicKeysHelper(_sftp_user=self)

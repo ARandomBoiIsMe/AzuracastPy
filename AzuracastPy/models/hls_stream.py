@@ -9,16 +9,26 @@ from ..util.general_util import generate_repr_string, generate_enum_error_text
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links associated with a HLS Stream."""
     def __init__(
         self_,
         self: str
     ):
+        """
+        Initializes a :class:`Links` object for HLS Stream.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``hls_stream.links``.
+        """
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class HLSStream:
+    """Represents a HTTP Live Streaming (HLS) Stream on a station."""
     def __init__(
         self,
         name: str,
@@ -29,12 +39,21 @@ class HLSStream:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`HLSStream` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.hls_stream.create()``, ``station.hls_stream(id)`` or
+            ``station.hls_streams()``.
+        """
         self.name = name
         self.format = format
         self.bitrate = bitrate
         self.listeners = listeners
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
     def __repr__(self):
@@ -60,7 +79,7 @@ class HLSStream:
 
             from AzuracastPy.enums import Formats, Bitrates
 
-            station.hls_stream(1).edit(
+            hls_stream.edit(
                 name="New name",
                 format=Formats.OPUS,
                 bitrate=Bitrates.BITRATE_128
@@ -89,7 +108,7 @@ class HLSStream:
         Usage:
         .. code-block:: python
 
-            station.hls_stream(1).delete()
+            hls_stream.delete()
         """
         return delete_station_resource(self, "hls_stream")
 

@@ -13,6 +13,7 @@ from .util.station_resource_operations import edit_station_resource, delete_stat
 from .podcast_episode import PodcastEpisode
 
 class Links:
+    """Represents the links associated with a podcast."""
     def __init__(
         self_,
         self: str,
@@ -23,6 +24,14 @@ class Links:
         episode_new_art: str,
         episode_new_media: str
     ):
+        """
+        Initializes a :class:`Links` object for a podcast.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``podcast.links``.
+        """
         self_.self = self
         self_.episodes = episodes
         self_.public_episodes = public_episodes
@@ -35,10 +44,19 @@ class Links:
         return generate_repr_string(self)
 
 class PodcastEpisodeHelper:
+    """Provides functions for working with the episodes of a podcast."""
     def __init__(
         self,
         _podcast
     ):
+        """
+        Initializes a :class:`PodcastEpisodeHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``podcast.episode``.
+        """
         self._podcast = _podcast
 
     def __call__(
@@ -143,10 +161,19 @@ class PodcastEpisodeHelper:
         return [PodcastEpisode(**pe, _podcast=self._podcast) for pe in response]
 
 class PodcastCategoryHelper:
+    """Provides functions for working with the categories of a podcast."""
     def __init__(
         self,
         _podcast
     ):
+        """
+        Initializes a :class:`PodcastCategoryHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``podcast.category``.
+        """
         self._podcast = _podcast
 
     def add(
@@ -256,6 +283,7 @@ class PodcastCategoryHelper:
         return response
 
 class Podcast:
+    """Represents a podcast on a station."""
     def __init__(
         self,
         id: str,
@@ -274,6 +302,14 @@ class Podcast:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`Podcast` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.podcast(id)`` or ``station.podcasts()``.
+        """
         self.id = id
         self.storage_location_id = storage_location_id
         self.title = title
@@ -287,7 +323,7 @@ class Podcast:
         self.art_updated_at = art_updated_at
         self.categories = categories
         self.episodes = episodes
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
         self.episode = PodcastEpisodeHelper(_podcast=self)

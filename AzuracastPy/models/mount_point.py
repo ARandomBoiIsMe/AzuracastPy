@@ -9,12 +9,21 @@ from ..exceptions import ClientException
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links associated with a mount point."""
     def __init__(
         self_,
         self: str,
         intro: str,
         listen: str
     ):
+        """
+        Initializes a :class:`Links` object for a mount point.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``mount_point.links``.
+        """
         self_.self = self
         self_.intro = intro
         self_.listen = listen
@@ -23,6 +32,7 @@ class Links:
         return generate_repr_string(self)
 
 class MountPoint:
+    """Represents a mount point on a station."""
     def __init__(
         self,
         name: str,
@@ -39,13 +49,22 @@ class MountPoint:
         autodj_bitrate: int,
         custom_listen_url: str,
         intro_path: str,
-        frontend_config,
+        frontend_config: str,
         listeners_unique: int,
         listeners_total: int,
         id: int,
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`MountPoint` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.mount_point.create()``, ``station.mount_point(id)`` or
+            ``station.mount_points()``.
+        """
         self.name = name
         self.display_name = display_name
         self.is_visible_on_public_pages = is_visible_on_public_pages
@@ -64,7 +83,7 @@ class MountPoint:
         self.listeners_unique = listeners_unique
         self.listeners_total = listeners_total
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
     def __repr__(self):
@@ -124,7 +143,7 @@ class MountPoint:
 
             from AzuracastPy.enums import Formats, Bitrates
 
-            station.mount_point(1).edit(
+            mount_point.edit(
                 display_name="New display name",
                 enable_autodj=True,
                 autodj_format=Formats.OPUS,
@@ -158,7 +177,7 @@ class MountPoint:
         Usage:
         .. code-block:: python
 
-            station.mount_point(1).delete()
+            mount_point.delete()
         """
         return delete_station_resource(self, "station_mount_point")
 

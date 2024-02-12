@@ -21,7 +21,7 @@ class Mount:
         self.url = url
         self.bitrate = bitrate
         self.format = format
-        self.listeners = listeners
+        self.listeners = Listeners(**listeners)
         self.path = path
         self.is_default = is_default
 

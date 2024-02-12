@@ -19,7 +19,7 @@ class Remote:
         self.url = url
         self.bitrate = bitrate
         self.format = format
-        self.listeners = listeners
+        self.listeners = Listeners(**listeners)
 
     def __repr__(self):
         return generate_repr_string(self)

@@ -5,16 +5,26 @@ from .util.admin_resource_operations import delete_admin_resource
 from typing import Dict, Any
 
 class Links:
+    """Represents the link associated with a storage location."""
     def __init__(
         self_,
         self
     ):
+        """
+        Initializes a :class:`Links` object for a storage location.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``storage_location.links``.
+        """
         self_.self = self
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
 class StorageLocation:
+    """Represents a storage location on a radio."""
     def __init__(
         self,
         id,
@@ -49,6 +59,14 @@ class StorageLocation:
         links,
         _admin
     ):
+        """
+        Initializes a :class:`StorageLocation` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.storage_location(id)`` or ``admin.storage_locations()``.
+        """
         self.id = id
         self.type = type
         self.adapter = adapter
@@ -78,7 +96,7 @@ class StorageLocation:
         self.is_full = is_full
         self.uri = uri
         self.stations = stations
-        self.links = links
+        self.links = Links(**links)
         self._admin = _admin
 
     @classmethod

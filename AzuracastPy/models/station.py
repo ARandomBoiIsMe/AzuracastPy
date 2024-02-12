@@ -39,11 +39,7 @@ from .helpers import (
 )
 
 class Station:
-    """
-    This class represents a station in an Azuracast web radio.
-
-    It provides data and actions that can be performed on stations of a hosted radio.
-    """
+    """Represents a station on a radio."""
     def __init__(
         self,
         id: str,
@@ -66,6 +62,14 @@ class Station:
         hls_url: Optional[str] = None,
         _request_handler: RequestHandler = None
     ):
+        """
+        Initializes a :class:`Station` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``client.station(id)`` or ``client.stations()``.
+        """
         self.id = id
         self.name = name
         self.shortcode = shortcode
@@ -401,6 +405,9 @@ class Station:
 
             station.request_song("request_id")
         """
+        if not isinstance(request_id, str):
+            raise ValueError("request_id param must be a string.")
+
         url = API_ENDPOINTS["song_request"].format(
             radio_url=self._request_handler.radio_url,
             station_id=self.id,

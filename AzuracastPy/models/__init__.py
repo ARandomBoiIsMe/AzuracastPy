@@ -16,3 +16,7 @@ from .podcast_episode import PodcastEpisode
 from .now_playing import NowPlaying
 from .webhook import Webhook
 from .helpers import MountPointHelper
+from .hls_stream import HLSStream
+from .remote_relay import RemoteRelay
+from .sftp_user import SFTPUser
+from .streamer import Streamer

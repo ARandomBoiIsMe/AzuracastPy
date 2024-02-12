@@ -16,6 +16,14 @@ class Export:
         pls: str,
         m3u: str
     ):
+        """
+        Initializes a :class:`Export` object for a :class:`Links` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``playlist.links.export``.
+        """
         self.pls = pls
         self.m3u = m3u
 
@@ -23,6 +31,7 @@ class Export:
         return generate_repr_string(self)
 
 class Links:
+    """Represents the links associated with a playlist."""
     def __init__(
         self,
         _self: str,
@@ -35,6 +44,14 @@ class Links:
         empty: str,
         export: Export
     ):
+        """
+        Initializes a :class:`Links` object for a playlist.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``playlist.links``.
+        """
         self._self = _self
         self.toggle = toggle
         self.clone = clone
@@ -43,7 +60,7 @@ class Links:
         self.reshuffle = reshuffle
         self.applyto = applyto
         self.empty = empty
-        self.export = export
+        self.export = Export(**export)
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
@@ -66,6 +83,7 @@ class Links:
         )
 
 class ScheduleItem:
+    """Represents a single item in a playlist's schedule."""
     def __init__(
         self,
         start_time: int,
@@ -76,6 +94,14 @@ class ScheduleItem:
         loop_once: bool,
         id: int
     ):
+        """
+        Initializes a :class:`ScheduleItem` object for a playlist.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``playlist.schedule_items``.
+        """
         self.start_time = start_time
         self.end_time = end_time
         self.start_date = datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
@@ -104,10 +130,19 @@ def _get_schedule_item_json(self, schedule_item):
     }
 
 class ScheduleHelper:
+    """Provides functions for working with the schedule of a playlist."""
     def __init__(
         self,
         _playlist
     ):
+        """
+        Initializes a :class:`ScheduleHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``playlist.schedule``.
+        """
         self._playlist = _playlist
 
     def add(
@@ -199,6 +234,7 @@ class ScheduleHelper:
         return response
 
 class Playlist:
+    """Represents a playlist on a station."""
     def __init__(
         self,
         name: str,
@@ -228,6 +264,15 @@ class Playlist:
         links: Dict[str, Any],
         _station
     ):
+        """
+        Initializes a :class:`Playlist` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.playlist.create()``, ``station.playlist(id)`` or
+            ``station.playlists()``.
+        """
         self.name = name
         self.type = type
         self.source = source

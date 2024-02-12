@@ -5,6 +5,7 @@ from ...util.general_util import generate_repr_string
 from ..mount import Mount
 
 class Relay:
+    """Represents a relay item of a radio."""
     def __init__(
         self,
         id: int,
@@ -19,6 +20,14 @@ class Relay:
         admin_pw: str,
         mounts: List[Mount]
     ):
+        """
+        Initializes a :class:`Relay` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.relays()``.
+        """
         self.id = id
         self.name = name
         self.shortcode = shortcode

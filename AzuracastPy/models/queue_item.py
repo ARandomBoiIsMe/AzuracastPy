@@ -8,16 +8,26 @@ from ..constants import API_ENDPOINTS
 from ..util.general_util import generate_repr_string
 
 class Links:
+    """Represents the links associated with an item in a queue."""
     def __init__(
         self_,
         self: str
     ):
+        """
+        Initializes a :class:`Links` object for a queue item.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``queue_item.links``.
+        """
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class QueueItem:
+    """Represents a single item in the queue of a station."""
     def __init__(
         self,
         cued_at: int,
@@ -33,17 +43,25 @@ class QueueItem:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`QueueItem` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.queue(id)`` or ``station.queue()``.
+        """
         self.cued_at = cued_at
         self.played_at = played_at
         self.duration = duration
         self.playlist = playlist
         self.is_request = is_request
-        self.song = song
+        self.song = Song(**song)
         self.sent_to_autodj = sent_to_autodj
         self.is_played = is_played
         self.autodj_custom_uri = autodj_custom_uri
         self.log = log
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
     def __repr__(self):

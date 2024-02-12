@@ -9,18 +9,18 @@ from ...enums import (
     PublicThemes
 )
 
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Dict, Any
 
 class UpdateResults:
     def __init__(
         self,
-        current_release,
-        latest_release,
-        needs_rolling_update,
-        rolling_updates_available,
-        rolling_updates_list,
-        needs_release_update,
-        can_switch_to_stable
+        current_release: str,
+        latest_release: str,
+        needs_rolling_update: bool,
+        rolling_updates_available: int,
+        rolling_updates_list: List[str],
+        needs_release_update: bool,
+        can_switch_to_stable: bool
     ):
         self.current_release = current_release
         self.latest_release = latest_release
@@ -30,10 +30,26 @@ class UpdateResults:
         self.needs_release_update = needs_release_update
         self.can_switch_to_stable = can_switch_to_stable
 
+    @classmethod
+    def from_dict(
+        cls,
+        update_results_dict: Dict[str, Any]
+    ):
+        return cls(
+            current_release=update_results_dict.get("currentRelease"),
+            latest_release=update_results_dict.get("latestRelease"),
+            needs_rolling_update=update_results_dict.get("needs_rolling_update"),
+            rolling_updates_available=update_results_dict.get("rolling_updates_available"),
+            rolling_updates_list=update_results_dict.get("rolling_updates_list"),
+            needs_release_update=update_results_dict.get("needs_release_update"),
+            can_switch_to_stable=update_results_dict.get("can_switch_to_stable")
+        )
+
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
 class Settings:
+    """Represents a radio's settings."""
     def __init__(
         self,
         app_unique_identifier,
@@ -43,11 +59,11 @@ class Settings:
         use_radio_proxy,
         history_keep_days,
         always_use_ssl,
-        api_access_control,
+        api_access_control: str,
         enable_static_nowplaying,
         analytics,
         check_for_updates,
-        update_results,
+        update_results: UpdateResults,
         update_last_run,
         public_theme,
         hide_album_art,
@@ -86,10 +102,18 @@ class Settings:
         avatar_service,
         avatar_default_url,
         acme_email,
-        acme_domains,
+        acme_domains: str,
         ip_source,
         _admin
     ):
+        """
+        Initializes a :class:`Settings` object for a :class:`NowPlaying` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``now_playing.now_playing``.
+        """
         self.app_unique_identifier = app_unique_identifier
         self.base_url = base_url
         self.instance_name = instance_name
@@ -97,11 +121,11 @@ class Settings:
         self.use_radio_proxy = use_radio_proxy
         self.history_keep_days = history_keep_days
         self.always_use_ssl = always_use_ssl
-        self.api_access_control = api_access_control
+        self.api_access_control = [api.strip() for api in api_access_control.split(',')]
         self.enable_static_nowplaying = enable_static_nowplaying
         self.analytics = analytics
         self.check_for_updates = check_for_updates
-        self.update_results = update_results
+        self.update_results = UpdateResults.from_dict(update_results)
         self.update_last_run = update_last_run
         self.public_theme = public_theme
         self.hide_album_art = hide_album_art
@@ -140,7 +164,7 @@ class Settings:
         self.avatar_service = avatar_service
         self.avatar_default_url = avatar_default_url
         self.acme_email = acme_email
-        self.acme_domains = acme_domains
+        self.acme_domains = [domain.strip() for domain in acme_domains.split(',')]
         self.ip_source = ip_source
         self._admin = _admin
 
@@ -332,6 +356,9 @@ class Settings:
 
             public_theme = public_theme.value
 
+        if isinstance(api_access_control, list):
+            api_access_control = ', '.join(api_access_control)
+
         url = API_ENDPOINTS["settings"].format(
             radio_url=self._admin._request_handler.radio_url
         )
@@ -462,7 +489,7 @@ class Settings:
             "use_radio_proxy": use_radio_proxy if use_radio_proxy is not None else self.use_radio_proxy,
             "history_keep_days": history_keep_days or self.history_keep_days,
             "always_use_ssl": always_use_https if always_use_https is not None else self.always_use_ssl,
-            "api_access_control": api_access_control if api_access_control  else self.api_access_control,
+            "api_access_control": api_access_control if api_access_control else self.api_access_control,
             "enable_static_nowplaying": use_high_performance_now_playing_updates if use_high_performance_now_playing_updates else self.enable_static_nowplaying,
             "analytics": listener_analytics or self.analytics,
             "check_for_updates": show_update_announcements if show_update_announcements else self.check_for_updates,

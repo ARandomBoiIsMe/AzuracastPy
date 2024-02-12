@@ -25,6 +25,7 @@ class Live:
         return generate_repr_string(self)
 
 class CurrentSong:
+    """Represents the currently-playing song on a station."""
     def __init__(
         self,
         sh_id: int,
@@ -37,13 +38,21 @@ class CurrentSong:
         elapsed: int,
         remaining: int
     ):
+        """
+        Initializes a :class:`CurrentSong` object for a :class:`NowPlaying` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``now_playing.now_playing``.
+        """
         self.sh_id = sh_id
         self.played_at = played_at
         self.duration = duration
         self.playlist = playlist
         self.streamer = streamer
         self.is_request = is_request
-        self.song = song
+        self.song = Song(**song)
         self.elapsed = elapsed
         self.remaining = remaining
 
@@ -51,6 +60,7 @@ class CurrentSong:
         return generate_repr_string(self)
 
 class PlayingNext:
+    """Represents the data of the next song to be played on a station."""
     def __init__(
         self,
         cued_at: int,
@@ -60,6 +70,14 @@ class PlayingNext:
         is_request: bool,
         song: Song
     ):
+        """
+        Initializes a :class:`PlayingNext` object for a :class:`NowPlaying` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``now_playing.playing_next``.
+        """
         self.cued_at = cued_at
         self.played_at = played_at
         self.duration = duration
@@ -71,6 +89,7 @@ class PlayingNext:
         return generate_repr_string(self)
 
 class NowPlaying:
+    """Represents the data of the current status of a station."""
     def __init__(
         self,
         station: Station,
@@ -82,11 +101,19 @@ class NowPlaying:
         is_online: bool,
         cache: str
     ):
-        self.station = station
-        self.listeners = listeners
-        self.live = live
-        self.now_playing = now_playing
-        self.playing_next = playing_next
+        """
+        Initializes a :class:`NowPlaying` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``client.now_playing(id)`` or ``client.now_playing()``.
+        """
+        self.station = Station(**station)
+        self.listeners = Listeners(**listeners)
+        self.live = Live(**live)
+        self.now_playing = CurrentSong(**now_playing)
+        self.playing_next = PlayingNext(**playing_next)
         self.song_history = [SongHistory(**sh) for sh in song_history] if song_history else []
         self.is_online = is_online
         self.cache = cache

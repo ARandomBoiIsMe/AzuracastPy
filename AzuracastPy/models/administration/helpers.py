@@ -30,10 +30,19 @@ def _request_single_instance_of_admin_resource(
     return admin._request_handler.get(url)
 
 class AdminStationHelper:
+    """Provides a set of functions to interact with admin stations."""
     def __init__(
         self,
         _admin
     ):
+        """
+        Initializes a :class:`AdminStationHelpe` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.station``.
+        """
         self._admin = _admin
 
     def __call__(
@@ -61,10 +70,19 @@ class AdminStationHelper:
         return AdminStation(**response, _admin=self._admin)
 
 class RoleHelper:
+    """Provides a set of functions to interact with radio roles."""
     def __init__(
         self,
         _admin
     ):
+        """
+        Initializes a :class:`RoleHelper` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.role``.
+        """
         self._admin = _admin
 
     def __call__(
@@ -287,10 +305,19 @@ class RoleHelper:
         return self.__call__(role_id)
 
 class CustomFieldHelper:
+    """Provides a set of functions to interact with radio custom fields."""
     def __init__(
         self,
         _admin
     ):
+        """
+        Initializes a :class:`CustomFieldHelper` object for a :class:`NowPlaying` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.custom_field``.
+        """
         self._admin = _admin
 
     def __call__(
@@ -376,10 +403,19 @@ class CustomFieldHelper:
         return CustomField(**response, _admin=self._admin)
 
 class StorageLocationHelper:
+    """Provides a set of functions to interact with radio storage locations."""
     def __init__(
         self,
         _admin
     ):
+        """
+        Initializes a :class:`StorageLocationHelper` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.storage_location``.
+        """
         self._admin = _admin
 
     def __call__(

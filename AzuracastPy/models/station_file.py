@@ -10,22 +10,40 @@ from ..util.media_util import get_media_file_art
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links for a file on a station."""
     def __init__(
         self_,
         self: str
     ):
+        """
+        Initializes a :class:`Links` instance for a file.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``file.links``.
+        """
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class Playlist:
+    """Represents playlists that contain the current file."""
     def __init__(
         self,
         id: int,
         name: str,
         weight: int
     ):
+        """
+        Initializes a :class:`Playlist` instance for a file.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``file.playlists``.
+        """
         self.id = id
         self.name = name
         self.weight = weight
@@ -41,10 +59,19 @@ def _get_playlist_json(playlist):
     }
 
 class PlaylistHelper:
+    """Provides functions for working with the playlists of a file."""
     def __init__(
         self,
         _file
     ):
+        """
+        Initializes a :class:`PlaylistHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``file.playlist``.
+        """
         self._file = _file
 
     def add(
@@ -176,6 +203,7 @@ class PlaylistHelper:
         return response
 
 class StationFile:
+    """Represents an uploaded file on a station."""
     def __init__(
         self,
         unique_id: str,
@@ -204,6 +232,14 @@ class StationFile:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`StationFile` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.file(id)`` or ``station.files()``.
+        """
         self.unique_id = unique_id
         self.album = album
         self.genre = genre
@@ -220,14 +256,14 @@ class StationFile:
         self.cue_in = cue_in
         self.cue_out = cue_out
         self.art_updated_at = art_updated_at
-        self.playlists = [Playlist(**p) for p in playlists] or []
+        self.playlists = [Playlist(**p) for p in playlists] if playlists else []
         self.id = id
         self.song_id = song_id
         self.text = text
         self.artist = artist
         self.title = title
         self.custom_fields = custom_fields
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
         self.playlist = PlaylistHelper(_file=self)

@@ -8,16 +8,26 @@ from ..exceptions import ClientException
 from ..models.util.station_resource_operations import delete_station_resource, edit_station_resource
 
 class Links:
+    """Represents the links associated with a remote relay."""
     def __init__(
         self_,
         self
     ):
+        """
+        Initializes a :class:`Links` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``remote_relay.links``.
+        """
         self_.self = self
 
     def __repr__(self):
         return generate_repr_string(self)
 
 class RemoteRelay:
+    """Represents a remote relay on a station."""
     def __init__(
         self,
         id: int,
@@ -42,6 +52,15 @@ class RemoteRelay:
         links: Links,
         _station
     ):
+        """
+        Initializes a :class:`RemoteRelay` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.remote_relay.create()``, ``station.remote_relay(id)`` or
+            ``station.remote_relays()``.
+        """
         self.id = id
         self.display_name = display_name
         self.is_visible_on_public_pages = is_visible_on_public_pages
@@ -61,7 +80,7 @@ class RemoteRelay:
         self.is_public = is_public
         self.listeners_unique = listeners_unique
         self.listeners_total = listeners_total
-        self.links = links
+        self.links = Links(**links)
         self._station = _station
 
     def __repr__(self):

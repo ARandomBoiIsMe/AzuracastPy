@@ -13,10 +13,22 @@ from .relay import Relay
 from .settings import Settings
 
 class Admin:
+    """
+    Represents administration functionality on a radio,
+    such as managing stations and changing settings.
+    """
     def __init__(
         self,
         _request_handler: RequestHandler
     ):
+        """
+        Initializes an :class:`Admin` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``client.admin()``.
+        """
         self._request_handler = _request_handler
 
         self.station = AdminStationHelper(_admin=self)

@@ -3,6 +3,7 @@
 from ..util.general_util import generate_repr_string
 
 class Device:
+    """Represents the device of a listener."""
     def __init__(
         self,
         client: str,
@@ -12,6 +13,14 @@ class Device:
         browser_family: str,
         os_family: str
     ):
+        """
+        Initializes a :class:`Device` object for a :class:`Listener` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``listener.device``.
+        """
         self.client = client
         self.is_browser = is_browser
         self.is_mobile = is_mobile
@@ -23,6 +32,7 @@ class Device:
         return generate_repr_string(self)
 
 class Location:
+    """Represents the location of a listener."""
     def __init__(
         self,
         description: str,
@@ -32,6 +42,14 @@ class Location:
         lat,
         lon
     ):
+        """
+        Initializes a :class:`Location` object for a :class:`Listener` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``listener.location``.
+        """
         self.description = description
         self.region = region
         self.city = city
@@ -43,6 +61,7 @@ class Location:
         return generate_repr_string(self)
 
 class Listener:
+    """Represents a single listener on a station."""
     def __init__(
         self,
         ip: str,
@@ -56,6 +75,14 @@ class Listener:
         device: Device,
         location: Location
     ):
+        """
+        Initializes a :class:`Listener` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``station.listeners()``.
+        """
         self.ip = ip
         self.user_agent = user_agent
         self.hash = hash
@@ -64,8 +91,8 @@ class Listener:
         self.connected_on = connected_on
         self.connected_until = connected_until
         self.connected_time = connected_time
-        self.device = device
-        self.location = location
+        self.device = Device(**device)
+        self.location = Location(**location)
 
     def __repr__(self):
         return generate_repr_string(self)

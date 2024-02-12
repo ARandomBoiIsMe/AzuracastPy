@@ -12,11 +12,21 @@ from ..util.media_util import get_resource_art
 from .util.station_resource_operations import edit_station_resource, delete_station_resource
 
 class Links:
+    """Represents the links associated with a streamer."""
     def __init__(
         self_,
         self: str,
-        broadcasts: str, art: str
+        broadcasts: str,
+        art: str
     ):
+        """
+        Initializes a :class:`Links` object for a streamer.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``streamer.links``.
+        """
         self_.self = self
         self_.broadcasts = broadcasts
         self_.art = art
@@ -25,6 +35,7 @@ class Links:
         return generate_repr_string(self)
 
 class ScheduleItem:
+    """Represents a single item in a streamer's schedule."""
     def __init__(
         self,
         start_time: int,
@@ -35,6 +46,14 @@ class ScheduleItem:
         loop_once: bool,
         id: int
     ):
+        """
+        Initializes a :class:`ScheduleItem` for a streamer.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``streamer.schedule_items``.
+        """
         self.start_time = start_time
         self.end_time = end_time
         self.start_date = datetime.strptime(start_date, "%Y-%m-%d").date() if start_date else None
@@ -62,10 +81,19 @@ def _get_schedule_item_json(schedule_item):
     }
 
 class ScheduleHelper:
+    """Provides functions for working with the schedule of a streamer."""
     def __init__(
         self,
         _streamer
     ):
+        """
+        Initializes a :class:`ScheduleHelper` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``streamer.schedule``.
+        """
         self._streamer = _streamer
 
     def add(
@@ -126,7 +154,7 @@ class ScheduleHelper:
         Usage:
         .. code-block:: python
 
-            streamer(1).schedule.remove(1)
+            streamer.schedule.remove(1)
         """
         item_exists_in_schedule = any(item.id == id for item in self._streamer.schedule_items)
 
@@ -156,6 +184,7 @@ class ScheduleHelper:
         return response
 
 class Streamer:
+    """Represents a streamer on a station."""
     def __init__(
         self,
         streamer_username: str,
@@ -173,6 +202,14 @@ class Streamer:
         art: str,
         _station
     ):
+        """
+        Initializes a :class:`Streamer` instance for a streamer.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``streamer.links``.
+        """
         self.streamer_username = streamer_username
         self.streamer_password = streamer_password
         self.display_name = display_name
@@ -183,7 +220,7 @@ class Streamer:
         self.art_updated_at = art_updated_at
         self.schedule_items = [ScheduleItem(**si) for si in schedule_items] if schedule_items else []
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self.has_custom_art = has_custom_art
         self.art = art
         self._station = _station

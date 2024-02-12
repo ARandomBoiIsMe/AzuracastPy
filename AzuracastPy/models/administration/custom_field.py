@@ -12,16 +12,26 @@ from ...util.general_util import (
 from .util.admin_resource_operations import edit_admin_resource, delete_admin_resource
 
 class Links:
+    """Represents the links associated with a custom field."""
     def __init__(
         self_,
         self
     ):
+        """
+        Initializes a :class:`Links` object for a custom field.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``custom_field.links``.
+        """
         self_.self = self
 
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
 class CustomField:
+    """Represents a custom field on a radio."""
     def __init__(
         self,
         name: str,
@@ -31,11 +41,20 @@ class CustomField:
         links: Links,
         _admin
     ):
+        """
+        Initializes a :class:`CustomField` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin.custom_field.create()``, ``admin.custom_field(id)`` or
+            ``admin.custom_fields()``.
+        """
         self.name = name
         self.short_name = short_name
         self.auto_assign = auto_assign
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self._admin = _admin
 
     def __repr__(self) -> str:

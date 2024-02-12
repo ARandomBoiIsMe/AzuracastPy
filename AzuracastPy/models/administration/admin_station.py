@@ -8,6 +8,7 @@ from ..station import Station
 from .util.admin_resource_operations import delete_admin_resource
 
 class BackendConfig:
+    """Represents the backend configuration of a station."""
     def __init__(
         self,
         charset: str,
@@ -102,7 +103,12 @@ class FrontendConfig:
         return generate_repr_string(self)
 
 class Links:
-    def __init__(self_, self: str, manage: str, clone: str):
+    def __init__(
+        self_,
+        self: str,
+        manage: str,
+        clone: str
+    ):
         self_.self = self
         self_.manage = manage
         self_.clone = clone
@@ -149,9 +155,9 @@ class AdminStation:
         self.short_name = short_name
         self.is_enabled = is_enabled
         self.frontend_type = frontend_type
-        self.frontend_config = frontend_config
+        self.frontend_config = FrontendConfig(**frontend_config)
         self.backend_type = backend_type
-        self.backend_config = backend_config
+        self.backend_config = BackendConfig(**backend_config)
         self.description = description
         self.url = url
         self.genre = genre
@@ -174,7 +180,7 @@ class AdminStation:
         self.podcasts_storage_location = podcasts_storage_location
         self.fallback_path = fallback_path
         self.id = id
-        self.links = links
+        self.links = Links(**links)
         self._admin = _admin
 
     def __repr__(self):
