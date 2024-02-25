@@ -1,6 +1,6 @@
 """Class for an SFTP user of a station."""
 
-from typing import Optional, List, Union
+from typing import Optional, List
 
 from ..constants import API_ENDPOINTS
 from ..exceptions import ClientException
@@ -85,7 +85,7 @@ class PublicKeysHelper:
 
         response = self._sftp_user._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._sftp_user.public_keys = public_keys
 
         return response
@@ -132,7 +132,7 @@ class PublicKeysHelper:
 
         response = self._sftp_user._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._sftp_user.public_keys = public_keys
 
         return response

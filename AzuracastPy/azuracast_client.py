@@ -110,6 +110,11 @@ class AzuracastClient:
         Exposes administration actions for a radio.
 
         :returns: An :class:`Admin` object.
+
+        Usage:
+        .. code-block:: python
+
+            admin = client.admin()
         """
         return Admin(_request_handler=self._request_handler)
 
@@ -157,6 +162,7 @@ class AzuracastClient:
 
         :returns: A list of :class:`Station` objects.
 
+        Usage:
         .. code-block:: python
 
             stations = client.stations()
@@ -180,6 +186,7 @@ class AzuracastClient:
 
         :returns: A :class:`Station` object.
 
+        Usage:
         .. code-block:: python
 
             station = client.station(1)
@@ -201,7 +208,6 @@ class AzuracastClient:
         :returns: The status of the radio's API.
 
         Usage:
-
         .. code-block:: python
 
             status = client.status()
@@ -219,7 +225,6 @@ class AzuracastClient:
         :returns: The current time.
 
         Usage:
-
         .. code-block:: python
 
             time = client.time()

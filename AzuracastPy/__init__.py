@@ -1,1 +1,1 @@
-from AzuracastPy.azuracast_client import AzuracastClient
+from .azuracast_client import AzuracastClient

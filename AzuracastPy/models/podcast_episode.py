@@ -108,6 +108,24 @@ class PodcastEpisode:
         description: Optional[str] = None,
         explicit: Optional[bool] = None
     ):
+        """
+        Edits the podcast episode's properties.
+
+        Updates all edited attributes of the current :class:`PodcastEpisode` object.
+
+        :param title: (Optional) The new title of the episode. Default: ``None``.
+        :param description: (Optional) The new description of the episode. Default: ``None``.
+        :param explicit: (Optional) The new explicit status of the episode. Default: ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            podcast_episode.edit(
+                title="New episode title",
+                description="New episode description",
+                explicit=True
+            )
+        """
         url = API_ENDPOINTS["podcast_episode"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
             station_id=self._podcast._station.id,
@@ -125,6 +143,16 @@ class PodcastEpisode:
         return response
 
     def delete(self):
+        """
+        Deletes the episode from the podcast.
+
+        Sets all attributes of the current :class:`PodcastEpisode` object to ``None``.
+
+        Usage:
+        .. code-block:: python
+
+            podcast_episode.delete()
+        """
         url = API_ENDPOINTS["podcast_episode"].format(
             radio_url=self._podcast._station._request_handler.radio_url,
             station_id=self._podcast._station.id,
@@ -134,7 +162,7 @@ class PodcastEpisode:
 
         response = self._podcast._station._request_handler.delete(url)
 
-        if response['success']:
+        if response['success'] is True:
             self._podcast.episodes.remove(self.id)
             self._clear_properties()
 

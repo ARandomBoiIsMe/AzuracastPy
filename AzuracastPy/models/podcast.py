@@ -1,6 +1,6 @@
 """Class for a station podcast."""
 
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from ..constants import API_ENDPOINTS
 from ..enums import Languages, PodcastCategories
@@ -224,7 +224,7 @@ class PodcastCategoryHelper:
 
         response = self._podcast._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._podcast.categories = categories
 
         return response
@@ -277,7 +277,7 @@ class PodcastCategoryHelper:
 
         response = self._podcast._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._podcast.categories = categories
 
         return response

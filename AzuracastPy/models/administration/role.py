@@ -94,7 +94,7 @@ class PermissionsHelper:
 
         response = self._role._admin._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._role.permissions.global_permissions = permissions
 
         return response
@@ -151,7 +151,7 @@ class PermissionsHelper:
 
         response = self._role._admin._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._role.permissions.global_permissions = permissions
 
         return response
@@ -241,7 +241,7 @@ class Role:
 
             from AzuracastPy.enums import GlobalPermissions
 
-            station.hls_stream(1).edit(
+            role.edit(
                 name="New name",
                 global_permissions=[
                     GlobalPermissions.ADMINISTER_BACKUPS,
@@ -286,7 +286,7 @@ class Role:
         Usage:
         .. code-block:: python
 
-            admin.role(1).delete()
+            role.delete()
         """
         url = API_ENDPOINTS["role"].format(
             radio_url=self._admin._request_handler.radio_url,

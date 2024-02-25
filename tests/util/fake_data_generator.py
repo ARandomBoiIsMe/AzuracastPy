@@ -14,6 +14,8 @@ from AzuracastPy.models.remote_relay import RemoteRelay
 from AzuracastPy.models.sftp_user import SFTPUser
 from AzuracastPy.models.streamer import Streamer
 from AzuracastPy.models.webhook import Webhook
+from AzuracastPy.models.hls_stream import HLSStream
+from AzuracastPy.models.now_playing import NowPlaying
 
 def return_fake_station_json(id: int):
     return {
@@ -149,14 +151,14 @@ def return_fake_mount_point_json(id: int):
         "is_public": True,
         "fallback_mount": "/error.mp3",
         "relay_url": "",
-        "authhash": None,
+        "authhash": "",
         "max_listener_duration": 0,
         "enable_autodj": True,
         "autodj_format": "mp3",
         "autodj_bitrate": 128,
-        "custom_listen_url": None,
-        "intro_path": None,
-        "frontend_config": None,
+        "custom_listen_url": "",
+        "intro_path": "",
+        "frontend_config": "",
         "listeners_unique": 0,
         "listeners_total": 0,
         "id": id,
@@ -170,13 +172,218 @@ def return_fake_mount_point_json(id: int):
 def return_fake_mount_point_instance(id: int):
     return MountPoint(**return_fake_mount_point_json(id), _station=None)
 
+def return_fake_now_playing_json(id: int):
+    return {
+        "station": {
+            "id": id,
+            "name": "Yet Another Radio",
+            "shortcode": "yet_another_radio",
+            "description": "",
+            "frontend": "icecast",
+            "backend": "liquidsoap",
+            "listen_url": "http://localhost:8000/kiki",
+            "url": "",
+            "public_player_url": "http://localhost/public/yet_another_radio",
+            "playlist_pls_url": "http://localhost/public/yet_another_radio/playlist.pls",
+            "playlist_m3u_url": "http://localhost/public/yet_another_radio/playlist.m3u",
+            "is_public": True,
+            "mounts": [
+                {
+                    "id": 4,
+                    "name": "/hi (128kbps MP3)",
+                    "url": "http://localhost:8000/kiki",
+                    "bitrate": 128,
+                    "format": "mp3",
+                    "listeners": {
+                        "total": 0,
+                        "unique": 0,
+                        "current": 0
+                    },
+                    "path": "/kiki",
+                    "is_default": True
+                },
+                {
+                    "id": 5,
+                    "name": "hohoho",
+                    "url": "https://z",
+                    "bitrate": None,
+                    "format": None,
+                    "listeners": {
+                        "total": 0,
+                        "unique": 0,
+                        "current": 0
+                    },
+                    "path": "/bleh",
+                    "is_default": False
+                }
+            ],
+            "remotes": [
+                {
+                    "id": 7,
+                    "name": "yohppppohpeo",
+                    "url": "https://yuh",
+                    "bitrate": None,
+                    "format": None,
+                    "listeners": {
+                        "total": 0,
+                        "unique": 0,
+                        "current": 0
+                    }
+                },
+                {
+                    "id": 8,
+                    "name": "another name who dis",
+                    "url": "https://yuh",
+                    "bitrate": 128,
+                    "format": "ogg",
+                    "listeners": {
+                        "total": 0,
+                        "unique": 0,
+                        "current": 0
+                    }
+                }
+            ],
+            "hls_enabled": True,
+            "hls_is_default": False,
+            "hls_url": "http://localhost/hls/yet_another_radio/live.m3u8",
+            "hls_listeners": 0
+        },
+        "listeners": {
+            "total": 0,
+            "unique": 0,
+            "current": 0
+        },
+        "live": {
+            "is_live": False,
+            "streamer_name": "",
+            "broadcast_start": None,
+            "art": None
+        },
+        "now_playing": {
+            "sh_id": 1428,
+            "played_at": 1707691998,
+            "duration": 127,
+            "playlist": "IM HERE",
+            "streamer": "",
+            "is_request": False,
+            "song": {
+                "id": "937b60a479ee80c96db217721afca1fb",
+                "text": "Cochise - MEGAMAN",
+                "artist": "Cochise",
+                "title": "MEGAMAN",
+                "album": "THE INSPECTION",
+                "genre": "",
+                "isrc": "",
+                "lyrics": "",
+                "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+                "custom_fields": {
+                    "bro_thinks_hes_funny": None,
+                    "i thought this wouldn't work     sff s ';-;": None,
+                    "lol_if_i_dont_wanna_8_lel": None,
+                    "lolpleasework": None,
+                    "new_name_who_dis": None,
+                    "whats_up": None
+                }
+            },
+            "elapsed": 86,
+            "remaining": 41
+        },
+        "playing_next": {
+            "cued_at": 1707689785,
+            "played_at": 1707692117,
+            "duration": 175,
+            "playlist": "IM HERE",
+            "is_request": False,
+            "song": {
+                "id": "773d3766a9cacf261e6c8b9c542b36f9",
+                "text": "Cochise - GRIND",
+                "artist": "Cochise",
+                "title": "GRIND",
+                "album": "THE INSPECTION",
+                "genre": "",
+                "isrc": "",
+                "lyrics": "",
+                "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+                "custom_fields": {
+                    "bro_thinks_hes_funny": None,
+                    "i thought this wouldn't work     sff s ';-;": None,
+                    "lol_if_i_dont_wanna_8_lel": None,
+                    "lolpleasework": None,
+                    "new_name_who_dis": None,
+                    "whats_up": None
+                }
+            }
+        },
+        "song_history": [
+            {
+                "sh_id": 1427,
+                "played_at": 1707691794,
+                "duration": 175,
+                "playlist": "IM HERE",
+                "streamer": "",
+                "is_request": False,
+                "song": {
+                    "id": "773d3766a9cacf261e6c8b9c542b36f9",
+                    "text": "Cochise - GRIND",
+                    "artist": "Cochise",
+                    "title": "GRIND",
+                    "album": "THE INSPECTION",
+                    "genre": "",
+                    "isrc": "",
+                    "lyrics": "",
+                    "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+                    "custom_fields": {
+                        "bro_thinks_hes_funny": None,
+                        "i thought this wouldn't work     sff s ';-;": None,
+                        "lol_if_i_dont_wanna_8_lel": None,
+                        "lolpleasework": None,
+                        "new_name_who_dis": None,
+                        "whats_up": None
+                    }
+                }
+            },
+            {
+                "sh_id": 1426,
+                "played_at": 1707691650,
+                "duration": 127,
+                "playlist": "IM HERE",
+                "streamer": "",
+                "is_request": False,
+                "song": {
+                    "id": "937b60a479ee80c96db217721afca1fb",
+                    "text": "Cochise - MEGAMAN",
+                    "artist": "Cochise",
+                    "title": "MEGAMAN",
+                    "album": "THE INSPECTION",
+                    "genre": "",
+                    "isrc": "",
+                    "lyrics": "",
+                    "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+                    "custom_fields": {
+                        "bro_thinks_hes_funny": None,
+                        "i thought this wouldn't work     sff s ';-;": None,
+                        "lol_if_i_dont_wanna_8_lel": None,
+                        "lolpleasework": None,
+                        "new_name_who_dis": None,
+                        "whats_up": None
+                    }
+                }
+            }
+        ],
+        "is_online": True,
+        "cache": None
+    }
+
+def return_fake_now_playing_instance(id: int):
+    return NowPlaying(**return_fake_now_playing_json(id))
+
 def return_fake_playlist_json(id: int):
     return {
         "name": "Haha",
         "type": "default",
         "source": "songs",
         "order": "shuffle",
-        "remote_url": None,
+        "remote_url": "",
         "remote_type": "stream",
         "remote_buffer": 0,
         "is_enabled": True,
@@ -383,7 +590,7 @@ def return_fake_podcast_episode_json():
         "title": "lol hey",
         "description": "fuck off",
         "explicit": False,
-        "publish_at": None,
+        "publish_at": "",
         "has_media": False,
         "media": {
             "id": None,
@@ -445,6 +652,21 @@ def return_fake_queue_item_json():
 def return_fake_queue_item_instance():
     return QueueItem(**return_fake_queue_item_json(), _station=None)
 
+def return_fake_hls_stream_json(id):
+    return {
+        "name": "aac_lofi",
+        "format": "aac",
+        "bitrate": 48,
+        "listeners": 0,
+        "id": id,
+        "links": {
+            "self": "http://localhost/api/station/1/hls_stream/2"
+        }
+    }
+
+def return_fake_hls_stream_instance():
+    return HLSStream(**return_fake_hls_stream_json(1), _station=None)
+
 def return_fake_remote_relay_json(id: int):
     return {
         "id": id,
@@ -455,11 +677,11 @@ def return_fake_remote_relay_json(id: int):
         "enable_autodj": True,
         "autodj_format": "ogg",
         "autodj_bitrate": 128,
-        "custom_listen_url": None,
+        "custom_listen_url": "",
         "url": "https://yuh",
         "mount": "",
         "admin_password": "",
-        "source_port": None,
+        "source_port": "",
         "source_mount": "",
         "source_username": "",
         "source_password": "",
@@ -472,7 +694,7 @@ def return_fake_remote_relay_json(id: int):
     }
 
 def return_fake_remote_relay_instance():
-    return RemoteRelay(**return_fake_remote_relay_json(), _station=None)
+    return RemoteRelay(**return_fake_remote_relay_json(1), _station=None)
 
 def return_fake_sftp_user_json(id: int):
     return {
@@ -486,7 +708,7 @@ def return_fake_sftp_user_json(id: int):
     }
 
 def return_fake_sftp_user_instance():
-    return SFTPUser(**return_fake_sftp_user_json(), _station=None)
+    return SFTPUser(**return_fake_sftp_user_json(1), _station=None)
 
 def return_fake_streamer_json(id: int):
     return {
@@ -496,7 +718,7 @@ def return_fake_streamer_json(id: int):
         "comments": "Im so fucking tired someone help me please I feel like I'm drowning-",
         "is_active": True,
         "enforce_schedule": True,
-        "reactivate_at": None,
+        "reactivate_at": 1,
         "art_updated_at": 0,
         "schedule_items": [],
         "id": id,
@@ -510,7 +732,7 @@ def return_fake_streamer_json(id: int):
     }
 
 def return_fake_streamer_instance():
-    return Streamer(**return_fake_streamer_json(), _station=None)
+    return Streamer(**return_fake_streamer_json(1), _station=None)
 
 def return_fake_webhook_json(id: int):
     return {
@@ -535,4 +757,4 @@ def return_fake_webhook_json(id: int):
     }
 
 def return_fake_webhook_instance():
-    return Webhook(**return_fake_webhook_json(), _station=None)
+    return Webhook(**return_fake_webhook_json(1), _station=None)

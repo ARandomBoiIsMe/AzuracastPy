@@ -184,7 +184,7 @@ class ScheduleHelper:
 
         response = self._playlist._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # Updates the playlist's properties on the object.
             # Inefficient, but can't think of a better way.
             self._playlist.schedule_items = self._playlist._station.playlist(self._playlist.id).schedule_items
@@ -226,7 +226,7 @@ class ScheduleHelper:
 
         response = self._playlist._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # Updates the playlist's properties on the object.
             # Inefficient, but can't think of a better way.
             self._playlist.schedule_items = self._playlist._station.playlist(self._playlist.id).schedule_items

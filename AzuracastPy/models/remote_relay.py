@@ -135,7 +135,7 @@ class RemoteRelay:
         Usage:
         .. code-block:: python
 
-            station.remote_relay(1).edit(
+            remote_relay.edit(
                 display_name="New display name",
                 enable_autodj=False
             )
@@ -175,7 +175,7 @@ class RemoteRelay:
         Usage:
         .. code-block:: python
 
-            station.remote_relay(1).delete()
+            remote_relay.delete()
         """
         return delete_station_resource(self, "station_remote_relay_item")
 

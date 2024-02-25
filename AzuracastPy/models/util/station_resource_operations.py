@@ -11,7 +11,7 @@ def edit_station_resource(self, resource_type: str, *args):
 
     response = self._station._request_handler.put(url, body)
 
-    if response['success']:
+    if response['success'] is True:
         self._update_properties(*args)
 
     return response
@@ -25,7 +25,7 @@ def delete_station_resource(self, resource_type: str):
 
     response = self._station._request_handler.delete(url)
 
-    if response['success']:
+    if response['success'] is True:
         self._clear_properties()
 
     return response

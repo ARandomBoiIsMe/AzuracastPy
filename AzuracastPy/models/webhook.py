@@ -98,7 +98,7 @@ class TriggerHelper:
 
         response = self._webhook._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._webhook.triggers = triggers
 
         return response
@@ -153,7 +153,7 @@ class TriggerHelper:
 
         response = self._webhook._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             self._webhook.triggers = triggers
 
         return response

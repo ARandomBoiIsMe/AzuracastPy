@@ -135,7 +135,7 @@ class ScheduleHelper:
 
         response = self._streamer._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # Updates the streamer's properties on the object.
             # Inefficient, but can't think of a better way.
             self._streamer.schedule_items = self._streamer._station.streamer(self._streamer.id).schedule_items
@@ -176,7 +176,7 @@ class ScheduleHelper:
 
         response = self._streamer._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # Updates the streamer's properties on the object.
             # Inefficient, but can't think of a better way.
             self._streamer.schedule_items = self._streamer._station.streamer(self._streamer.id).schedule_items

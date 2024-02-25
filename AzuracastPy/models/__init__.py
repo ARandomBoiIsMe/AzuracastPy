@@ -20,3 +20,4 @@ from .hls_stream import HLSStream
 from .remote_relay import RemoteRelay
 from .sftp_user import SFTPUser
 from .streamer import Streamer
+from . import administration

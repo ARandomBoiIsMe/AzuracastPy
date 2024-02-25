@@ -133,7 +133,7 @@ class PlaylistHelper:
 
         response = self._file._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # I hate this.
             self._file.playlists = self._file._station.file(self._file.id).playlists
 
@@ -196,7 +196,7 @@ class PlaylistHelper:
 
         response = self._file._station._request_handler.put(url, body)
 
-        if response['success']:
+        if response['success'] is True:
             # I hate this.
             self._file.playlists = self._file._station.file(self._file.id).playlists
 
