@@ -11,7 +11,7 @@ from .util import fake_data_generator
 
 class TestStation(TestCase):
     def setUp(self) -> None:
-        self.mount_point = fake_data_generator.return_fake_mount_point_instance(1)
+        self.mount_point = fake_data_generator.return_fake_mount_point_instance()
         self.mount_point._station = mock.MagicMock()
         self.response = Response()
 

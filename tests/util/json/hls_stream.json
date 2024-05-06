@@ -1,0 +1,10 @@
+{
+    "name": "aac_lofi",
+    "format": "aac",
+    "bitrate": 48,
+    "listeners": 0,
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/station/1/hls_stream/2"
+    }
+}

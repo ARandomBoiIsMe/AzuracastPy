@@ -41,7 +41,7 @@ class Admin:
 
         .. code-block:: python
 
-            admin_station = admin.admin_station(1)
+            admin_station = admin.station(1)
         """
 
         self.role = RoleHelper(_admin=self)
@@ -64,8 +64,9 @@ class Admin:
 
             station_permissions = admin.role.generate_station_permissions(
                 ("name", 1, [StationPermissions.VIEW_STATION_LOGS]),
-                (None, 1, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
-                ("name", None, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS])
+                (None, 2, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
+                ("name", None, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
+                (None, 3, None)
             )
 
             role = admin.role.create(

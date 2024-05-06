@@ -1,0 +1,25 @@
+{
+    "name": "/hey",
+    "display_name": "/hey (128kbps MP3)",
+    "is_visible_on_public_pages": true,
+    "is_default": false,
+    "is_public": true,
+    "fallback_mount": "/error.mp3",
+    "relay_url": "",
+    "authhash": "",
+    "max_listener_duration": 0,
+    "enable_autodj": true,
+    "autodj_format": "mp3",
+    "autodj_bitrate": 128,
+    "custom_listen_url": "",
+    "intro_path": "",
+    "frontend_config": "",
+    "listeners_unique": 0,
+    "listeners_total": 0,
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/station/1/mount/6",
+        "intro": "http://localhost/api/station/1/mount/6/intro",
+        "listen": "http://localhost:8000/hey"
+    }
+}

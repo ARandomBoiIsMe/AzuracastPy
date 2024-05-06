@@ -10,7 +10,7 @@ from .util import fake_data_generator
 
 class TestStation(TestCase):
     def setUp(self) -> None:
-        self.playlist = fake_data_generator.return_fake_playlist_instance(1)
+        self.playlist = fake_data_generator.return_fake_playlist_instance()
         self.playlist._station = mock.MagicMock()
         self.response = Response()
 

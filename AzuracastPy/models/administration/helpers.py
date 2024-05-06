@@ -59,7 +59,7 @@ class AdminStationHelper:
         Usage:
         .. code-block:: python
 
-            admin_station = admin.admin_station(1)
+            admin_station = admin.station(1)
         """
         response = _request_single_instance_of_admin_resource(
             admin=self._admin,
@@ -192,9 +192,9 @@ class RoleHelper:
 
             station_permissions = admin.role.generate_station_permissions(
                 ("name", 1, [StationPermissions.VIEW_STATION_LOGS]),
-                (None, 1, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
+                (None, 2, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
                 ("name", None, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
-                (None, 1, None)
+                (None, 3, None)
             )
         """
         permissions = []
@@ -257,13 +257,13 @@ class RoleHelper:
 
             station_permissions = admin.role.generate_station_permissions(
                 ("name", 1, [StationPermissions.VIEW_STATION_LOGS]),
-                (None, 1, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
+                (None, 2, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
                 ("name", None, [StationPermissions.ADMINISTER_ALL, StationPermissions.VIEW_STATION_LOGS]),
-                (None, 1, None)
+                (None, 3, None)
             )
 
             role = admin.role.create(
-                name="New playlist",
+                name="New role",
                 global_permissions=[
                     GlobalPermissions.VIEW_ADMINISTRATION,
                     GlobalPermissions.VIEW_SYSTEM_LOGS
@@ -283,7 +283,7 @@ class RoleHelper:
         station_perms = {}
         if station_permissions:
             for key, value in station_permissions.items():
-                station_permissions[key] = [permission.value for permission in value]
+                station_perms[key] = [permission.value for permission in value]
 
         url = API_ENDPOINTS["roles"].format(
             radio_url=self._admin._request_handler.radio_url
@@ -362,7 +362,7 @@ class CustomFieldHelper:
             Default: ``None``.
 
         Usage:
-        .. code-block :: python
+        .. code-block:: python
 
             from AzuracastPy.enums import AutoAssignValues
 

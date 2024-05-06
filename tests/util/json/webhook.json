@@ -1,0 +1,20 @@
+{
+    "name": "from library",
+    "type": "email",
+    "is_enabled": true,
+    "triggers": [
+        "live_connect",
+        "song_changed"
+    ],
+    "config": [
+        "gabeyiscool43@gmail.com",
+        "BRO",
+        "THIS WORKS"
+    ],
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/station/1/webhook/18",
+        "toggle": "http://localhost/api/station/1/webhook/18/toggle",
+        "test": "http://localhost/api/station/1/webhook/18/test"
+    }
+}

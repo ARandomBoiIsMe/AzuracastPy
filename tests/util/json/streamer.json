@@ -1,0 +1,19 @@
+{
+    "streamer_username": "hi",
+    "streamer_password": "",
+    "display_name": "ISSBROKIE",
+    "comments": "Im so fucking tired someone help me please I feel like I'm drowning-",
+    "is_active": true,
+    "enforce_schedule": true,
+    "reactivate_at": 1,
+    "art_updated_at": 0,
+    "schedule_items": [],
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/station/1/streamer/4",
+        "broadcasts": "http://localhost/api/station/1/streamer/4/broadcasts",
+        "art": "http://localhost/api/station/1/streamer/4/art"
+    },
+    "has_custom_art": false,
+    "art": "http://localhost/api/station/1/streamer/4/art"
+}

@@ -1,0 +1,9 @@
+{
+    "username": "lil_tee",
+    "password": "",
+    "publicKeys": "hi\nho\nhate",
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/station/1/sftp-user/5"
+    }
+}

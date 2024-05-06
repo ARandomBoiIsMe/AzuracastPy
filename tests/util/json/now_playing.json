@@ -1,0 +1,200 @@
+{
+    "station": {
+        "id": 1,
+        "name": "Yet Another Radio",
+        "shortcode": "yet_another_radio",
+        "description": "",
+        "frontend": "icecast",
+        "backend": "liquidsoap",
+        "listen_url": "http://localhost:8000/kiki",
+        "url": "",
+        "public_player_url": "http://localhost/public/yet_another_radio",
+        "playlist_pls_url": "http://localhost/public/yet_another_radio/playlist.pls",
+        "playlist_m3u_url": "http://localhost/public/yet_another_radio/playlist.m3u",
+        "is_public": true,
+        "mounts": [
+            {
+                "id": 4,
+                "name": "/hi (128kbps MP3)",
+                "url": "http://localhost:8000/kiki",
+                "bitrate": 128,
+                "format": "mp3",
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                },
+                "path": "/kiki",
+                "is_default": true
+            },
+            {
+                "id": 5,
+                "name": "hohoho",
+                "url": "https://z",
+                "bitrate": null,
+                "format": null,
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                },
+                "path": "/bleh",
+                "is_default": false
+            }
+        ],
+        "remotes": [
+            {
+                "id": 7,
+                "name": "yohppppohpeo",
+                "url": "https://yuh",
+                "bitrate": null,
+                "format": null,
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                }
+            },
+            {
+                "id": 8,
+                "name": "another name who dis",
+                "url": "https://yuh",
+                "bitrate": 128,
+                "format": "ogg",
+                "listeners": {
+                    "total": 0,
+                    "unique": 0,
+                    "current": 0
+                }
+            }
+        ],
+        "hls_enabled": true,
+        "hls_is_default": false,
+        "hls_url": "http://localhost/hls/yet_another_radio/live.m3u8",
+        "hls_listeners": 0
+    },
+    "listeners": {
+        "total": 0,
+        "unique": 0,
+        "current": 0
+    },
+    "live": {
+        "is_live": false,
+        "streamer_name": "",
+        "broadcast_start": null,
+        "art": null
+    },
+    "now_playing": {
+        "sh_id": 1428,
+        "played_at": 1707691998,
+        "duration": 127,
+        "playlist": "IM HERE",
+        "streamer": "",
+        "is_request": false,
+        "song": {
+            "id": "937b60a479ee80c96db217721afca1fb",
+            "text": "Cochise - MEGAMAN",
+            "artist": "Cochise",
+            "title": "MEGAMAN",
+            "album": "THE INSPECTION",
+            "genre": "",
+            "isrc": "",
+            "lyrics": "",
+            "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+            "custom_fields": {
+                "bro_thinks_hes_funny": null,
+                "i thought this wouldn't work     sff s ';-;": null,
+                "lol_if_i_dont_wanna_8_lel": null,
+                "lolpleasework": null,
+                "new_name_who_dis": null,
+                "whats_up": null
+            }
+        },
+        "elapsed": 86,
+        "remaining": 41
+    },
+    "playing_next": {
+        "cued_at": 1707689785,
+        "played_at": 1707692117,
+        "duration": 175,
+        "playlist": "IM HERE",
+        "is_request": false,
+        "song": {
+            "id": "773d3766a9cacf261e6c8b9c542b36f9",
+            "text": "Cochise - GRIND",
+            "artist": "Cochise",
+            "title": "GRIND",
+            "album": "THE INSPECTION",
+            "genre": "",
+            "isrc": "",
+            "lyrics": "",
+            "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+            "custom_fields": {
+                "bro_thinks_hes_funny": null,
+                "i thought this wouldn't work     sff s ';-;": null,
+                "lol_if_i_dont_wanna_8_lel": null,
+                "lolpleasework": null,
+                "new_name_who_dis": null,
+                "whats_up": null
+            }
+        }
+    },
+    "song_history": [
+        {
+            "sh_id": 1427,
+            "played_at": 1707691794,
+            "duration": 175,
+            "playlist": "IM HERE",
+            "streamer": "",
+            "is_request": false,
+            "song": {
+                "id": "773d3766a9cacf261e6c8b9c542b36f9",
+                "text": "Cochise - GRIND",
+                "artist": "Cochise",
+                "title": "GRIND",
+                "album": "THE INSPECTION",
+                "genre": "",
+                "isrc": "",
+                "lyrics": "",
+                "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+                "custom_fields": {
+                    "bro_thinks_hes_funny": null,
+                    "i thought this wouldn't work     sff s ';-;": null,
+                    "lol_if_i_dont_wanna_8_lel": null,
+                    "lolpleasework": null,
+                    "new_name_who_dis": null,
+                    "whats_up": null
+                }
+            }
+        },
+        {
+            "sh_id": 1426,
+            "played_at": 1707691650,
+            "duration": 127,
+            "playlist": "IM HERE",
+            "streamer": "",
+            "is_request": false,
+            "song": {
+                "id": "937b60a479ee80c96db217721afca1fb",
+                "text": "Cochise - MEGAMAN",
+                "artist": "Cochise",
+                "title": "MEGAMAN",
+                "album": "THE INSPECTION",
+                "genre": "",
+                "isrc": "",
+                "lyrics": "",
+                "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+                "custom_fields": {
+                    "bro_thinks_hes_funny": null,
+                    "i thought this wouldn't work     sff s ';-;": null,
+                    "lol_if_i_dont_wanna_8_lel": null,
+                    "lolpleasework": null,
+                    "new_name_who_dis": null,
+                    "whats_up": null
+                }
+            }
+        }
+    ],
+    "is_online": true,
+    "cache": null
+}

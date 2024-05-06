@@ -1,0 +1,31 @@
+{
+    "sh_id": 1347,
+    "played_at": 1707520094,
+    "duration": 175,
+    "playlist": "IM HERE",
+    "streamer": "",
+    "is_request": false,
+    "song": {
+        "id": "773d3766a9cacf261e6c8b9c542b36f9",
+        "text": "Cochise - GRIND",
+        "artist": "Cochise",
+        "title": "GRIND",
+        "album": "THE INSPECTION",
+        "genre": "",
+        "isrc": "",
+        "lyrics": "",
+        "art": "http://localhost/api/station/yet_another_radio/art/36c1d6cda4e7d71b97b237bb-1705365756.jpg",
+        "custom_fields": {
+            "bro_thinks_hes_funny": null,
+            "i thought this wouldn't work     sff s ';-;": null,
+            "lol_if_i_dont_wanna_8_lel": null,
+            "lolpleasework": null,
+            "new_name_who_dis": null,
+            "whats_up": null
+        }
+    },
+    "listeners_start": 0,
+    "listeners_end": 0,
+    "delta_total": 0,
+    "is_visible": true
+}

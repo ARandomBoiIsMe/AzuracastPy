@@ -1,0 +1,20 @@
+{
+    "id": 1,
+    "name": "yo ho",
+    "permissions": {
+        "global": [
+            "view administration",
+            "view system logs"
+        ],
+        "station": {
+            "1": [
+                "manage station automation",
+                "manage station media"
+            ]
+        }
+    },
+    "links": {
+        "self": "http://localhost/api/admin/role/14"
+    },
+    "is_super_admin": false
+}

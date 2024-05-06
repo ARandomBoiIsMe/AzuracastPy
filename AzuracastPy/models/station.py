@@ -57,6 +57,7 @@ class Station:
         mounts: List[Mount],
         remotes: List[Remote],
         hls_is_default: bool = None,
+        timezone: str = None,
         playlist_pls_url: Optional[str] = None,
         playlist_m3u_url: Optional[str] = None,
         hls_url: Optional[str] = None,
@@ -86,6 +87,7 @@ class Station:
         self.remotes = [Remote(**r) for r in remotes] if remotes else []
         self.hls_enabled = hls_enabled
         self.hls_is_default = hls_is_default
+        self.timezone = timezone
         self.hls_url = hls_url
         self.hls_listeners = hls_listeners
         self._request_handler = _request_handler

@@ -1,0 +1,28 @@
+{
+    "id": 1,
+    "name": "Here we go again",
+    "shortcode": "here_we_go_again",
+    "description": "lol",
+    "url": "",
+    "genre": "Bleh",
+    "type": "icecast",
+    "port": 8000,
+    "relay_pw": "6YazkrRp",
+    "admin_pw": "7pTyq2ef",
+    "mounts": [
+        {
+            "id": 1,
+            "name": "/radio.mp3 (128kbps MP3)",
+            "url": "http://localhost:8000/radio.mp3",
+            "bitrate": 128,
+            "format": "mp3",
+            "listeners": {
+                "total": 0,
+                "unique": 0,
+                "current": 0
+            },
+            "path": "/radio.mp3",
+            "is_default": true
+        }
+    ]
+}

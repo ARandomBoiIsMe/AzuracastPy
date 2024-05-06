@@ -1,0 +1,150 @@
+{
+    "cpu": {
+        "total": {
+            "name": "total",
+            "usage": "1.23",
+            "idle": "98.77",
+            "io_wait": "0.00",
+            "steal": "0.00"
+        },
+        "cores": [
+            {
+                "name": "cpu0",
+                "usage": "0.99",
+                "idle": "99.01",
+                "io_wait": "0.00",
+                "steal": "0.00"
+            },
+            {
+                "name": "cpu1",
+                "usage": "0.98",
+                "idle": "99.02",
+                "io_wait": "0.00",
+                "steal": "0.00"
+            },
+            {
+                "name": "cpu2",
+                "usage": "2.94",
+                "idle": "97.06",
+                "io_wait": "0.00",
+                "steal": "0.00"
+            },
+            {
+                "name": "cpu3",
+                "usage": "0.00",
+                "idle": "100.00",
+                "io_wait": "0.00",
+                "steal": "0.00"
+            }
+        ],
+        "load": [
+            0.2900390625,
+            0.19091796875,
+            0.19189453125
+        ]
+    },
+    "memory": {
+        "bytes": {
+            "total": "4046352384",
+            "free": "274243584",
+            "buffers": "315072512",
+            "cached": "2051612672",
+            "sReclaimable": "143863808",
+            "shmem": "11665408",
+            "used": "1588297728"
+        },
+        "readable": {
+            "total": "3.77 GB",
+            "free": "261.54 MB",
+            "buffers": "300.48 MB",
+            "cached": "1.91 GB",
+            "sReclaimable": "137.20 MB",
+            "shmem": "11.12 MB",
+            "used": "1.48 GB"
+        }
+    },
+    "swap": {
+        "bytes": {
+            "total": "1073741824",
+            "free": "1050001408",
+            "used": "23740416"
+        },
+        "readable": {
+            "total": "1.00 GB",
+            "free": "0.98 GB",
+            "used": "22.64 MB"
+        }
+    },
+    "disk": {
+        "bytes": {
+            "total": "1081101176832",
+            "free": "1022802468864",
+            "used": "58298707968"
+        },
+        "readable": {
+            "total": "1.0 TB",
+            "free": "0.9 TB",
+            "used": "54.3 GB"
+        }
+    },
+    "network": [
+        {
+            "interface_name": "lo",
+            "received": {
+                "speed": {
+                    "bytes": "788",
+                    "readable": "788.0 B"
+                },
+                "packets": "9",
+                "errs": "0",
+                "drop": "0",
+                "fifo": "0",
+                "frame": "0",
+                "compressed": "0",
+                "multicast": "0"
+            },
+            "transmitted": {
+                "speed": {
+                    "bytes": "788",
+                    "readable": "788.0 B"
+                },
+                "packets": "9",
+                "errs": "0",
+                "drop": "0",
+                "fifo": "0",
+                "frame": "0",
+                "carrier": "0",
+                "compressed": "0"
+            }
+        },
+        {
+            "interface_name": "eth0",
+            "received": {
+                "speed": {
+                    "bytes": "0",
+                    "readable": "0.0 B"
+                },
+                "packets": "0",
+                "errs": "0",
+                "drop": "0",
+                "fifo": "0",
+                "frame": "0",
+                "compressed": "0",
+                "multicast": "0"
+            },
+            "transmitted": {
+                "speed": {
+                    "bytes": "0",
+                    "readable": "0.0 B"
+                },
+                "packets": "0",
+                "errs": "0",
+                "drop": "0",
+                "fifo": "0",
+                "frame": "0",
+                "carrier": "0",
+                "compressed": "0"
+            }
+        }
+    ]
+}

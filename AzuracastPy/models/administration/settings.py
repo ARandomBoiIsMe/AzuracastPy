@@ -107,12 +107,12 @@ class Settings:
         _admin
     ):
         """
-        Initializes a :class:`Settings` object for a :class:`NowPlaying` instance.
+        Initializes a :class:`Settings` object for a radio.
 
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``now_playing.now_playing``.
+            via: ``admin.settings()``.
         """
         self.app_unique_identifier = app_unique_identifier
         self.base_url = base_url
@@ -121,7 +121,7 @@ class Settings:
         self.use_radio_proxy = use_radio_proxy
         self.history_keep_days = history_keep_days
         self.always_use_ssl = always_use_ssl
-        self.api_access_control = [api.strip() for api in api_access_control.split(',')]
+        self.api_access_control = [api.strip() for api in api_access_control.split(',')] if api_access_control else []
         self.enable_static_nowplaying = enable_static_nowplaying
         self.analytics = analytics
         self.check_for_updates = check_for_updates
@@ -164,7 +164,7 @@ class Settings:
         self.avatar_service = avatar_service
         self.avatar_default_url = avatar_default_url
         self.acme_email = acme_email
-        self.acme_domains = [domain.strip() for domain in acme_domains.split(',')]
+        self.acme_domains = [domain.strip() for domain in acme_domains.split(',')] if acme_domains else []
         self.ip_source = ip_source
         self._admin = _admin
 

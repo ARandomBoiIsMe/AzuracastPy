@@ -1,0 +1,42 @@
+{
+    "name": "Haha",
+    "type": "default",
+    "source": "songs",
+    "order": "shuffle",
+    "remote_url": "",
+    "remote_type": "stream",
+    "remote_buffer": 0,
+    "is_enabled": true,
+    "is_jingle": false,
+    "play_per_songs": 0,
+    "play_per_minutes": 0,
+    "play_per_hour_minute": 0,
+    "weight": 3,
+    "include_in_requests": true,
+    "include_in_on_demand": false,
+    "backend_options": [
+        ""
+    ],
+    "avoid_duplicates": true,
+    "played_at": 1707329223,
+    "queue_reset_at": 1707327991,
+    "schedule_items": [],
+    "id": 1,
+    "short_name": "haha",
+    "num_songs": 0,
+    "total_length": 0,
+    "links": {
+        "self": "http://localhost/api/station/1/playlist/5",
+        "toggle": "http://localhost/api/station/1/playlist/5/toggle",
+        "clone": "http://localhost/api/station/1/playlist/5/clone",
+        "queue": "http://localhost/api/station/1/playlist/5/queue",
+        "import": "http://localhost/api/station/1/playlist/5/import",
+        "reshuffle": "http://localhost/api/station/1/playlist/5/reshuffle",
+        "applyto": "http://localhost/api/station/1/playlist/5/apply-to",
+        "empty": "http://localhost/api/station/1/playlist/5/empty",
+        "export": {
+            "pls": "http://localhost/api/station/1/playlist/5/export/pls",
+            "m3u": "http://localhost/api/station/1/playlist/5/export/m3u"
+        }
+    }
+}

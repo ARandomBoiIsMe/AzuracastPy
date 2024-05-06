@@ -1,0 +1,26 @@
+{
+    "ip": "XXXX",
+    "user_agent": "XXXX",
+    "hash": "XXXX",
+    "mount_is_local": false,
+    "mount_name": "XXXX",
+    "connected_on": 1667545600,
+    "connected_until": 1667632000,
+    "connected_time": 3600,
+    "device": {
+        "client": "XXXX",
+        "is_browser": true,
+        "is_mobile": false,
+        "is_bot": false,
+        "browser_family": "XXXX",
+        "os_family": "XXXX"
+    },
+    "location": {
+        "description": "XXXX",
+        "region": "XXXX",
+        "city": "XXXX",
+        "country": "XXXX",
+        "lat": 123.456,
+        "lon": -78.901
+    }
+}

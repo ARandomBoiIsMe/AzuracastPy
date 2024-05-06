@@ -149,6 +149,7 @@ class AzuracastClient:
 
         if station_id:
             # The entire now_playing list is returned when an invalid station ID is passed.
+            # API's rules, not mine.
             if isinstance(response, list):
                 return [NowPlaying(**np) for np in response]
 

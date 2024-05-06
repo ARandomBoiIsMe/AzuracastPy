@@ -1,0 +1,74 @@
+{
+    "id": 1,
+    "name": "Yet Another Radio",
+    "shortcode": "yet_another_radio",
+    "description": "",
+    "frontend": "icecast",
+    "backend": "liquidsoap",
+    "listen_url": "http://localhost:8000/kiki",
+    "url": "",
+    "public_player_url": "http://localhost/public/yet_another_radio",
+    "playlist_pls_url": "http://localhost/public/yet_another_radio/playlist.pls",
+    "playlist_m3u_url": "http://localhost/public/yet_another_radio/playlist.m3u",
+    "is_public": true,
+    "mounts": [
+        {
+            "id": 4,
+            "name": "/hi (128kbps MP3)",
+            "url": "http://localhost:8000/kiki",
+            "bitrate": 128,
+            "format": "mp3",
+            "listeners": {
+                "total": 0,
+                "unique": 0,
+                "current": 0
+            },
+            "path": "/kiki",
+            "is_default": true
+        },
+        {
+            "id": 5,
+            "name": "hohoho",
+            "url": "https://z",
+            "bitrate": null,
+            "format": null,
+            "listeners": {
+                "total": 0,
+                "unique": 0,
+                "current": 0
+            },
+            "path": "/bleh",
+            "is_default": false
+        }
+    ],
+    "remotes": [
+        {
+            "id": 7,
+            "name": "yohppppohpeo",
+            "url": "https://yuh",
+            "bitrate": null,
+            "format": null,
+            "listeners": {
+                "total": 0,
+                "unique": 0,
+                "current": 0
+            }
+        },
+        {
+            "id": 8,
+            "name": "another name who dis",
+            "url": "https://yuh",
+            "bitrate": 128,
+            "format": "ogg",
+            "listeners": {
+                "total": 0,
+                "unique": 0,
+                "current": 0
+            }
+        }
+    ],
+    "hls_enabled": true,
+    "hls_is_default": false,
+    "hls_url": "http://localhost/hls/yet_another_radio/live.m3u8",
+    "hls_listeners": 0
+}

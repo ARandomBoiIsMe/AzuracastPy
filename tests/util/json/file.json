@@ -1,0 +1,41 @@
+{
+    "unique_id": "53bff3de9429ad36ad9bd533",
+    "album": "THE INSPECTION",
+    "genre": null,
+    "lyrics": null,
+    "isrc": null,
+    "length": 127.37,
+    "length_text": "2:07",
+    "path": "songs/y2mate.com_-_cochise__megaman_official_audio.mp3",
+    "mtime": 1707328093,
+    "amplify": null,
+    "fade_overlap": null,
+    "fade_in": null,
+    "fade_out": null,
+    "cue_in": null,
+    "cue_out": null,
+    "art_updated_at": 1703965646,
+    "playlists": [
+        {
+            "id": 7,
+            "name": "IM HERE",
+            "weight": 2
+        }
+    ],
+    "id": 1,
+    "song_id": "937b60a479ee80c96db217721afca1fb",
+    "text": "Cochise - MEGAMAN",
+    "artist": "Cochise",
+    "title": "MEGAMAN",
+    "custom_fields": {
+        "bro_thinks_hes_funny": null,
+        "new_name_who_dis": null,
+        "lol_if_i_dont_wanna_8_lel": null,
+        "lolpleasework": null,
+        "i thought this wouldn't work     sff s ';-;": null,
+        "whats_up": null
+    },
+    "links": {
+        "self": "http://localhost/api/station/1/file/4"
+    }
+}

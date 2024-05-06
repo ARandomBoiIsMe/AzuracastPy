@@ -1,0 +1,33 @@
+{
+    "cued_at": 1707406815,
+    "played_at": 1707520368,
+    "duration": 127,
+    "playlist": "IM HERE",
+    "is_request": false,
+    "song": {
+        "id": "937b60a479ee80c96db217721afca1fb",
+        "text": "Cochise - MEGAMAN",
+        "artist": "Cochise",
+        "title": "MEGAMAN",
+        "album": "THE INSPECTION",
+        "genre": "",
+        "isrc": "",
+        "lyrics": "",
+        "art": "http://localhost/api/station/yet_another_radio/art/53bff3de9429ad36ad9bd533-1703965646.jpg",
+        "custom_fields": {
+            "bro_thinks_hes_funny": null,
+            "i thought this wouldn't work     sff s ';-;": null,
+            "lol_if_i_dont_wanna_8_lel": null,
+            "lolpleasework": null,
+            "new_name_who_dis": null,
+            "whats_up": null
+        }
+    },
+    "sent_to_autodj": true,
+    "is_played": false,
+    "autodj_custom_uri": null,
+    "log": null,
+    "links": {
+        "self": "http://localhost/api/station/1/queue/1308"
+    }
+}

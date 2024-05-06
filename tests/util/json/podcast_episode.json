@@ -1,0 +1,25 @@
+{
+    "id": "1eec486c-7007-60aa-a71b-9d325f29a184",
+    "title": "lol hey",
+    "description": "fuck off",
+    "explicit": false,
+    "publish_at": "",
+    "has_media": false,
+    "media": {
+        "id": null,
+        "original_name": null,
+        "length": 0,
+        "length_text": null,
+        "path": null
+    },
+    "has_custom_art": false,
+    "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/art",
+    "art_updated_at": 0,
+    "links": {
+        "self": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184",
+        "public": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184",
+        "download": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/download",
+        "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/art",
+        "media": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episode/1eec486c-7007-60aa-a71b-9d325f29a184/media"
+    }
+}

@@ -6,7 +6,6 @@ from AzuracastPy import AzuracastClient, models
 from .util import fake_data_generator
 
 class TestAzuracastClient(unittest.TestCase):
-
     def setUp(self):
         radio_url = "http://example.com"
         x_api_key = "your_api_key"
@@ -37,8 +36,8 @@ class TestAzuracastClient(unittest.TestCase):
 
     def test_now_playing_method_all_stations(self):
         response_data = [
-            fake_data_generator.return_fake_now_playing_json(1),
-            fake_data_generator.return_fake_now_playing_json(2)
+            fake_data_generator.return_fake_now_playing_json(),
+            fake_data_generator.return_fake_now_playing_json()
         ]
         self.client._request_handler.get.return_value = response_data
 
@@ -57,7 +56,7 @@ class TestAzuracastClient(unittest.TestCase):
                 self.assertIsInstance(history, models.now_playing.SongHistory)
 
     def test_now_playing_method_single_station(self):
-        response_data = fake_data_generator.return_fake_now_playing_json(1)
+        response_data = fake_data_generator.return_fake_now_playing_json()
         self.client._request_handler.get.return_value = response_data
 
         station_now_playing = self.client.now_playing(station_id=1)
@@ -74,8 +73,8 @@ class TestAzuracastClient(unittest.TestCase):
 
     def test_stations_method(self):
         response_data = [
-            fake_data_generator.return_fake_station_json(1),
-            fake_data_generator.return_fake_station_json(2)
+            fake_data_generator.return_fake_station_json(),
+            fake_data_generator.return_fake_station_json()
         ]
         self.client._request_handler.get.return_value = response_data
 
@@ -93,7 +92,7 @@ class TestAzuracastClient(unittest.TestCase):
                 self.assertIsInstance(remote, models.Remote)
 
     def test_station_method(self):
-        response_data = fake_data_generator.return_fake_station_json(1)
+        response_data = fake_data_generator.return_fake_station_json()
         self.client._request_handler.get.return_value = response_data
 
         station = self.client.station(1)

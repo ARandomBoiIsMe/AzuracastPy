@@ -1,0 +1,12 @@
+{
+    "id": 12345,
+    "type": "XXXX",
+    "name": "XXXX",
+    "title": "XXXX",
+    "description": "XXXX",
+    "start_timestamp": 1667545600,
+    "start": "2023-11-02T00:00:00",
+    "end_timestamp": 1667632000,
+    "end": "2023-11-03T00:00:00",
+    "is_now": false
+}

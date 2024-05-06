@@ -1,0 +1,24 @@
+{
+    "id": 1,
+    "display_name": "another name who dis",
+    "is_visible_on_public_pages": true,
+    "type": "icecast",
+    "is_editable": true,
+    "enable_autodj": true,
+    "autodj_format": "ogg",
+    "autodj_bitrate": 128,
+    "custom_listen_url": "",
+    "url": "https://yuh",
+    "mount": "",
+    "admin_password": "",
+    "source_port": "",
+    "source_mount": "",
+    "source_username": "",
+    "source_password": "",
+    "is_public": false,
+    "listeners_unique": 0,
+    "listeners_total": 0,
+    "links": {
+        "self": "http://localhost/api/station/1/remote/8"
+    }
+}

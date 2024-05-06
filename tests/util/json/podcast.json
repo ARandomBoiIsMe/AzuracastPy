@@ -1,0 +1,32 @@
+{
+    "id": "1eeb3f87-c013-6c90-b123-9ba650b804a0",
+    "storage_location_id": 4,
+    "title": "Title",
+    "link": "Website",
+    "description": "Description",
+    "language": "en",
+    "author": "Author",
+    "email": "Email@gmail.com",
+    "has_custom_art": false,
+    "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/art",
+    "art_updated_at": 0,
+    "categories": [
+        "Arts|Performing Arts",
+        "Business|Non-Profit",
+        "Arts|Fashion & Beauty"
+    ],
+    "episodes": [
+        "1eeb3f88-f3a4-6a22-b189-8d7240fd53e1",
+        "1eeb3f97-f14e-6d54-9d30-131fe97e1a45",
+        "1eec486c-7007-60aa-a71b-9d325f29a184"
+    ],
+    "links": {
+        "self": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0",
+        "episodes": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes",
+        "public_episodes": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes",
+        "public_feed": "http://localhost/public/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/feed",
+        "art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/art",
+        "episode_new_art": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes/art",
+        "episode_new_media": "http://localhost/api/station/1/podcast/1eeb3f87-c013-6c90-b123-9ba650b804a0/episodes/media"
+    }
+}

@@ -19,13 +19,13 @@ from .util import fake_data_generator
 
 class TestStation(TestCase):
     def setUp(self) -> None:
-        self.station = fake_data_generator.return_fake_station_instance(1)
+        self.station = fake_data_generator.return_fake_station_instance()
         self.station._request_handler = mock.MagicMock()
         self.response = Response()
 
     def test_file_returns_file(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_file_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_file_json()
 
         result = self.station.file(id)
 
@@ -38,9 +38,9 @@ class TestStation(TestCase):
 
     def test_files_returns_list_of_file(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_file_json(1),
-            fake_data_generator.return_fake_file_json(2),
-            fake_data_generator.return_fake_file_json(19)
+            fake_data_generator.return_fake_file_json(),
+            fake_data_generator.return_fake_file_json(),
+            fake_data_generator.return_fake_file_json()
         ]
 
         result = self.station.files()
@@ -55,8 +55,7 @@ class TestStation(TestCase):
                 self.assertIsInstance(playlist, models.station_file.Playlist)
 
     def test_mount_point_creation(self):
-        id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_mount_point_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_mount_point_json()
         self.station._request_handler.post.return_value['name'] = "/autodj.mp3"
         self.station._request_handler.post.return_value['display_name'] = "Hehehehe"
         self.station._request_handler.post.return_value['autodj_format'] = "opus"
@@ -78,7 +77,7 @@ class TestStation(TestCase):
 
     def test_mount_point_returns_mount_point(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_mount_point_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_mount_point_json()
 
         result = self.station.mount_point(id)
 
@@ -87,9 +86,9 @@ class TestStation(TestCase):
 
     def test_mount_points_returns_list_of_mount_point(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_mount_point_json(1),
-            fake_data_generator.return_fake_mount_point_json(2),
-            fake_data_generator.return_fake_mount_point_json(19)
+            fake_data_generator.return_fake_mount_point_json(),
+            fake_data_generator.return_fake_mount_point_json(),
+            fake_data_generator.return_fake_mount_point_json()
         ]
 
         result = self.station.mount_points()
@@ -100,13 +99,12 @@ class TestStation(TestCase):
             self.assertIsInstance(item.links, models.mount_point.Links)
 
     def test_playlist_creation(self):
-        id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_playlist_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_playlist_json()
         self.station._request_handler.post.return_value['name'] = "New playlist"
         self.station._request_handler.post.return_value['type'] = "once_per_x_minutes"
         self.station._request_handler.post.return_value['play_per_minutes'] = 5
 
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_playlist_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_playlist_json()
         self.station._request_handler.get.return_value['name'] = "New playlist"
         self.station._request_handler.get.return_value['type'] = "once_per_x_minutes"
         self.station._request_handler.get.return_value['play_per_minutes'] = 5
@@ -128,7 +126,7 @@ class TestStation(TestCase):
 
     def test_playlist_returns_playlist(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_playlist_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_playlist_json()
 
         result = self.station.playlist(id)
 
@@ -141,9 +139,9 @@ class TestStation(TestCase):
 
     def test_playlists_returns_list_of_playlist(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_playlist_json(1),
-            fake_data_generator.return_fake_playlist_json(2),
-            fake_data_generator.return_fake_playlist_json(19)
+            fake_data_generator.return_fake_playlist_json(),
+            fake_data_generator.return_fake_playlist_json(),
+            fake_data_generator.return_fake_playlist_json()
         ]
 
         result = self.station.playlists()
@@ -283,7 +281,7 @@ class TestStation(TestCase):
 
     def test_hls_stream_creation(self):
         id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_hls_stream_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_hls_stream_json()
         self.station._request_handler.post.return_value['name'] = "New HLS Stream"
         self.station._request_handler.post.return_value['format'] = "mp3"
         self.station._request_handler.post.return_value['bitrate'] = 32
@@ -303,7 +301,7 @@ class TestStation(TestCase):
 
     def test_hls_stream_returns_hls_stream(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_hls_stream_json(1)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_hls_stream_json()
 
         result = self.station.hls_stream(id)
 
@@ -312,9 +310,9 @@ class TestStation(TestCase):
 
     def test_hls_streams_returns_list_of_hls_stream(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_hls_stream_json(1),
-            fake_data_generator.return_fake_hls_stream_json(1),
-            fake_data_generator.return_fake_hls_stream_json(1)
+            fake_data_generator.return_fake_hls_stream_json(),
+            fake_data_generator.return_fake_hls_stream_json(),
+            fake_data_generator.return_fake_hls_stream_json()
         ]
 
         result = self.station.hls_streams()
@@ -326,7 +324,7 @@ class TestStation(TestCase):
 
     def test_remote_relay_creation(self):
         id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_remote_relay_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_remote_relay_json()
         self.station._request_handler.post.return_value['url'] = "http://station.example.com:8000"
         self.station._request_handler.post.return_value['display_name'] = "Display name"
         self.station._request_handler.post.return_value['autodj_format'] = "mp3"
@@ -347,7 +345,7 @@ class TestStation(TestCase):
 
     def test_remote_relay_returns_remote_relay(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_remote_relay_json(1)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_remote_relay_json()
 
         result = self.station.remote_relay(id)
 
@@ -356,9 +354,9 @@ class TestStation(TestCase):
 
     def test_remote_relays_returns_list_of_remote_relay(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_remote_relay_json(1),
-            fake_data_generator.return_fake_remote_relay_json(1),
-            fake_data_generator.return_fake_remote_relay_json(1)
+            fake_data_generator.return_fake_remote_relay_json(),
+            fake_data_generator.return_fake_remote_relay_json(),
+            fake_data_generator.return_fake_remote_relay_json()
         ]
 
         result = self.station.remote_relays()
@@ -370,7 +368,7 @@ class TestStation(TestCase):
 
     def test_sftp_user_creation(self):
         id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_sftp_user_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_sftp_user_json()
         self.station._request_handler.post.return_value['username'] = "Username"
         self.station._request_handler.post.return_value['password'] = "Password"
         self.station._request_handler.post.return_value['publicKeys'] = "key1\nkey2"
@@ -390,7 +388,7 @@ class TestStation(TestCase):
 
     def test_sftp_user_returns_sftp_user(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_sftp_user_json(1)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_sftp_user_json()
 
         result = self.station.sftp_user(id)
 
@@ -399,9 +397,9 @@ class TestStation(TestCase):
 
     def test_sftp_users_returns_list_of_sftp_user(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_sftp_user_json(1),
-            fake_data_generator.return_fake_sftp_user_json(1),
-            fake_data_generator.return_fake_sftp_user_json(1)
+            fake_data_generator.return_fake_sftp_user_json(),
+            fake_data_generator.return_fake_sftp_user_json(),
+            fake_data_generator.return_fake_sftp_user_json()
         ]
 
         result = self.station.sftp_users()
@@ -413,12 +411,12 @@ class TestStation(TestCase):
 
     def test_streamer_creation(self):
         id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_streamer_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_streamer_json()
         self.station._request_handler.post.return_value['username'] = "Username"
         self.station._request_handler.post.return_value['password'] = "Password"
         self.station._request_handler.post.return_value['comments'] = "Never gonna give you up."
 
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json()
         self.station._request_handler.get.return_value['streamer_username'] = "Username"
         self.station._request_handler.get.return_value['streamer_password'] = "Password"
         self.station._request_handler.get.return_value['comments'] = "Never gonna give you up."
@@ -438,7 +436,7 @@ class TestStation(TestCase):
 
     def test_streamer_returns_streamer(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json(1)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_streamer_json()
 
         result = self.station.streamer(id)
 
@@ -451,9 +449,9 @@ class TestStation(TestCase):
 
     def test_streamers_returns_list_of_streamer(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_streamer_json(1),
-            fake_data_generator.return_fake_streamer_json(1),
-            fake_data_generator.return_fake_streamer_json(1)
+            fake_data_generator.return_fake_streamer_json(),
+            fake_data_generator.return_fake_streamer_json(),
+            fake_data_generator.return_fake_streamer_json()
         ]
 
         result = self.station.streamers()
@@ -469,7 +467,7 @@ class TestStation(TestCase):
 
     def test_webhook_creation(self):
         id = 1
-        self.station._request_handler.post.return_value = fake_data_generator.return_fake_webhook_json(id)
+        self.station._request_handler.post.return_value = fake_data_generator.return_fake_webhook_json()
         self.station._request_handler.post.return_value['name'] = "New email webhook"
         self.station._request_handler.post.return_value['type'] = "email"
         self.station._request_handler.post.return_value['config'] = [
@@ -482,7 +480,7 @@ class TestStation(TestCase):
             "station_online"
         ]
 
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json(id)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json()
         self.station._request_handler.get.return_value['name'] = "New email webhook"
         self.station._request_handler.get.return_value['type'] = "email"
         self.station._request_handler.get.return_value['config'] = [
@@ -525,7 +523,7 @@ class TestStation(TestCase):
 
     def test_webhook_returns_webhook(self):
         id = 1
-        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json(1)
+        self.station._request_handler.get.return_value = fake_data_generator.return_fake_webhook_json()
 
         result = self.station.webhook(id)
 
@@ -534,9 +532,9 @@ class TestStation(TestCase):
 
     def test_webhooks_returns_list_of_webhook(self):
         self.station._request_handler.get.return_value = [
-            fake_data_generator.return_fake_webhook_json(1),
-            fake_data_generator.return_fake_webhook_json(1),
-            fake_data_generator.return_fake_webhook_json(1)
+            fake_data_generator.return_fake_webhook_json(),
+            fake_data_generator.return_fake_webhook_json(),
+            fake_data_generator.return_fake_webhook_json()
         ]
 
         result = self.station.webhooks()

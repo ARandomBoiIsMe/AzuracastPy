@@ -1,0 +1,6 @@
+{
+    "backend_running": false,
+    "frontend_running": true,
+    "station_has_started": true,
+    "station_needs_restart": false
+}

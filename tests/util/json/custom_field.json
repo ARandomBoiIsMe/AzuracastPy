@@ -1,0 +1,9 @@
+{
+    "name": "bro thinks hes funny",
+    "short_name": "bro_thinks_hes_funny",
+    "auto_assign": "album",
+    "id": 1,
+    "links": {
+        "self": "http://localhost/api/admin/custom_field/1"
+    }
+}

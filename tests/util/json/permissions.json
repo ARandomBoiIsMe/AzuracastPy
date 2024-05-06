@@ -1,0 +1,94 @@
+{
+    "global": [
+        {
+            "id": "administer all",
+            "name": "All Permissions"
+        },
+        {
+            "id": "view administration",
+            "name": "View Administration Page"
+        },
+        {
+            "id": "view system logs",
+            "name": "View System Logs"
+        },
+        {
+            "id": "administer settings",
+            "name": "Administer Settings"
+        },
+        {
+            "id": "administer api keys",
+            "name": "Administer API Keys"
+        },
+        {
+            "id": "administer stations",
+            "name": "Administer Stations"
+        },
+        {
+            "id": "administer custom fields",
+            "name": "Administer Custom Fields"
+        },
+        {
+            "id": "administer backups",
+            "name": "Administer Backups"
+        },
+        {
+            "id": "administer storage locations",
+            "name": "Administer Storage Locations"
+        }
+    ],
+    "station": [
+        {
+            "id": "administer all",
+            "name": "All Permissions"
+        },
+        {
+            "id": "view station management",
+            "name": "View Station Page"
+        },
+        {
+            "id": "view station reports",
+            "name": "View Station Reports"
+        },
+        {
+            "id": "view station logs",
+            "name": "View Station Logs"
+        },
+        {
+            "id": "manage station profile",
+            "name": "Manage Station Profile"
+        },
+        {
+            "id": "manage station broadcasting",
+            "name": "Manage Station Broadcasting"
+        },
+        {
+            "id": "manage station streamers",
+            "name": "Manage Station Streamers"
+        },
+        {
+            "id": "manage station mounts",
+            "name": "Manage Station Mount Points"
+        },
+        {
+            "id": "manage station remotes",
+            "name": "Manage Station Remote Relays"
+        },
+        {
+            "id": "manage station media",
+            "name": "Manage Station Media"
+        },
+        {
+            "id": "manage station automation",
+            "name": "Manage Station Automation"
+        },
+        {
+            "id": "manage station web hooks",
+            "name": "Manage Station Web Hooks"
+        },
+        {
+            "id": "manage station podcasts",
+            "name": "Manage Station Podcasts"
+        }
+    ]
+}
