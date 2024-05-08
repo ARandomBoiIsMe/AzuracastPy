@@ -15,7 +15,7 @@ class Permissions:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.permissions()``.
+            via: :meth:`~.models.administration.Admin.permissions`.
         """
         self.global_permissions = global_permissions
         self.station_permissions = station_permissions

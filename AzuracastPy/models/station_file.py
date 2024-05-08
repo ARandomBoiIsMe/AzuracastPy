@@ -85,6 +85,7 @@ class PlaylistHelper:
             All arguments must be strings.
 
         Usage:
+
         .. code-block:: python
 
             file.playlist.add("playlist")
@@ -150,6 +151,7 @@ class PlaylistHelper:
             All arguments must be strings.
 
         Usage:
+
         .. code-block:: python
 
             file.playlist.remove("playlist")
@@ -238,7 +240,9 @@ class StationFile:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.file(id)`` or ``station.files()``.
+            via: :meth:`~.models.helpers.FileHelper.upload`,
+            :meth:`~.models.helpers.FileHelper.__call__` or
+            :meth:`~.models.Station.files`.
         """
         self.unique_id = unique_id
         self.album = album
@@ -324,10 +328,15 @@ class StationFile:
         :param isrc: (Optional) The new International Standard Recording Code of the song.
             Default: ``None``.
         :param playlists: (Optional) The new list of playlists that the song has been added to.
-            Note: This will overwrite the file's existing playlists.
-                  Use the :meth:`.playlist.add` and :meth:`.playlist.remove` methods to
-                  interact with the file's existing playlists.
             Default: ``None``.
+
+            .. warning::
+
+                This will overwrite the file's existing playlists.
+                Use the :meth:`~.models.station_file.PlaylistHelper.add` and
+                :meth:`~.models.station_file.PlaylistHelper.remove` methods to
+                interact with the file's existing playlists.
+
         :param amplify: (Optional) The volume in decibels to amplify the track with.
             Leave as ``None`` to use the system default. Default: ``None``.
         :param fade_overlap: (Optional) The time that this song should overlap its surrounding
@@ -342,6 +351,7 @@ class StationFile:
             playing. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             station.file.edit(
@@ -389,6 +399,7 @@ class StationFile:
         Sets all attributes of the current :class:`StationFile` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             station.file.delete()

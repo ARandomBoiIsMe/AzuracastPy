@@ -59,7 +59,7 @@ class MountPointHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.mount_point``.
+            via: :attr:`~.models.Station.mount_point`.
         """
         self._station = _station
 
@@ -72,9 +72,10 @@ class MountPointHelper:
 
         :param id: The numerical ID of the mount point to be retrieved.
 
-        :returns: A :class:`MountPoint` object.
+        :returns: A :class:`.MountPoint` object.
 
         Usage:
+
         .. code-block:: python
 
             mount_point = station.mount_point(1)
@@ -133,11 +134,12 @@ class MountPointHelper:
         :param custom_url: (Optional) A custom URL for this stream that AzuraCast will use when
             referring to it. Leave as ``None`` to use the default value. Default: ``None``.
         :param custom_frontend_config: (Optional) Special mount point settings, in either
-            JSON { key: 'value' } format or XML <key>value</key>. Default: ``None``.
+            JSON: ``{ key: 'value' }`` or XML: ``<key>value</key>``. Default: ``None``.
 
-        :returns: A :class:`MountPoint` object for the newly created mount point.
+        :returns: A :class:`.MountPoint` object for the newly created mount point.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Formats
@@ -195,7 +197,7 @@ class FileHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.file``.
+            via: :attr:`~.models.Station.file`.
         """
         self._station = _station
 
@@ -208,9 +210,10 @@ class FileHelper:
 
         :param id: The numerical ID of the file to be retrieved.
 
-        :returns: A :class:`StationFile` object.
+        :returns: A :class:`.StationFile` object.
 
         Usage:
+
         .. code-block:: python
 
             file = station.file(1)
@@ -234,9 +237,10 @@ class FileHelper:
         :param path: the/relative/path/to/file.mp3.
         :param file: The system path of the file to be uploaded.
 
-        :returns: A :class:`StationFile` object for the newly uploaded file.
+        :returns: A :class:`.StationFile` object for the newly uploaded file.
 
         Usage:
+
         .. code-block:: python
 
             file = station.file.upload(
@@ -267,7 +271,7 @@ class PlaylistHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.playlist``.
+            via: :attr:`~.models.Station.playlist`.
         """
         self._station = _station
 
@@ -280,9 +284,10 @@ class PlaylistHelper:
 
         :param id: The numerical ID of the playlist to be retrieved.
 
-        :returns: A :class:`Playlist` object.
+        :returns: A :class:`.Playlist` object.
 
         Usage:
+
         .. code-block:: python
 
             playlist = station.playlist(1)
@@ -318,6 +323,7 @@ class PlaylistHelper:
             Default: ``False``.
 
         Usage:
+
         .. code-block:: python
 
             item = station.playlist.generate_schedule_item(
@@ -344,7 +350,7 @@ class PlaylistHelper:
     def generate_schedule_items(self, *args) -> List[Dict[str, Any]]:
         """
         Generates a list of schedule items for a playlist by using the
-            :meth:``.generate_schedule_item`` function on each argument.
+            :meth:`.generate_schedule_item` function on each argument.
 
         :param args: Tuples in the format of
             ``(start_time, end_time, start_date, end_date, days, loop_once)``.
@@ -352,6 +358,7 @@ class PlaylistHelper:
             The rest of the tuple's values can be ``None``.
 
         Usage:
+
         .. code-block:: python
 
             items = station.playlist.generate_schedule_items(
@@ -455,9 +462,10 @@ class PlaylistHelper:
         :param schedule: The structure representing the schedule list of the playlist. This can be
             generated using the :meth:`.generate_schedule_items` function. Default: ``None``.
 
-        :returns: A :class:`Playlist` object for the newly created playlist.
+        :returns: A :class:`.Playlist` object for the newly created playlist.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import PlaylistTypes
@@ -535,7 +543,7 @@ class PodcastHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.podcast``.
+            via: :attr:`~.models.Station.podcast`.
         """
         self._station = _station
 
@@ -548,9 +556,10 @@ class PodcastHelper:
 
         :param id: The string ID of the podcast to be retrieved.
 
-        :returns: A :class:`Podcast` object.
+        :returns: A :class:`.Podcast` object.
 
         Usage:
+
         .. code-block:: python
 
             podcast = station.podcast("string-id")
@@ -594,9 +603,10 @@ class PodcastHelper:
         :param website: (Optional) The link to the website that hosts the podcast.
             Default: ``None``.
 
-        :returns: A :class:`Podcast` object for the newly created podcast.
+        :returns: A :class:`.Podcast` object for the newly created podcast.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Languages, PodcastCategories
@@ -647,7 +657,7 @@ class HLSStreamHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.hls_stream``.
+            via: :attr:`~.models.Station.hls_stream`.
         """
         self._station = _station
 
@@ -660,9 +670,10 @@ class HLSStreamHelper:
 
         :param id: The numerical ID of the HLS stream to be retrieved.
 
-        :returns: A :class:`HLSStream` object.
+        :returns: A :class:`.HLSStream` object.
 
         Usage:
+
         .. code-block:: python
 
             hls_stream = station.hls_stream(1)
@@ -684,17 +695,14 @@ class HLSStreamHelper:
         """
         Adds an HTTP Live Streaming (HLS) stream to the station.
 
-        .. note::
-
-            You need to provide a valid X-API-Key to use this function.
-
         :param name: The name of the HLS stream.
         :param format: The format of the HLS stream. Default: ``Formats.AAC``.
         :param bitrate: The bitrate of the HLS stream. Default: ``Bitrates.BITRATE_128``.
 
-        :returns: A :class:`HLSStream` object for the newly created HLS stream.
+        :returns: A :class:`.HLSStream` object for the newly created HLS stream.
 
        Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Formats, Bitrates
@@ -742,7 +750,7 @@ class SFTPUserHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.sftp_user``.
+            via: :attr:`~.models.Station.sftp_user`.
         """
         self._station = _station
 
@@ -755,9 +763,10 @@ class SFTPUserHelper:
 
         :param id: The numerical ID of the SFTP user to be retrieved.
 
-        :returns: A :class:`SFTPUser` object.
+        :returns: A :class:`.SFTPUser` object.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user = station.sftp_user(1)
@@ -784,9 +793,10 @@ class SFTPUserHelper:
         :param public_keys: (Optional) A list of public keys to be assigned to the user.
             Default: ``None``.
 
-        :returns: A :class:`SFTPUser` object for the newly created SFTP user.
+        :returns: A :class:`.SFTPUser` object for the newly created SFTP user.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user = station.sftp_user.create(
@@ -822,7 +832,7 @@ class WebhookHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.webhook``.
+            via: :attr:`~.models.Station.webhook`.
         """
         self._station = _station
 
@@ -835,9 +845,10 @@ class WebhookHelper:
 
         :param id: The numerical ID of the SFTP user to be retrieved.
 
-        :returns: A :class:`SFTPUser` object.
+        :returns: A :class:`.SFTPUser` object.
 
         Usage:
+
         .. code-block:: python
 
             webhook = station.webhook(1)
@@ -896,6 +907,7 @@ class WebhookHelper:
         :returns: A dictionary of the not-``None`` attributes and their values.
 
         Usage:
+
         .. code-block:: python
 
             webhook_config = station.webhook.generate_webhook_config(
@@ -928,9 +940,10 @@ class WebhookHelper:
         :param triggers: (Optional) A list of triggers for the webhook. Each element of the list
             must be from the :class:`WebhookTriggers` enum.
 
-        :returns: A :class:`Webhook` object for the newly created webhook.
+        :returns: A :class:`.Webhook` object for the newly created webhook.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookConfigTypes, WebhookTriggers
@@ -995,7 +1008,7 @@ class StreamerHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.streamer``.
+            via: :attr:`~.models.Station.streamer`.
         """
         self._station = _station
 
@@ -1006,11 +1019,12 @@ class StreamerHelper:
         """
         Retrieves a specific streamer from the station.
 
-        :returns: A :class:`Streamer` object.
-
         :param id: The numerical ID of the streamer to be retrieved.
 
+        :returns: A :class:`.Streamer` object.
+
         Usage:
+
         .. code-block:: python
 
             streamer = station.streamer(1)
@@ -1043,6 +1057,7 @@ class StreamerHelper:
         :param days: (Optional) A list of the days that the playlist will play. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             item = station.streamer.generate_schedule_item(
@@ -1074,6 +1089,7 @@ class StreamerHelper:
             Any of the tuple's values can be ``None``.
 
         Usage:
+
         .. code-block:: python
 
             items = station.streamer.generate_schedule_items(
@@ -1143,9 +1159,10 @@ class StreamerHelper:
         :param schedule: The structure representing the schedule list of the streamer. This can be
             generated using the :meth:`.generate_schedule_items` function. Default: ``None``.
 
-        :returns: A :class:`Streamer` object for the newly created streamer.
+        :returns: A :class:`.Streamer` object for the newly created streamer.
 
         Usage:
+
         .. code-block:: python
 
         streamer = station.streamer.create(
@@ -1188,7 +1205,7 @@ class RemoteRelayHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.remote_relay``.
+            via: :attr:`~.models.Station.remote_relay`.
         """
         self._station = _station
 
@@ -1201,9 +1218,10 @@ class RemoteRelayHelper:
 
         :param id: The numerical ID of the remote relay to be retrieved.
 
-        :returns: A :class:`RemoteRelay` object.
+        :returns: A :class:`.RemoteRelay` object.
 
         Usage:
+
         .. code-block:: python
 
             remote_relay = station.remote_relay(1)
@@ -1260,9 +1278,10 @@ class RemoteRelayHelper:
         :param is_public: Set to ``True`` to advertise this relay on "Yellow Pages" public radio
             directories. Default: ``False``.
 
-        :returns: A :class:`RemoteRelay` object for the newly created remote relay.
+        :returns: A :class:`.RemoteRelay` object for the newly created remote relay.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Formats
@@ -1326,7 +1345,7 @@ class QueueHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.queue``.
+            via: :attr:`~.models.Station.queue`.
         """
         self._station = _station
 
@@ -1340,9 +1359,10 @@ class QueueHelper:
         :param id: (Optional) The numerical ID of the queue item to be retrieved.
             If None, all items in the queue are retrieved. Default: ``None``.
 
-        :returns: A list of :class:`QueueItem` objects or a single :class:`QueueItem` object.
+        :returns: A list of :class:`.QueueItem` objects or a single :class:`.QueueItem` object.
 
         Usage:
+
         .. code-block:: python
 
             queue = station.queue()

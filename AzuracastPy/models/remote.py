@@ -5,6 +5,7 @@ from ..util.general_util import generate_repr_string
 from .listeners import Listeners
 
 class Remote:
+    "Represents basic info for station remote relay"
     def __init__(
         self,
         id: int,
@@ -14,6 +15,14 @@ class Remote:
         format: str,
         listeners: Listeners
     ):
+        """
+        Initializes a :class:`Remote` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, an instance will be made
+            available as an attribute another classes: :class:`~.models.Station`.
+        """
         self.id = id
         self.name = name
         self.url = url

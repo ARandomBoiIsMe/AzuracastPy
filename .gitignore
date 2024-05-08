@@ -2,3 +2,7 @@ venv
 __pycache__
 meh.py
 *.ini
+build
+_static
+_templates
+dist

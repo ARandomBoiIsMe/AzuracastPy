@@ -18,7 +18,7 @@ class RequestableSong:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.requestable_songs()``.
+            via: :meth:`~.models.Station.requestable_songs`.
         """
         self.request_id = request_id
         self.request_url = request_url

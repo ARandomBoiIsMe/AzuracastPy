@@ -54,6 +54,7 @@ class PublicKeysHelper:
             All arguments must be strings.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user.key.add("key")
@@ -101,6 +102,7 @@ class PublicKeysHelper:
             All arguments must be strings.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user.key.remove("key")
@@ -154,7 +156,9 @@ class SFTPUser:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.sftp_user(id)`` or ``station.sftp_users()``.
+            via: :meth:`~.models.helpers.SFTPUserHelper.create`,
+            :meth:`~.models.helpers.SFTPUserHelper.__call__` or
+            :meth:`~.models.Station.sftp_users`.
         """
         self.id = id
         self.username = username
@@ -201,12 +205,17 @@ class SFTPUser:
 
         :param username: (Optional) The new username of the SFTP user. Default: ``None``.
         :param public_keys: (Optional) The new list of public keys to be assigned to the user.
-            Note: This will overwrite the user's existing keys.
-                  Use the :meth:`.key.add` and :meth:`.key.remove` methods to
-                  interact with the user's existing keys.
             Default: ``None``.
 
+            .. warning::
+
+                This will overwrite the user's existing keys.
+                Use the :meth:`~.models.sftp_user.PublicKeysHelper.add` and
+                :meth:`~.models.sftp_user.PublicKeysHelper.remove` methods to
+                interact with the user's existing keys.
+
         Usage:
+
         .. code-block:: python
 
             sftp_user.edit(
@@ -226,6 +235,7 @@ class SFTPUser:
         :param password: The SFTP user's new password.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user.update_password(
@@ -253,6 +263,7 @@ class SFTPUser:
         Sets all attributes of the current :class:`SFTPUser` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             sftp_user.delete()

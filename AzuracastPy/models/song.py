@@ -25,9 +25,12 @@ class Song:
         .. note::
 
             This class should not be initialized directly. Instead, an instance will be made
-            available as an attribute of other classes: :class:`RequestableSong`,
-            :class:`SongHistory`, :class:`QueueItem`, :class:`CurrentSong`,
-            :class:`PlayingNext`.
+            available as an attribute of other classes:
+            :class:`~.models.requestable_song.RequestableSong`,
+            :class:`~.models.song_history.SongHistory`,
+            :class:`.QueueItem`,
+            :class:`~.models.now_playing.CurrentSong`,
+            :class:`~.models.now_playing.PlayingNext`.
         """
         self.id = id
         self.text = text

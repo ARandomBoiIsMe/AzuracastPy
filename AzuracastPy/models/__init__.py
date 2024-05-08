@@ -5,7 +5,7 @@ from .mount_point import MountPoint
 from .playlist import Playlist
 from .remote import Remote
 from .requestable_song import RequestableSong
-from .schedule_time import ScheduleTime
+from .schedule_item import ScheduleItem
 from .song import Song
 from .song_history import SongHistory
 from .station import Station

@@ -62,8 +62,9 @@ class MountPoint:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.mount_point.create()``, ``station.mount_point(id)`` or
-            ``station.mount_points()``.
+            via: :meth:`~.models.helpers.MountPointHelper.create`,
+            :meth:`~.models.helpers.MountPointHelper.__call__` or
+            :meth:`~.models.Station.mount_points`.
         """
         self.name = name
         self.display_name = display_name
@@ -139,6 +140,7 @@ class MountPoint:
             JSON { key: 'value' } format or XML <key>value</key>. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Formats, Bitrates
@@ -175,6 +177,7 @@ class MountPoint:
         Sets all attributes of the current :class:`MountPoint` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             mount_point.delete()

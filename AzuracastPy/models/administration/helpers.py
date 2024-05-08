@@ -36,12 +36,12 @@ class AdminStationHelper:
         _admin
     ):
         """
-        Initializes a :class:`AdminStationHelpe` object.
+        Initializes a :class:`AdminStationHelper` object.
 
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.station``.
+            via: :attr:`~.Admin.station`.
         """
         self._admin = _admin
 
@@ -57,6 +57,7 @@ class AdminStationHelper:
         :returns: A :class:`AdminStation` object.
 
         Usage:
+
         .. code-block:: python
 
             admin_station = admin.station(1)
@@ -81,7 +82,7 @@ class RoleHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.role``.
+            via: :attr:`~.Admin.role`.
         """
         self._admin = _admin
 
@@ -97,6 +98,7 @@ class RoleHelper:
         :returns: A :class:`Role` object.
 
         Usage:
+
         .. code-block:: python
 
             role = admin.role(1)
@@ -127,6 +129,7 @@ class RoleHelper:
             If ``None``, all permissions will be given by default. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import StationPermissions
@@ -186,6 +189,7 @@ class RoleHelper:
             Any of the tuple's values can be ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import StationPermissions
@@ -251,6 +255,7 @@ class RoleHelper:
         :returns: A :class:`Role` object for the newly created role.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import GlobalPermissions, StationPermissions
@@ -316,7 +321,7 @@ class CustomFieldHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.custom_field``.
+            via: :attr:`~.Admin.custom_field`.
         """
         self._admin = _admin
 
@@ -332,6 +337,7 @@ class CustomFieldHelper:
         :returns: A :class:`CustomField` object.
 
         Usage:
+
         .. code-block:: python
 
             custom_field = admin.custom_field(1)
@@ -362,6 +368,7 @@ class CustomFieldHelper:
             Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import AutoAssignValues
@@ -414,7 +421,7 @@ class StorageLocationHelper:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.storage_location``.
+            via: :attr:`~.Admin.storage_location`.
         """
         self._admin = _admin
 
@@ -430,6 +437,7 @@ class StorageLocationHelper:
         :returns: A :class:`StorageLocation` object.
 
         Usage:
+
         .. code-block:: python
 
             storage_location = admin.storage_location(1)

@@ -10,12 +10,21 @@ from .station import Station
 from .song_history import SongHistory
 
 class Live:
+    """Represents live status and info of the currently-playing song on a station."""
     def __init__(
         self,
         is_live: bool,
         streamer_name: str,
         broadcast_start, art: str
     ):
+        """
+        Initializes a :class:`Live` object for a :class:`NowPlaying` instance.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``now_playing.live``.
+        """
         self.is_live = is_live
         self.streamer_name = streamer_name
         self.broadcast_start = broadcast_start
@@ -107,7 +116,7 @@ class NowPlaying:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``client.now_playing(id)`` or ``client.now_playing()``.
+            via: :meth:`~.AzuracastClient.now_playing`.
         """
         self.station = Station(**station)
         self.listeners = Listeners(**listeners)

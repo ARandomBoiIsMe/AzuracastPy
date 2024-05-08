@@ -26,7 +26,7 @@ class SongHistory:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.history()``.
+            via: :meth:`~.models.Station.history`
         """
         self.sh_id = sh_id
         self.played_at = played_at

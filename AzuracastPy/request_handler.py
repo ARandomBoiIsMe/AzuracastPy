@@ -4,14 +4,14 @@ from typing import Optional, Tuple, Dict, Any
 from json.decoder import JSONDecodeError
 from lxml import html # A HTML parser is needed to extract some errors
 
-import requests
-
 from .exceptions import (
     AccessDeniedException,
     AzuracastAPIException,
     UnexpectedErrorException,
     ClientException
 )
+
+import requests
 
 class RequestHandler:
     def __init__(

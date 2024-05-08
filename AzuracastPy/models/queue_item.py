@@ -49,7 +49,7 @@ class QueueItem:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.queue(id)`` or ``station.queue()``.
+            via: :meth:`~.models.helpers.QueueHelper.__call__`.
         """
         self.cued_at = cued_at
         self.played_at = played_at

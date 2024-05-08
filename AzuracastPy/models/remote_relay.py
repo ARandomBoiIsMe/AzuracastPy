@@ -58,8 +58,9 @@ class RemoteRelay:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.remote_relay.create()``, ``station.remote_relay(id)`` or
-            ``station.remote_relays()``.
+            via: :meth:`~.models.helpers.RemoteRekayHelper.create`,
+            :meth:`~.models.helpers.RemoteRekayHelper.__call__` or
+            :meth:`~.models.Station.remote_relays`.
         """
         self.id = id
         self.display_name = display_name
@@ -133,6 +134,7 @@ class RemoteRelay:
             "Yellow Pages" public radio directories. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             remote_relay.edit(
@@ -173,6 +175,7 @@ class RemoteRelay:
         Sets all attributes of the current :class:`RemoteRelay` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             remote_relay.delete()

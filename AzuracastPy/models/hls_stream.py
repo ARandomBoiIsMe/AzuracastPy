@@ -45,8 +45,9 @@ class HLSStream:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.hls_stream.create()``, ``station.hls_stream(id)`` or
-            ``station.hls_streams()``.
+            via: :meth:`~.models.helpers.HLSStreamHelper.create`,
+            :meth:`~.models.helpers.HLSStreamHelper.__call__` or
+            :meth:`~.models.Station.hls_streams`.
         """
         self.name = name
         self.format = format
@@ -75,6 +76,7 @@ class HLSStream:
         :param bitrate: (Optional) The new bitrate of the hls stream. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Formats, Bitrates
@@ -106,6 +108,7 @@ class HLSStream:
         Sets all attributes of the current :class:`HLSStream` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             hls_stream.delete()

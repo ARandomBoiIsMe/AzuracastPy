@@ -155,6 +155,7 @@ class ScheduleHelper:
         :param args: The new schedule item(s) to be added to the playlist.
 
         Usage:
+
         .. code-block:: python
 
             item = station.playlist.generate_schedule_item(
@@ -201,6 +202,7 @@ class ScheduleHelper:
         :param id: The ID of the schedule item to be removed.
 
         Usage:
+
         .. code-block:: python
 
             playlist.schedule.remove(1)
@@ -270,8 +272,9 @@ class Playlist:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.playlist.create()``, ``station.playlist(id)`` or
-            ``station.playlists()``.
+            via: :meth:`~.models.helpers.PlaylistHelper.create`,
+            :meth:`~.models.helpers.PlaylistHelper.__call__` or
+            :meth:`~.models.Station.playlists`.
         """
         self.name = name
         self.type = type
@@ -390,12 +393,17 @@ class Playlist:
             ``PlaylistSources.SONGS``. Default: ``None``.
         :param schedule: (Optional) The new structure representing the schedule list of the
             playlist. This can be generated using the :meth:`.generate_schedule_items` function.
-            Note: This will overwrite the playlist's existing schedule.
-                  Use the :meth:`.schedule.add` and :meth:`.schedule.remove` methods to
-                  interact with the playlist's existing schedule.
             Default: ``None``.
 
+            .. warning::
+
+                This will overwrite the playlist's existing schedule.
+                Use the :meth:`~.models.playlist.ScheduleHelper.add` and
+                :meth:`~.models.playlist.ScheduleHelper.remove` methods to
+                interact with the playlist's existing schedule.
+
         Usage:
+
         .. code-block:: python
 
             playlist.edit(
@@ -441,6 +449,7 @@ class Playlist:
         Sets all attributes of the current :class:`Playlist` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             playlist.delete()

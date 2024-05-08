@@ -16,8 +16,8 @@ class Listeners:
         .. note::
 
             This class should not be initialized directly. Instead, an instance will be made
-            available as an attribute of other classes: :class:`NowPlaying`, :class:`Mount`,
-            :class:`Remote`.
+            available as an attribute of other classes: :class:`~.models.now_playing.NowPlaying`,
+            :class:`~.models.mount.Mount` or :class:`~.models.remote.Remote`.
         """
         self.total = total
         self.unique = unique

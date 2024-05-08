@@ -47,8 +47,9 @@ class CustomField:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.custom_field.create()``, ``admin.custom_field(id)`` or
-            ``admin.custom_fields()``.
+            via: :meth:`~.models.administration.helpers.CustomFieldHelper.create`,
+            :meth:`~.models.administration.helpers.CustomFieldHelper.__call__` or
+            :meth:`~.models.administration.Admin.custom_fields`.
         """
         self.name = name
         self.short_name = short_name
@@ -77,6 +78,7 @@ class CustomField:
             Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import AutoAssignValues
@@ -110,6 +112,7 @@ class CustomField:
         Sets all attributes of the current :class:`CustomField` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             custom_field.delete()

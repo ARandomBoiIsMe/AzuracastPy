@@ -22,22 +22,22 @@ class Admin:
         _request_handler: RequestHandler
     ):
         """
-        Initializes an :class:`Admin` object.
+        Initializes an :class:`~.models.administration.Admin` object.
 
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``client.admin()``.
+            via: :meth:`~.AzuracastClient.admin`.
         """
         self._request_handler = _request_handler
 
         self.station = AdminStationHelper(_admin=self)
         """
-        An instance of :class:`.AdminStationHelper`.
+        An instance of :class:`~.models.administration.helpers.AdminStationHelper`.
 
-        Provides the interface for working with :class:`.AdminStation` instances.
+        Provides the interface for working with :class:`~.models.administration.AdminStation` instances.
 
-        For example, to get a station with admin priviledges on this radio, whose is ``1``:
+        For example, to get a station with admin priviledges on this radio, whose id is ``1``:
 
         .. code-block:: python
 
@@ -46,9 +46,9 @@ class Admin:
 
         self.role = RoleHelper(_admin=self)
         """
-        An instance of :class:`.RoleHelper`.
+        An instance of :class:`~.models.administration.helpers.RoleHelper`.
 
-        Provides the interface for working with :class:`.Role` instances.
+        Provides the interface for working with :class:`~.models.administration.Role` instances.
 
         For example, to get a role with an id of ``1`` from this radio:
 
@@ -81,9 +81,9 @@ class Admin:
 
         self.custom_field = CustomFieldHelper(_admin=self)
         """
-        An instance of :class:`.CustomFieldHelper`.
+        An instance of :class:`~.models.administration.helpers.CustomFieldHelper`.
 
-        Provides the interface for working with :class:`.CustomField` instances.
+        Provides the interface for working with :class:`~.models.administration.CustomField` instances.
 
         For example, to get a custom field with an id of ``1`` from this radio:
 
@@ -105,9 +105,9 @@ class Admin:
 
         self.storage_location = StorageLocationHelper(_admin=self)
         """
-        An instance of :class:`.StorageLocationHelper`.
+        An instance of :class:`~.models.administration.helpers.StorageLocationHelper`.
 
-        Provides the interface for working with :class:`.StorageLocation` instances.
+        Provides the interface for working with :class:`~.models.administration.StorageLocation` instances.
 
         For example, to get a storage location with an id of ``1`` from this radio:
 
@@ -130,9 +130,10 @@ class Admin:
         """
         Retrieves all stations on the radio.
 
-        :returns: A list of :class:`AdminStation` objects.
+        :returns: A list of :class:`~.models.administration.AdminStation` objects.
 
         Usage:
+
         .. code-block:: python
 
             admin_stations = admin.stations()
@@ -145,9 +146,10 @@ class Admin:
         """
         Retrieves the available permissions on the radio.
 
-        :returns: A :class:`Permissions` object.
+        :returns: A :class:`~.models.administration.Permissions` object.
 
         Usage:
+
         .. code-block:: python
 
             radio_permissions = admin.permissions()
@@ -160,9 +162,10 @@ class Admin:
         """
         Retrieves the created roles on the radio.
 
-        :returns: A list of :class:`Role` objects.
+        :returns: A list of :class:`~.models.administration.Role` objects.
 
         Usage:
+
         .. code-block:: python
 
             radio_roles = admin.roles()
@@ -175,9 +178,10 @@ class Admin:
         """
         Retrieves the created custom fields on the radio.
 
-        :returns: A list of :class:`CustomField` objects.
+        :returns: A list of :class:`~.models.administration.CustomField` objects.
 
         Usage:
+
         .. code-block:: python
 
             custom_fields = admin.custom_fields()
@@ -190,9 +194,10 @@ class Admin:
         """
         Retrieves the available storage loactions on the radio.
 
-        :returns: A list of :class:`StorageLocation` objects.
+        :returns: A list of :class:`~.models.administration.StorageLocation` objects.
 
         Usage:
+
         .. code-block:: python
 
             storage_locations = admin.storage_locations()
@@ -205,9 +210,10 @@ class Admin:
         """
         Retrieves the internal relays on the radio.
 
-        :returns: A list of :class:`Relay` objects.
+        :returns: A list of :class:`~.models.administration.Relay` objects.
 
         Usage:
+
         .. code-block:: python
 
             relays = admin.relays()
@@ -220,9 +226,10 @@ class Admin:
         """
         Retrieves the radio's settings.
 
-        :returns: A :class:`Settings` object.
+        :returns: A :class:`~.models.administration.Settings` object.
 
         Usage:
+
         .. code-block:: python
 
             settings = admin.settings()
@@ -236,6 +243,7 @@ class Admin:
         :returns: The statistics of the system running the radio.
 
         Usage:
+
         .. code-block:: python
 
             stats = admin.cpu_stats()

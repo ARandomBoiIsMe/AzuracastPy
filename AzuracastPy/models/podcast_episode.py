@@ -83,8 +83,9 @@ class PodcastEpisode:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``podcast.episode.create()``, ``podcast.episode(id)`` or
-            ``podcast.episode.all()``.
+            via: :meth:`~.models.podcast.PodcastEpisodeHelper.create`,
+            :meth:`~.models.podcast.PodcastEpisodeHelper.__call__` or
+            :meth:`~.models.podcast.PodcastEpisodeHelper.all`.
         """
         self.id = id
         self.title = title
@@ -118,6 +119,7 @@ class PodcastEpisode:
         :param explicit: (Optional) The new explicit status of the episode. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             podcast_episode.edit(
@@ -149,6 +151,7 @@ class PodcastEpisode:
         Sets all attributes of the current :class:`PodcastEpisode` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             podcast_episode.delete()

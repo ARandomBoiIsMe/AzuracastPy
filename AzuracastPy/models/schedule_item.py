@@ -4,7 +4,7 @@ from datetime import datetime
 
 from ..util.general_util import generate_repr_string
 
-class ScheduleTime:
+class ScheduleItem:
     """Represents a single item in the station's schedule."""
     def __init__(
         self,
@@ -25,7 +25,7 @@ class ScheduleTime:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.schedule()``.
+            via: :meth:`~.models.Station.schedule`.
         """
         self.id = id
         self.type = type

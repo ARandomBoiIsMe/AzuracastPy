@@ -26,7 +26,7 @@ class Relay:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.relays()``.
+            via: :meth:`~.Admin.relays`.
         """
         self.id = id
         self.name = name

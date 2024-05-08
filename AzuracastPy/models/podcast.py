@@ -71,6 +71,7 @@ class PodcastEpisodeHelper:
         :returns: A :class:`PodcastEpisode` object.
 
         Usage:
+
         .. code-block:: python
 
             episode = podcast.episode("episode-id")
@@ -107,6 +108,7 @@ class PodcastEpisodeHelper:
         :returns: A :class:`PodcastEpisode` object for the newly created episode.
 
         Usage:
+
         .. code-block:: python
 
             episode = podcast.episode.create(
@@ -145,6 +147,7 @@ class PodcastEpisodeHelper:
         :returns: A list of :class:`PodcastEpisode` objects.
 
         Usage:
+
 
         .. code-block:: python
 
@@ -187,6 +190,7 @@ class PodcastCategoryHelper:
             All arguments must be from the :class:`PodcastCategories` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import PodcastCategories
@@ -240,6 +244,7 @@ class PodcastCategoryHelper:
             All arguments must be from the :class:`PodcastCategories` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import PodcastCategories
@@ -308,7 +313,9 @@ class Podcast:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.podcast(id)`` or ``station.podcasts()``.
+            via: :meth:`~.models.helpers.PodcastHelper.create`,
+            :meth:`~.models.helpers.PodcastHelper.__call__` or
+            :meth:`~.models.Station.podcasts`.
         """
         self.id = id
         self.storage_location_id = storage_location_id
@@ -411,15 +418,21 @@ class Podcast:
         :param language: (Optional) The new language of the podcast. Default: ``None``.
         :param categories: (Optional) A list of the categories that the podcast falls under.
             Each element of the list must be from the ``PodcastCategories`` class.
-            Note: This will overwrite the podcast's existing categories.
-                  Use the :meth:`.category.add` and :meth:`.category.remove` methods to
-                  interact with the podcast's existing categories.
             Default: ``None``.
+
+            .. warning::
+
+                This will overwrite the podcast's existing categories.
+                Use the :meth:`~.models.podcast.PodcastCategoryHelper.add` and
+                :meth:`~.models.podcast.PodcastCategoryHelper.remove` methods to
+                interact with the podcast's existing categories.
+
         :param author: (Optional) The new author of the podcast. Default: ``None``.
         :param email: (Optional) The new email of the podcast. Default: ``None``.
         :param website: (Optional) The new website url of the podcast. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import Languages, PodcastCategories
@@ -451,6 +464,7 @@ class Podcast:
         Sets all attributes of the current :class:`Podcast` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             podcast.delete()

@@ -12,6 +12,7 @@ from ...enums import (
 from typing import Optional, List, Union, Dict, Any
 
 class UpdateResults:
+    "Represents the service's update results."
     def __init__(
         self,
         current_release: str,
@@ -22,6 +23,14 @@ class UpdateResults:
         needs_release_update: bool,
         can_switch_to_stable: bool
     ):
+        """
+        Initializes a :class:`UpdateResults` object for the settings of the radio.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``settings.update_results``.
+        """
         self.current_release = current_release
         self.latest_release = latest_release
         self.needs_rolling_update = needs_rolling_update
@@ -112,7 +121,7 @@ class Settings:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.settings()``.
+            via: :meth:`~.administration.Admin.settings`.
         """
         self.app_unique_identifier = app_unique_identifier
         self.base_url = base_url
@@ -307,6 +316,7 @@ class Settings:
             Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import AnalyticsTypes, PublicThemes

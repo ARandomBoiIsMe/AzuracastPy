@@ -53,6 +53,7 @@ class PermissionsHelper:
             All arguments must be from the :class:`GlobalPermissions` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import GlobalPermissions
@@ -110,6 +111,7 @@ class PermissionsHelper:
             All arguments must be from the :class:`GlobalPermissions` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import GlobalPermissions
@@ -173,7 +175,9 @@ class Role:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.role.create()``, ``admin.role(id)`` or ``admin.roles()``.
+            via: :meth:`~.administration.helpers.RoleHelper.create`,
+            :meth:`~.administration.helpers.RoleHelper.__call__` or
+            :meth:`~.Admin.roles`.
         """
         self.id = id
         self.name = name
@@ -232,11 +236,20 @@ class Role:
         :param name: (Optional) The new name of the role. Default: ``None``
         :param global_permissions: (Optional) The new global permissions of the role.
             Default: ``None``.
+
+            .. warning::
+
+                This will overwrite the role's existing global permissions.
+                Use the :meth:`~.models.administration.role.PermissionsHelper.add_global` and
+                :meth:`~.models.administration.role.PermissionsHelper.remove_global` methods to
+                interact with the role's existing global permissions.
+
         :param station_permissions: (Optional) The structure representing the new station
             permissions of the role. Generate this using the :meth:`.generate_station_permissions`
             function. Default: ``None``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import GlobalPermissions
@@ -284,6 +297,7 @@ class Role:
         Sets all attributes of the current :class:`Role` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             role.delete()

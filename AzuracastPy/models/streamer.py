@@ -106,6 +106,7 @@ class ScheduleHelper:
         :param args: The new schedule item(s) to be added to the station.
 
         Usage:
+
         .. code-block:: python
 
             item = station.streamer.generate_schedule_item(
@@ -152,6 +153,7 @@ class ScheduleHelper:
         :param id: The ID of the schedule item to be removed.
 
         Usage:
+
         .. code-block:: python
 
             streamer.schedule.remove(1)
@@ -208,7 +210,9 @@ class Streamer:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``streamer.links``.
+            via: :meth:`~.models.helpers.StreamerHelper.create`,
+            :meth:`~.models.helpers.StreamerHelper.__call__` or
+            :meth:`~.models.Station.streamers`.
         """
         self.streamer_username = streamer_username
         self.streamer_password = streamer_password
@@ -279,12 +283,16 @@ class Streamer:
             connect during their scheduled broadcast times. Default: ``None``.
         :param schedule: (Optional) The new structure representing the schedule list of the
             streamer. This can be generated using the :meth:`.generate_schedule_items` function.
-            Note: This will overwrite the streamer's existing schedule.
-                  Use the :meth:`.schedule.add` and :meth:`.schedule.remove` methods to
-                  interact with the streamer's existing schedule.
-            Default: ``None``.
+
+            .. warning::
+
+                This will overwrite the streamer's existing schedule.
+                Use the :meth:`~.models.streamer.ScheduleHelper.add` and
+                :meth:`~.models.streamer.ScheduleHelper.remove` methods to
+                interact with the streamer's existing schedule.
 
         Usage:
+
         .. code-block:: python
 
             streamer.edit(
@@ -307,6 +315,7 @@ class Streamer:
         :param password: The streamer's new password.
 
         Usage:
+
         .. code-block:: python
 
             streamer.update_password(
@@ -334,6 +343,7 @@ class Streamer:
         Sets all attributes of the current :class:`Streamer` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             streamer.delete()

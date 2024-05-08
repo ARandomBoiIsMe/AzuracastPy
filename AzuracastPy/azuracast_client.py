@@ -21,8 +21,10 @@ class AzuracastClient:
 
     .. code-block:: python
 
+        from AzuracastPy import AzuracastClient
+
         client = AzuracastClient(
-            radio_url="Your radio's public URL. Must start with 'http://' or 'https://'",
+            radio_url="Your radio's public URL.",
             x_api_key="Your account's API key. This can be created from your profile on the site."
         )
 
@@ -30,10 +32,10 @@ class AzuracastClient:
 
     .. code-block:: python
 
+        from AzuracastPy import AzuracastClient
+
         client = AzuracastClient(
-            config="The path to the configuration file containing the values.
-                See the format of the config file here: # bleh.
-                Must be a '.ini' file."
+            config="Path to the '*.ini' configuration file containing the values."
         )
     """
     def __init__(
@@ -112,6 +114,7 @@ class AzuracastClient:
         :returns: An :class:`Admin` object.
 
         Usage:
+
         .. code-block:: python
 
             admin = client.admin()
@@ -164,6 +167,7 @@ class AzuracastClient:
         :returns: A list of :class:`Station` objects.
 
         Usage:
+
         .. code-block:: python
 
             stations = client.stations()
@@ -188,6 +192,7 @@ class AzuracastClient:
         :returns: A :class:`Station` object.
 
         Usage:
+
         .. code-block:: python
 
             station = client.station(1)
@@ -209,6 +214,7 @@ class AzuracastClient:
         :returns: The status of the radio's API.
 
         Usage:
+
         .. code-block:: python
 
             status = client.status()
@@ -226,6 +232,7 @@ class AzuracastClient:
         :returns: The current time.
 
         Usage:
+
         .. code-block:: python
 
             time = client.time()

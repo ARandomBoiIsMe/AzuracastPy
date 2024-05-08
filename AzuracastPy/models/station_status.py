@@ -17,7 +17,7 @@ class StationStatus:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.status()``.
+            via: :meth:`~.models.Station.status`.
         """
         self.backend_running = backend_running
         self.frontend_running = frontend_running

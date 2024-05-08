@@ -65,7 +65,8 @@ class StorageLocation:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``admin.storage_location(id)`` or ``admin.storage_locations()``.
+            via: :meth:`~.administration.helpers.StorageLocationHelper.__call__` or
+            :meth:`~.Admin.storage_locations`.
         """
         self.id = id
         self.type = type
@@ -149,6 +150,7 @@ class StorageLocation:
         Sets all attributes of the current :class:`StorageLocation` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             storage_location.delete()

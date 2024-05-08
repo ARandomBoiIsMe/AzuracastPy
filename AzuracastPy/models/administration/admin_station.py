@@ -38,6 +38,14 @@ class BackendConfig:
         hls_is_default: bool,
         live_broadcast_text: str
     ):
+        """
+        Initializes a :class:`BackendConfig` object for an admin station.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin_station.backend_config``.
+        """
         self.charset = charset
         self.dj_port = dj_port
         self.telnet_port = telnet_port
@@ -69,6 +77,7 @@ class BackendConfig:
         return generate_repr_string(self)
 
 class FrontendConfig:
+    """Represents the frontend configuration of a station."""
     def __init__(
         self,
         custom_config: str,
@@ -85,6 +94,14 @@ class FrontendConfig:
         sc_license_id: str,
         sc_user_id: str
     ):
+        """
+        Initializes a :class:`FrontendConfig` object for an admin station.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin_station.frontend_config``.
+        """
         self.custom_config = custom_config
         self.source_pw = source_pw
         self.admin_pw = admin_pw
@@ -103,12 +120,21 @@ class FrontendConfig:
         return generate_repr_string(self)
 
 class Links:
+    "Represents an admin station's links."
     def __init__(
         self_,
         self: str,
         manage: str,
         clone: str
     ):
+        """
+        Initializes a :class:`Links` object for an admin station.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: ``admin_station.links``.
+        """
         self_.self = self
         self_.manage = manage
         self_.clone = clone
@@ -117,6 +143,7 @@ class Links:
         return generate_repr_string(self)
 
 class AdminStation:
+    "Represents a radio station, with extra information."
     def __init__(
         self,
         name: str,
@@ -151,6 +178,15 @@ class AdminStation:
         links: Links,
         _admin
     ):
+        """
+        Initializes an :class:`AdminStation` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, obtain an instance
+            via: :meth:`~.models.administration.helpers.AdminStationHelper.__call__`. or
+            :meth:`~.models.administration.Admin.stations`.
+        """
         self.name = name
         self.short_name = short_name
         self.is_enabled = is_enabled
@@ -193,6 +229,7 @@ class AdminStation:
         :returns: A :class:`Station` object.
 
         Usage:
+
         .. code-block:: python
 
             station = admin_station.manage()
@@ -213,6 +250,7 @@ class AdminStation:
         Sets all attributes of the current :class:`AdminStation` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             admin_station.delete()

@@ -194,7 +194,7 @@ class TestStation(TestCase):
 
         self.assertIsInstance(result, list)
         for item in result:
-            self.assertIsInstance(item, models.ScheduleTime)
+            self.assertIsInstance(item, models.ScheduleItem)
 
     def test_listeners_returns_list_of_listener(self):
         self.station._request_handler.get.return_value = [

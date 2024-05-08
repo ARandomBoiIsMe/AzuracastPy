@@ -14,7 +14,7 @@ from .requestable_song import RequestableSong
 from .station_status import StationStatus
 from .song_history import SongHistory
 from .listener import Listener
-from .schedule_time import ScheduleTime
+from .schedule_item import ScheduleItem
 from .station_file import StationFile
 from .mount_point import MountPoint
 from .playlist import Playlist
@@ -69,7 +69,7 @@ class Station:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``client.station(id)`` or ``client.stations()``.
+            via: :meth:`~.AzuracastClient.station` or :meth:`~.AzuracastClient.stations`.
         """
         self.id = id
         self.name = name
@@ -385,6 +385,7 @@ class Station:
         :returns: A list of :class:`RequestableSong` objects.
 
         Usage:
+
         .. code-block:: python
 
             requestable_songs = station.requestable_songs()
@@ -403,6 +404,7 @@ class Station:
         :param request_id: The request ID of the song to be requested.
 
         Usage:
+
         .. code-block:: python
 
             station.request_song("request_id")
@@ -427,6 +429,7 @@ class Station:
         :returns: A :class:`StationStatus` object.
 
         Usage:
+
         .. code-block:: python
 
             status = station.status()
@@ -440,6 +443,7 @@ class Station:
         Restarts the station.
 
         Usage:
+
         .. code-block:: python
 
             station.restart()
@@ -463,6 +467,7 @@ class Station:
         :param action: (Optional) The action to be performed. Default: ``ServiceActions.RESTART``.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import ServiceActions
@@ -486,6 +491,7 @@ class Station:
         :param action: (Optional) The action to be performed. Default: ``ServiceActions.RESTART``.
 
         Usage:
+
         .. code-block:: python
 
             station.perform_backend_action(ServiceActions.STOP)
@@ -504,6 +510,7 @@ class Station:
         :returns: A list of :class:`SongHistory` objects.
 
         Usage:
+
         .. code-block:: python
 
             song_history = station.history()
@@ -519,6 +526,7 @@ class Station:
         :returns: A list of :class:`Listener` objects.
 
         Usage:
+
         .. code-block:: python
 
             listeners = station.listeners()
@@ -527,20 +535,21 @@ class Station:
 
         return [Listener(**l) for l in response]
 
-    def schedule(self) -> List[ScheduleTime]:
+    def schedule(self) -> List[ScheduleItem]:
         """
         Retrieves the schedule of the station.
 
-        :returns: A list of :class:`ScheduleTime` objects.
+        :returns: A list of :class:`ScheduleItem` objects.
 
         Usage:
+
         .. code-block:: python
 
             schedule = station.schedule()
         """
         response = self._request_multiple_instances_of("station_schedule")
 
-        return [ScheduleTime(**st) for st in response]
+        return [ScheduleItem(**st) for st in response]
 
     def fallback(self):
         # Request requires no ID, so I shall use this function
@@ -553,6 +562,7 @@ class Station:
         :returns: A list of :class:`StationFile` objects.
 
         Usage:
+
         .. code-block:: python
 
             files = station.files()
@@ -568,6 +578,7 @@ class Station:
         :returns: A list of :class:`MountPoint` objects.
 
         Usage:
+
         .. code-block:: python
 
             mount_points = station.mount_points()
@@ -583,6 +594,7 @@ class Station:
         :returns: A list of :class:`Playlist` objects.
 
         Usage:
+
         .. code-block:: python
 
             playlists = station.playlists()
@@ -598,6 +610,7 @@ class Station:
         :returns: A list of :class:`Podcast` objects.
 
         Usage:
+
         .. code-block:: python
 
             podcasts = station.podcasts()
@@ -613,6 +626,7 @@ class Station:
         :returns: A list of :class:`RemoteRelay` objects.
 
         Usage:
+
         .. code-block:: python
 
             remote_relays = station.remote_relays()
@@ -628,6 +642,7 @@ class Station:
         :returns: A list of :class:`SFTPUser` objects.
 
         Usage:
+
         .. code-block:: python
 
             sftp_users = station.sftp_users()
@@ -643,6 +658,7 @@ class Station:
         :returns: A list of :class:`HLSStream` objects.
 
         Usage:
+
         .. code-block:: python
 
             hls_streams = station.hls_streams()
@@ -658,6 +674,7 @@ class Station:
         :returns: A list of :class:`Streamer` objects.
 
         Usage:
+
         .. code-block:: python
 
             streamers = station.streamers()
@@ -673,6 +690,7 @@ class Station:
         :returns: A list of :class:`Webhook` objects.
 
         Usage:
+
         .. code-block:: python
 
             webhooks = station.webhooks()

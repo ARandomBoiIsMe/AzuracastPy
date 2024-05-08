@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "AzuracastPy"
+version = "0.0.1"
+authors = [
+  { name="Abah Olotuche Gabriel", email="gabrielabah38@gmail.com" },
+]
+description = "A Python wrapper for the AzuraCast API"
+readme = "README.rst"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU Affero General Public License v3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "certifi>=2024.2.2",
+  "charset-normalizer>=3.3.2",
+  "idna>=3.7",
+  "lxml>=5.2.1",
+  "requests>=2.31.0",
+  "urllib3>=2.2.1",
+]
+keywords = ["azuracast", "api", "wrapper"]
+
+[project.urls]
+Homepage = "https://github.com/ARandomBoiIsMe/AzuracastPy"
+Issues = "https://github.com/ARandomBoiIsMe/AzuracastPy/issues"

@@ -5,6 +5,7 @@ from ..util.general_util import generate_repr_string
 from .listeners import Listeners
 
 class Mount:
+    "Represents basic info for station mount point."
     def __init__(
         self,
         id: int,
@@ -16,6 +17,15 @@ class Mount:
         is_default: bool,
         listeners: Listeners
     ):
+        """
+        Initializes a :class:`Mount` object.
+
+        .. note::
+
+            This class should not be initialized directly. Instead, an instance will be made
+            available as an attribute of other classes: :class:`~.models.Station` or
+            :class:`~.models.administration.relay.Relay`.
+        """
         self.id = id
         self.name = name
         self.url = url

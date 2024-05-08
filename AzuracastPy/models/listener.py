@@ -81,7 +81,7 @@ class Listener:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.listeners()``.
+            via: :meth:`~.models.Station.listeners`.
         """
         self.ip = ip
         self.user_agent = user_agent

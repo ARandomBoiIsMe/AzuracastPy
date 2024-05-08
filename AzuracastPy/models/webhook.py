@@ -59,6 +59,7 @@ class TriggerHelper:
             All arguments must be from the :class:`WebhookTriggers` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookTriggers
@@ -114,6 +115,7 @@ class TriggerHelper:
             All arguments must be from the :class:`WebhookTriggers` enum.
 
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookTriggers
@@ -177,7 +179,9 @@ class Webhook:
         .. note::
 
             This class should not be initialized directly. Instead, obtain an instance
-            via: ``station.webhook.create()``, ``station.webhooks()`` or ``station.webhook(id)``.
+            via: :meth:`~.models.helpers.WebhookHelper.create`,
+            :meth:`~.models.helpers.WebhookHelper.__call__` or
+            :meth:`~.models.Station.webhooks`.
         """
         self.name = name
         self.type = type
@@ -241,12 +245,17 @@ class Webhook:
             Default: ``None``.
         :param triggers: (Optional) The new list of triggers for the webhook.
             Each element of the list must be from the :class:`WebhookTriggers` enum.
-            Note: This will overwrite the webhook's existing triggers.
-                  Use the :meth:`.trigger.add` and :meth:`.trigger.remove` methods to
-                  interact with the webhook's existing triggers.
             Default: ``None``.
 
+            .. warning::
+
+                This will overwrite the webhook's existing triggers.
+                Use the :meth:`~.models.webhook.TriggerHelper.add` and
+                :meth:`~.models.webhook.TriggerHelper.remove` methods to
+                interact with the webhook's existing triggers.
+
         Usage:
+
         .. code-block:: python
 
             from AzuracastPy.enums import WebhookTriggers
@@ -282,6 +291,7 @@ class Webhook:
         Sets all attributes of the current :class:`Webhook` object to ``None``.
 
         Usage:
+
         .. code-block:: python
 
             webhook.delete()
