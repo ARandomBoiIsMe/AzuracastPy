@@ -59,4 +59,4 @@ With this instance, radio stations can be interacted with and queried:
 Documentation
 -------------
 
-AzuracastPy's documentation is located at https://praw.readthedocs.io/.
+AzuracastPy's documentation is located at https://azuracastpy.readthedocs.io/en/latest/.
