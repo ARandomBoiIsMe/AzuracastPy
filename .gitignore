@@ -6,3 +6,4 @@ build
 _static
 _templates
 dist
+AzuracastPy.egg-info
