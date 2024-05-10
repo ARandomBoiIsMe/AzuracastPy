@@ -50,3 +50,4 @@ This documentation is split into different sections:
    :caption: Some Code Examples
 
    some_code_examples/song_request
+   some_code_examples/now_playing_data
