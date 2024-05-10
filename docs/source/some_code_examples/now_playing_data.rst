@@ -1,7 +1,7 @@
-Getting The Current Song On A Radio
-===================================
+Getting The Current Song On A Station
+=====================================
 
-A song is currently playing on the radio, and you want to know what it is.
+A song is currently playing on a station, and you want to know what it is.
 Here's how you can do that.
 
 .. note::
