@@ -26,7 +26,7 @@ is needed for more sensitive requests):
 
     client = AzuracastClient(
         radio_url="radio_url",
-        api_key="(Optional) api_key"
+        x_api_key="(Optional) api_key"
     )
 
 With this instance, radio stations can be interacted with and queried:
