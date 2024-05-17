@@ -60,8 +60,8 @@ class AzuracastClient:
 
         .. note::
 
-            If a 'config' param is provided, the values in the specified config file
-            will overwrite the values of the 'radio_url' and 'x_api_key' params.
+            If a ``config`` param is provided, the values in the specified config file
+            will overwrite the values of the ``radio_url`` and ``x_api_key`` params.
         """
         if not radio_url and not config:
             message = "Either the 'config' param or the 'radio_url' param "\
