@@ -113,7 +113,7 @@ class ScheduleItem:
     def __repr__(self) -> str:
         return generate_repr_string(self)
 
-def _get_schedule_item_json(self, schedule_item):
+def _get_schedule_item_json(schedule_item):
     if not schedule_item:
         return {}
 
